@@ -14,7 +14,7 @@ export async function createAction(input: CreateSchema) {
     const { code, creditAmount } = input;
 
     await Promise.all([
-      await prisma.giftCode.create({
+      await prisma.polaroidai_GiftCode.create({
         data: {
           code,
           creditAmount,
@@ -41,7 +41,7 @@ export async function updateAction(input: UpdateSchema & { id: string }) {
   try {
     const [id] = GiftCodeHashids.decode(input.id);
     const { code, creditAmount } = input;
-    await prisma.giftCode.update({
+    await prisma.polaroidai_GiftCode.update({
       where: {
         id: id as number,
       },
@@ -69,7 +69,7 @@ export async function updateAction(input: UpdateSchema & { id: string }) {
 export async function deleteAction(input: { id: string }) {
   try {
     const [id] = GiftCodeHashids.decode(input.id);
-    await prisma.giftCode.delete({
+    await prisma.polaroidai_GiftCode.delete({
       where: {
         id: id as number,
       },

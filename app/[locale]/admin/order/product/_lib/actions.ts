@@ -26,7 +26,7 @@ export async function createAction(input: CreateSchema) {
     } = input;
 
     await Promise.all([
-      await prisma.chargeProduct.create({
+      await prisma.polaroidai_ChargeProduct.create({
         data: {
           title,
           locale,

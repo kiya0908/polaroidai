@@ -69,6 +69,36 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // 宝丽来主题色彩
+        polaroid: {
+          orange: "#FF8C42",      // 主色: 暖橘色
+          cream: "#FFFEF7",       // 辅色: 米白色
+          brown: "#8B4513",       // 强调色: 深棕色
+          vintage: {
+            50: "#FFF9F5",
+            100: "#FFF2E8",
+            200: "#FFE4CC",
+            300: "#FFD1A3",
+            400: "#FFB366",
+            500: "#FF8C42",       // 主色
+            600: "#E6732A",
+            700: "#CC5A1F",
+            800: "#B34717",
+            900: "#8B3612",
+          },
+          sepia: {
+            50: "#FEFDFB",
+            100: "#FDFBF7",
+            200: "#FAF6EE",
+            300: "#F7F0E4",
+            400: "#F1E5D1",
+            500: "#FFFEF7",       // 辅色
+            600: "#E6E5DE",
+            700: "#CCCCB8",
+            800: "#B3B392",
+            900: "#8B8B6B",
+          }
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

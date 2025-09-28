@@ -9,7 +9,7 @@ export default async function AdminNewslettersPage() {
     (SELECT COUNT(*) FROM newsletters WHERE EXTRACT(YEAR FROM sent_at) = EXTRACT(YEAR FROM CURRENT_DATE) AND EXTRACT(MONTH FROM sent_at) = EXTRACT(MONTH FROM CURRENT_DATE)) AS this_month_count,
     (SELECT COUNT(*) FROM newsletters) as total
   `;
-  const nl = await prisma.newsletters.findMany({
+  const nl = await prisma.polaroidai_newsletters.findMany({
     take: 100,
     orderBy: {
       sentAt: "desc",

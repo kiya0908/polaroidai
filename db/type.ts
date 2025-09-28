@@ -33,15 +33,15 @@ export enum FluxTaskStatus {
   Canceled = "canceled",
 }
 
-export type UserCreditDto = Prisma.UserCreditGetPayload<any>;
+export type UserCreditDto = Prisma.polaroidai_UserCreditGetPayload<any>;
 
-export type UserCreditSchema = Prisma.UserCreditCreateInput;
+export type UserCreditSchema = Prisma.polaroidai_UserCreditCreateInput;
 
 export type UserCreditSelectDto = Omit<UserCreditDto, "id"> & { id: string };
 
-export type ChargeProductDto = Prisma.ChargeProductGetPayload<any>;
+export type ChargeProductDto = Prisma.polaroidai_ChargeProductGetPayload<any>;
 
-export type ChargeProductSchema = Prisma.ChargeProductCreateInput;
+export type ChargeProductSchema = Prisma.polaroidai_ChargeProductCreateInput;
 
 export type ChargeProductSelectDto = Omit<ChargeProductDto, "id"> & {
   id: string;
@@ -49,14 +49,18 @@ export type ChargeProductSelectDto = Omit<ChargeProductDto, "id"> & {
 
 export type ChargeOrderDto = Prisma.ChargeOrderGetPayload<any>;
 
-export type GiftCodeDto = Prisma.GiftCodeGetPayload<any>;
+export type GiftCodeDto = Prisma.polaroidai_GiftCodeGetPayload<any>;
 
-export type GiftCodeSchema = Prisma.GiftCodeCreateInput;
+export type GiftCodeSchema = Prisma.polaroidai_GiftCodeCreateInput;
 
 export type GiftCodeSelectDto = Omit<GiftCodeDto, "id"> & { id: string };
 
-export type FluxDto = Prisma.FluxDataGetPayload<any>;
+// Flux相关类型已弃用，使用宝丽来相关类型
+// export type FluxDto = Prisma.FluxDataGetPayload<any>;
+// export type FluxSchema = Prisma.FluxDataCreateInput;
+// export type FluxSelectDto = Omit<FluxDto, "id"> & { id: string };
 
-export type FluxSchema = Prisma.FluxDataCreateInput;
-
-export type FluxSelectDto = Omit<FluxDto, "id"> & { id: string };
+// 宝丽来相关类型
+export type PolaroidDto = Prisma.polaroidai_PolaroidGenerationGetPayload<any>;
+export type PolaroidSchema = Prisma.polaroidai_PolaroidGenerationCreateInput;
+export type PolaroidSelectDto = Omit<PolaroidDto, "id"> & { id: string };

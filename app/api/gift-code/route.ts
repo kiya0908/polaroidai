@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     const { code } = CreateGiftCodeOrderSchema.parse(data);
-    const giftCodeData = await prisma.giftCode.findFirst({
+    const giftCodeData = await prisma.polaroidai_GiftCode.findFirst({
       where: {
         code,
       },

@@ -1,100 +1,242 @@
 "use client";
 
-import { useContext } from "react";
-import { useSelectedLayoutSegment } from "next/navigation";
-
-import { useTranslations } from "next-intl";
-
-import { Icons } from "@/components/shared/icons";
-import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { UserButton, useUser } from "@clerk/nextjs";
+import { Menu, X, Sparkles, Camera, History, CreditCard, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { dashboardConfig } from "@/config/dashboard";
-import { docsConfig } from "@/config/docs";
-import { marketingConfig } from "@/config/marketing";
-import { useScroll } from "@/hooks/use-scroll";
-import { Link } from "@/lib/navigation";
+import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import { cn } from "@/lib/utils";
 
-import { UserInfo } from "../user-info";
-
-interface NavBarProps {
-  scroll?: boolean;
-  large?: boolean;
+interface NavItem {
+  href: string;
+  label: string;
+  iconName: string;
+  badge?: string;
 }
 
-export function NavbarLogo(props: { size?: "sm" | "md" | "lg" | "xl" }) {
-  const t = useTranslations("Navigation");
-  const { size = "xl" } = props;
-  return (
-    <Link href="/" className="flex items-center space-x-2">
-      <Icons.logo className="hidden h-6 w-6 md:block" />
-      <span className={cn("font-urban font-bold", `text-xs md:text-${size}`)}>
-        {t("title")}
-      </span>
-    </Link>
-  );
+const navItems: NavItem[] = [
+  {
+    href: "/app/generate",
+    label: "生成宝丽来",
+    iconName: "Camera",
+  },
+  {
+    href: "/app/history",
+    label: "历史记录",
+    iconName: "History",
+  },
+  {
+    href: "/app/order",
+    label: "积分充值",
+    iconName: "CreditCard",
+  },
+];
+
+const getNavIcon = (iconName: string) => {
+  switch (iconName) {
+    case "Camera":
+      return <Camera className="w-4 h-4" />;
+    case "History":
+      return <History className="w-4 h-4" />;
+    case "CreditCard":
+      return <CreditCard className="w-4 h-4" />;
+    default:
+      return <Camera className="w-4 h-4" />;
+  }
+};
+
+interface NavbarProps {
+  userCredit?: number;
 }
 
-export function NavbarUserInfo() {
-  return (
-    <div className="flex items-center space-x-3">
-      <UserInfo />
-    </div>
-  );
-}
+export function Navbar({ userCredit = 0 }: NavbarProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const { isSignedIn, user } = useUser();
 
-export function NavBar({ scroll = false }: NavBarProps) {
-  const scrolled = useScroll(50);
-  const t = useTranslations("Navigation");
-  const selectedLayout = useSelectedLayoutSegment();
-  const dashBoard = selectedLayout === "app";
-  const blog = selectedLayout === "(blog)";
-  const documentation = selectedLayout === "docs";
-  const links = documentation
-    ? docsConfig.mainNav
-    : dashBoard
-      ? dashboardConfig.mainNav
-      : marketingConfig.mainNav;
-
-  return (
-    <header
-      className={`sticky top-0 z-40 flex w-full justify-center bg-background/60 pr-9 backdrop-blur-xl transition-all md:pr-0 ${
-        scroll ? (scrolled ? "border-b" : "bg-transparent") : "border-b"
-      }`}
-    >
-      <MaxWidthWrapper
-        className="flex h-14 items-center justify-between py-4"
-        large={documentation}
+  const NavLink = ({ item, mobile = false }: { item: NavItem; mobile?: boolean }) => {
+    const isActive = pathname === item.href;
+    
+    return (
+      <Link
+        href={item.href}
+        className={cn(
+          "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+          isActive
+            ? "bg-polaroid-orange text-white"
+            : "text-gray-700 hover:text-polaroid-orange hover:bg-polaroid-cream",
+          mobile && "w-full justify-start"
+        )}
+        onClick={() => mobile && setIsOpen(false)}
       >
-        <div className="flex gap-6 md:gap-10">
-          <NavbarLogo />
+        {getNavIcon(item.iconName)}
+        {item.label}
+        {item.badge && (
+          <Badge variant="secondary" className="ml-auto">
+            {item.badge}
+          </Badge>
+        )}
+      </Link>
+    );
+  };
 
-          {links && links.length > 0 ? (
-            <nav className="hidden gap-6 md:flex">
-              {links.map((item, index) => (
-                <Link
-                  key={index}
-                  href={item.disabled ? "#" : item.href}
-                  prefetch={true}
-                  className={cn(
-                    "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm",
-                    item.href.startsWith(`/${selectedLayout}`) ||
-                      (item.href === "/blog" && blog)
-                      ? "text-foreground"
-                      : "text-foreground/60",
-                    item.disabled && "cursor-not-allowed opacity-80",
-                  )}
+  return (
+    <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+      <div className="container mx-auto px-4">
+        <div className="flex h-16 items-center justify-between">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-polaroid-orange rounded-lg flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-xl font-bold text-polaroid-brown">
+              宝丽来AI
+            </span>
+          </Link>
+
+          {/* 桌面端导航 */}
+          <div className="hidden md:flex items-center gap-6">
+            {isSignedIn && (
+              <>
+                <div className="flex items-center gap-4">
+                  {navItems.map((item) => (
+                    <NavLink key={item.href} item={item} />
+                  ))}
+                </div>
+                
+                {/* 积分显示 */}
+                <Badge 
+                  variant="outline" 
+                  className="border-polaroid-orange text-polaroid-orange px-3 py-1"
                 >
-                  {t(item.title)}
-                </Link>
-              ))}
-            </nav>
-          ) : null}
-        </div>
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  {userCredit} 积分
+                </Badge>
+              </>
+            )}
 
-        <NavbarUserInfo />
-      </MaxWidthWrapper>
-    </header>
+            {/* 用户菜单 */}
+            <div className="flex items-center gap-4">
+              {/* 语言切换 */}
+              <LocaleSwitcher />
+
+              {isSignedIn ? (
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-8 h-8",
+                    },
+                  }}
+                />
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Button variant="ghost" asChild>
+                    <Link href="/sign-in">登录</Link>
+                  </Button>
+                  <Button asChild className="bg-polaroid-orange hover:bg-polaroid-orange/90">
+                    <Link href="/sign-up">注册</Link>
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 移动端菜单按钮 */}
+          <div className="md:hidden">
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Menu className="w-5 h-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-80">
+                <div className="flex flex-col gap-6 mt-6">
+                  {/* 用户信息 */}
+                  {isSignedIn && (
+                    <div className="flex items-center gap-3 p-4 bg-polaroid-cream rounded-lg">
+                      <UserButton
+                        appearance={{
+                          elements: {
+                            avatarBox: "w-10 h-10",
+                          },
+                        }}
+                      />
+                      <div className="flex-1">
+                        <p className="font-medium text-polaroid-brown">
+                          {user?.firstName || user?.username || "用户"}
+                        </p>
+                        <Badge 
+                          variant="outline" 
+                          className="border-polaroid-orange text-polaroid-orange"
+                        >
+                          <Sparkles className="w-3 h-3 mr-1" />
+                          {userCredit} 积分
+                        </Badge>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 导航菜单 */}
+                  {isSignedIn ? (
+                    <div className="space-y-2">
+                      {navItems.map((item) => (
+                        <NavLink key={item.href} item={item} mobile />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <Button variant="ghost" asChild className="w-full justify-start">
+                        <Link href="/sign-in">登录</Link>
+                      </Button>
+                      <Button asChild className="w-full bg-polaroid-orange hover:bg-polaroid-orange/90">
+                        <Link href="/sign-up">注册</Link>
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* 语言切换 - 移动端 */}
+                  <div className="pt-4 border-t">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium text-gray-700">语言</span>
+                      <LocaleSwitcher />
+                    </div>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+      </div>
+    </nav>
   );
 }
+
+// NavbarUserInfo组件 - 用户信息显示
+export function NavbarUserInfo() {
+  const { isSignedIn, user } = useUser();
+
+  if (!isSignedIn) {
+    return (
+      <Button asChild size="sm">
+        <Link href="/sign-in">登录</Link>
+      </Button>
+    );
+  }
+
+  return (
+    <UserButton
+      appearance={{
+        elements: {
+          avatarBox: "w-8 h-8",
+        },
+      }}
+    />
+  );
+}
+
+// 导出别名以兼容不同的导入方式
+export { Navbar as NavBar };

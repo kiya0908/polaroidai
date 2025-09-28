@@ -74,9 +74,9 @@ export default async function ExplorePage({
             columnClassName="bg-clip-padding pl-4 first:pl-0"
           > */}
           <div className="masonry-grid columns-1 md:columns-2 lg:columns-3 xl:columns-4">
-            {fluxData.data?.data?.map((item, idx) => (
+            {fluxData.data?.data?.map((item: any, idx: number) => (
               <div
-                key={item.id}
+                key={item.id || idx}
                 className="masonry-grid-item w-full border-stroke-light bg-surface-300 hover:border-stroke-strong mb-4 flex break-inside-avoid flex-col space-y-4 overflow-hidden rounded-xl border relative"
               >
                 <Link href={`/d/${item.id}`}>

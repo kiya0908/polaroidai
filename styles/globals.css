@@ -36,6 +36,13 @@
 
     --surface-alpha-strong: rgba(97,97,97,.1);
     --stop-color: white;
+
+    /* 宝丽来主题变量 */
+    --polaroid-orange: 22 100% 63%;     /* #FF8C42 */
+    --polaroid-cream: 60 100% 98%;      /* #FFFEF7 */
+    --polaroid-brown: 25 75% 31%;       /* #8B4513 */
+    --polaroid-vintage: 22 100% 63%;
+    --polaroid-sepia: 60 100% 98%;
   }
 
   .dark {
@@ -69,6 +76,11 @@
 
     --surface-alpha-strong: hsla(0,0%,100%,.08);
     --stop-color: black;
+
+    /* 暗色模式下的宝丽来主题 */
+    --polaroid-orange: 22 85% 55%;      /* 稍微暗一点的橘色 */
+    --polaroid-cream: 60 50% 15%;       /* 暗色模式下的米白色 */
+    --polaroid-brown: 25 60% 40%;       /* 稍微亮一点的棕色 */
   }
 }
 
@@ -160,4 +172,66 @@
 
 .masonry-grid-item {
   break-inside: avoid;
+}
+
+/* 宝丽来特有样式 */
+.polaroid-frame {
+  background: white;
+  padding: 16px 16px 48px 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.15);
+  transform: rotate(-2deg);
+  transition: transform 0.3s ease;
+}
+
+.polaroid-frame:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+.polaroid-frame::after {
+  content: '';
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  height: 32px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #666;
+}
+
+.vintage-gradient {
+  background: linear-gradient(135deg, 
+    hsl(var(--polaroid-cream)) 0%, 
+    hsl(var(--polaroid-orange) / 0.1) 50%, 
+    hsl(var(--polaroid-brown) / 0.05) 100%);
+}
+
+.retro-shadow {
+  box-shadow: 
+    0 4px 6px -1px rgba(139, 69, 19, 0.1),
+    0 2px 4px -1px rgba(139, 69, 19, 0.06),
+    inset 0 1px 0 rgba(255, 254, 247, 0.1);
+}
+
+.film-grain {
+  position: relative;
+}
+
+.film-grain::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 50%, transparent 20%, rgba(255, 255, 255, 0.3) 21%, rgba(255, 255, 255, 0.3) 34%, transparent 35%, transparent),
+    linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05) 76%, transparent 77%, transparent);
+  background-size: 50px 50px, 50px 50px;
+  pointer-events: none;
+  opacity: 0.3;
 }

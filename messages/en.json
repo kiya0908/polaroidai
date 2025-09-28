@@ -72,44 +72,62 @@
     }
   },
   "IndexPage": {
-    "intro": "Introducing Flux AI Image Generator",
-    "description": "Revolutionizing Next-Generation Advanced Text-to-Image open model, support flux.1 pro/dev and flux.1 schnell models.",
-    "title": "Flux AI Image Generator",
-    "subtitle": "Advanced Text-to-Image",
+    "intro": "Introducing Polaroid AI Photo Generator",
+    "description": "Transform your memories into authentic vintage Polaroid photos with AI. Create nostalgic instant photos from text descriptions or upload your images for Polaroid-style conversion.",
+    "title": "Polaroid AI Photo Generator",
+    "subtitle": "✨ Transform memories into authentic vintage instant photos",
+    "generator": {
+      "textMode": {
+        "title": "Text to Polaroid",
+        "description": "Transform any text description into beautiful vintage Polaroid photos",
+        "cost": "5 credits per generation",
+        "example": "Sunset by the sea, vintage summer vibes..."
+      },
+      "imageMode": {
+        "title": "Image to Polaroid",
+        "description": "Upload your photos and convert them to stunning Polaroid style",
+        "cost": "8 credits per generation",
+        "formats": "Supports JPG, PNG formats, max 10MB"
+      }
+    },
     "examples": {
       "label": "Example",
-      "title": "Flux AI Image Examples",
-      "subtitle": "Generate images from text prompts."
+      "title": "Polaroid AI Photo Examples",
+      "subtitle": "Create authentic vintage Polaroid photos from text descriptions or uploaded images."
     },
     "features": {
+      "speed": "10-second generation",
+      "frame": "Classic white border",
+      "vintage": "Vintage tones",
+      "transparent": "Transparent credit usage",
       "title": "Features",
-      "description": "Flux AI Image Generator is a powerful tool that allows you to generate images from text prompts. It uses advanced AI models to create stunning images that are perfect for any project.",
       "action": {
         "visit": "Generate"
       },
+      "description": "Polaroid AI Photo Generator transforms your ideas and images into authentic vintage Polaroid photos with classic white borders, retro colors, and film grain texture.",
       "item1": {
-        "title": "FLUX.1 [pro]",
-        "description": "The best of FLUX.1, offering state-of-the-art performance image generation with top of the line prompt following, visual quality, image detail and output diversity."
+        "title": "Text to Polaroid",
+        "description": "Transform any text description into a beautiful vintage Polaroid photo. Simply describe your scene and watch it come to life with authentic retro aesthetics."
       },
       "item2": {
-        "title": "FLUX.1 [dev]",
-        "description": "Directly distilled from FLUX.1 [pro], FLUX.1 [dev] obtains similar quality and prompt adherence capabilities, while being more efficient than a standard model of the same size. "
+        "title": "Image to Polaroid",
+        "description": "Upload your existing photos and convert them into stunning Polaroid-style images with classic white borders, vintage colors, and film grain effects."
       },
       "item3": {
-        "title": "FLUX.1 [schnell]",
-        "description": "The fastest image generation model tailored for local development and personal use"
+        "title": "Authentic Vintage Style",
+        "description": "Experience true-to-life Polaroid aesthetics with classic white borders, warm vintage tones, film grain texture, and subtle light leaks for maximum authenticity."
       },
       "item4": {
-        "title": "Lightning-Fast",
-        "description": "Flux AI generates high-quality images in seconds, significantly faster than Stable Diffusion 3 and Midjourney. With its lightning-fast image generation capabilities, Flux AI ensures quick and efficient results, saving you valuable time and resources."
+        "title": "Lightning-Fast Generation",
+        "description": "Create your vintage Polaroid photos in seconds. Our AI-powered engine delivers high-quality results quickly, perfect for instant nostalgia and creative projects."
       },
       "item5": {
-        "title": "Customizable",
-        "description": "The advanced Flux.1 model produces more detailed and coherent images than competitors. With its customizable features and user-friendly interface, Flux AI Image Generator is the ultimate tool for generating stunning images from text prompts. Whether you're a beginner or a professional, Flux AI has got you covered. Experience the power of AI and revolutionize your image generation process today!"
+        "title": "High-Quality Output",
+        "description": "Generate crisp, detailed Polaroid photos at 1080x1080 resolution. Perfect for social media sharing, printing, or adding to your digital photo collection."
       },
       "item6": {
-        "title": "User-Friendly Interface",
-        "description": "Easier to use than ComfyUI, perfect for beginners and pros alike. Flux AI Image Generator is the ultimate tool for generating stunning images from text prompts. With its user-friendly interface and powerful AI models, Flux AI makes it easy for both beginners and professionals to create amazing visuals."
+        "title": "Easy to Use",
+        "description": "Simple and intuitive interface designed for everyone. Whether you're creating content for social media or preserving memories, our tool makes vintage photo creation effortless."
       }
     },
     "powered": {
@@ -121,9 +139,109 @@
       }
     },
     "schnell": {
-      "title": "Flux.1 [Schnell]",
-      "description": "Flux.1 [schnell] is a refined version of the base model, operating up to 10 times faster than the original. Licensed under Apache 2.0, it's optimized for speed and efficiency, catering to users who demand rapid image generation without compromising on quality. This model is ideal for local development and personal use, striking the perfect balance between performance and accessibility. We offer users 5 free opportunities each month to experience the lightning-fast image generation of the Flux.1 [schnell] model, allowing you to witness its incredible speed firsthand.",
+      "title": "Free Polaroid Generation",
+      "description": "Experience the magic of instant vintage photography with our free Polaroid generator. Create authentic-looking Polaroid photos with classic white borders, retro color grading, and film grain texture. Perfect for social media, creative projects, or adding nostalgic charm to your digital memories. We offer 5 free generations each month to let you experience the authentic Polaroid aesthetic.",
       "action": "Try Now"
+    },
+    "whatIs": {
+      "title": "What is Polaroid AI Photo Generator?",
+      "subtitle": "Redefining vintage photography with AI technology to recreate the charm of classic instant photos",
+      "badge": "AI x Vintage Aesthetics",
+      "description": {
+        "title": "Perfectly combining modern AI technology with classic Polaroid aesthetics",
+        "content": "The Polaroid AI Photo Generator is an AI tool specifically designed to create authentic vintage Polaroid-style photos. It's not just a filter, but deeply understands the imaging principles of Polaroid cameras, including unique color science, film grain, light leak effects, and classic white borders, providing you with the closest digital experience to a real Polaroid camera."
+      },
+      "comparison": {
+        "title": "Why choose AI over traditional Polaroid?",
+        "traditional": "Expensive camera equipment + Film costs + Operating complexity",
+        "ai": "One-click generation + Zero trial and error cost + Perfect control + Instant sharing"
+      },
+      "features": {
+        "authentic": {
+          "title": "Authentic Vintage Texture",
+          "description": "Precisely reproduce the color science and film characteristics of Polaroid cameras"
+        },
+        "ai": {
+          "title": "Smart AI Processing",
+          "description": "Deep learning-based image generation that understands the essence of vintage aesthetics"
+        },
+        "nostalgia": {
+          "title": "Emotional Resonance",
+          "description": "Evoke beautiful memories and create visual works with warmth"
+        },
+        "instant": {
+          "title": "Instant Creation",
+          "description": "Get professional-grade vintage photos in 10 seconds, create anytime, anywhere"
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "How to Use Polaroid AI?",
+      "subtitle": "Simple 4 steps to easily create professional-grade vintage Polaroid photos",
+      "steps": {
+        "input": {
+          "title": "Input Content",
+          "description": "Describe a scene or upload a photo",
+          "example": "Sunset by the sea, warm atmosphere"
+        },
+        "process": {
+          "title": "AI Smart Processing",
+          "description": "Analyze and apply Polaroid style",
+          "time": "Processing in 10-15 seconds"
+        },
+        "generate": {
+          "title": "Generate Polaroid",
+          "description": "Create vintage photo with white border",
+          "quality": "1080x1080 HD output"
+        },
+        "download": {
+          "title": "Download & Save",
+          "description": "Get high-quality printable image",
+          "quality": "Print quality"
+        }
+      },
+      "summary": {
+        "title": "It's that simple!",
+        "description": "No professional photography knowledge required, anyone can create professional-quality vintage Polaroid photos. From text description to beautiful artwork, the entire process takes less than 30 seconds."
+      },
+      "highlights": {
+        "fast": "10-second generation",
+        "authentic": "Authentic texture",
+        "easy": "Easy to use"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "All your questions about the Polaroid AI Photo Generator - we have answers ready for you",
+      "item1": {
+        "question": "How realistic are Polaroid AI generated photos?",
+        "answer": "Our AI model is trained on thousands of real Polaroid photos and can accurately reproduce the color science, film grain, border proportions, and subtle optical effects of Polaroid cameras. The generated photos are visually almost indistinguishable from real Polaroid photos, with a satisfaction rate exceeding 90%."
+      },
+      "item2": {
+        "question": "How does the credit system work?",
+        "answer": "We use a transparent credit consumption system: text-to-Polaroid generation consumes 5 credits, image conversion consumes 8 credits. New users get 50 credits upon registration, plus 1 free generation daily. Generation failures result in full credit refund, ensuring every investment is worthwhile."
+      },
+      "item3": {
+        "question": "How long does it take to generate a Polaroid photo?",
+        "answer": "Typically, from submitting a request to receiving the finished photo takes only 10-15 seconds. Our AI servers are optimized to maintain stable processing speeds even during peak hours. If there's a queue, the system will display estimated wait time."
+      },
+      "item4": {
+        "question": "What types of images can I upload?",
+        "answer": "We support JPG and PNG formats with a maximum file size of 10MB. For best results, we recommend uploading clear, well-lit photos. The system automatically optimizes image size and quality without manual adjustment needed."
+      },
+      "item5": {
+        "question": "Can the generated photos be used commercially?",
+        "answer": "You own complete usage rights for all photos generated through Polaroid AI, including commercial use. No copyright concerns - feel free to use them for social media, print materials, marketing content, and any other applications."
+      },
+      "item6": {
+        "question": "What if I'm not satisfied with the generation results?",
+        "answer": "We provide 3 free regeneration opportunities (consuming only 2 credits each time). If still unsatisfied, you can adjust the description text or upload photos from different angles. Our customer service team will also assist you in optimizing generation results."
+      },
+      "contact": {
+        "title": "Have other questions?",
+        "description": "Our team is always here to help you",
+        "response": "Response within 24 hours"
+      }
     },
     "action": {
       "pricing": "Buy Credits",
@@ -175,7 +293,7 @@
       },
       "item6": {
         "question": "How can I get support for Online?",
-        "answer": "You can reach out to us at support@fluxaipro.art."
+        "answer": "You can reach out to us at support@polaroidai.pro."
       }
     },
     "tip": {
@@ -203,13 +321,13 @@
   },
   "Playground": {
     "layout": {
-      "title": "Free Flux.1 {model} Image Generator: Create Stunning Images in Seconds",
-      "description": "Discover Free Flux.1 model image generator, your go-to tool for creating stunning visuals effortlessly. Generate high-quality images with ease and unleash your creativity without any cost. Perfect for designers, artists, and anyone looking to enhance their projects with unique imagery.",
-      "keywords": "flux.1 image generator, flux.1 model image generator, free image generator, AI image generator, image generation tool, create images with AI, generate images online, image creation software, image design tool, image generation platform"
+      "title": "Free Polaroid AI Photo Generator: Create Vintage Photos in Seconds",
+      "description": "Transform your memories with our free Polaroid AI photo generator. Create authentic vintage Polaroid photos from text descriptions or upload images for instant retro conversion. Perfect for social media, creative projects, and nostalgic memories.",
+      "keywords": "polaroid ai photo generator, vintage photo generator, retro photo creator, instant photo maker, polaroid style generator, vintage photography ai, nostalgic photo effects, classic polaroid borders"
     },
     "page": {
-      "title": "Free Flux.1 {model} Image Generator",
-      "subtitle": "Amazing AI models to generate images from text prompts."
+      "title": "Free Polaroid AI Photo Generator",
+      "subtitle": "Create authentic vintage Polaroid photos from text or images with AI."
     },
     "settings": {
       "display": "Display {mode}",
@@ -243,11 +361,11 @@
       },
       "item6": {
         "question": "How can I get support for Online?",
-        "answer": "You can reach out to us at support@fluxaipro.art."
+        "answer": "You can reach out to us at support@polaroidai.pro."
       }
     },
-    "title": "Flux AI Image Generator",
-    "description": "Amazing AI models to generate images from text prompts.",
+    "title": "Polaroid AI Photo Generator",
+    "description": "Create authentic vintage Polaroid photos with AI technology.",
     "empty": {
       "title": "Generator Error",
       "description": "Error Info: {error}",
@@ -255,19 +373,19 @@
     },
     "form": {
       "input": "Input",
-      "result": "Result",
-      "placeholder": "Enter prompt to generate image...",
-      "model": "Model",
-      "lora": "Lora",
-      "loraTooltip": "Select a Lora",
-      "loraLabel": "Lora Name",
-      "modelTooltip": "Choose a model to generate images.",
-      "submit": "Generate",
-      "aspectRatio": "AspectRatio",
-      "aspectRatioTooltip": "Aspect ratio for the generated image.",
-      "inputImage": "Image",
-      "inputImageTooltip": "Input image for image to image mode. The aspect ratio of your output will match this image",
-      "inputImagePlaceholder": "Upload input image"
+      "result": "Your Polaroid",
+      "placeholder": "Describe the scene for your Polaroid photo...",
+      "model": "Style",
+      "lora": "Effect",
+      "loraTooltip": "Select a vintage effect",
+      "loraLabel": "Effect Name",
+      "modelTooltip": "Choose a Polaroid style for your photo.",
+      "submit": "Create Polaroid",
+      "aspectRatio": "Format",
+      "aspectRatioTooltip": "Polaroid format (classic square with white border).",
+      "inputImage": "Upload Photo",
+      "inputImageTooltip": "Upload your photo to convert into Polaroid style",
+      "inputImagePlaceholder": "Upload your photo for Polaroid conversion"
     },
     "error": {
       "insufficientCredits": "Oops, points are running low! Time to top up!",
@@ -296,19 +414,61 @@
     }
   },
   "History": {
-    "title": "Generate Image History",
-    "description": "View your recent image generation history.",
+    "title": "My Polaroid Collection",
+    "description": "View your vintage Polaroid photo collection.",
     "empty": {
-      "title": "No history yet.",
-      "description": "Generate an image to see it here."
+      "title": "No Polaroids yet.",
+      "description": "Create your first vintage Polaroid photo to see it here."
     },
     "action": {
-      "generate": "Generate",
+      "generate": "Create Polaroid",
       "copy": "Copy prompt",
       "copySuccess": "Prompt copied to clipboard.",
-      "download": "Download Image",
-      "downloadSuccess": "Image downloaded.",
+      "download": "Download Polaroid",
+      "downloadSuccess": "Polaroid downloaded.",
       "downloadLoading": "Downloading..."
+    }
+  },
+  "PolaroidGenerator": {
+    "title": "Create Your Vintage Polaroid",
+    "subtitle": "Transform memories into authentic instant photos",
+    "tabs": {
+      "text": "Text to Polaroid",
+      "image": "Image to Polaroid"
+    },
+    "textMode": {
+      "title": "Describe Your Scene",
+      "placeholder": "A sunset over the ocean, vintage summer vibes...",
+      "examples": [
+        "A cozy coffee shop on a rainy day",
+        "Friends laughing at a beach bonfire",
+        "A vintage car parked under cherry blossoms",
+        "A cat sleeping by a sunny window"
+      ]
+    },
+    "imageMode": {
+      "title": "Upload Your Photo",
+      "subtitle": "Convert any photo into vintage Polaroid style",
+      "dragText": "Drag & drop your photo here",
+      "browseText": "or browse files",
+      "supportedFormats": "Supports JPG, PNG up to 10MB"
+    },
+    "styleOptions": {
+      "title": "Polaroid Style",
+      "classic": "Classic White Border",
+      "vintage": "Aged & Faded",
+      "warm": "Warm Tones",
+      "cool": "Cool Vintage"
+    },
+    "credits": {
+      "textCost": "5 credits per generation",
+      "imageCost": "8 credits per generation",
+      "balance": "Your balance: {credits} credits"
+    },
+    "generate": {
+      "button": "Create My Polaroid",
+      "processing": "Creating your vintage photo...",
+      "estimated": "Estimated time: 10-15 seconds"
     }
   },
   "Billings": {
@@ -367,31 +527,31 @@
     }
   },
   "LocaleLayout": {
-    "title": "Flux AI Image Generator Online - Flux AI",
-    "description": "Transform your visuals with Flux.1 AI's advanced tools: Flux Schnell for swift creations, Flux Dev for detailed customization, and Flux Pro for unmatched professional quality.",
-    "keywords": "flux AI, AI flux, flux artificial intelligence, AI technology, machine learning flux, flux AI tools, AI applications, artificial intelligence solutions, flux data analysis, AI innovation, predictive analytics flux, flux machine learning, AI development, next-gen AI"
+    "title": "Polaroid AI Photo Generator - Create Vintage Photos with AI",
+    "description": "Transform your memories into authentic vintage Polaroid photos with AI. Create nostalgic instant photos from text descriptions or convert your images to classic Polaroid style with white borders and retro effects.",
+    "keywords": "polaroid ai photo generator, vintage photo generator, retro photo creator, instant photo maker, polaroid style generator, vintage photography ai, nostalgic photo effects, classic polaroid borders, ai photo vintage, retro image generator"
   },
   "LocaleSwitcher": {
     "label": "Change language",
     "locale": "{locale, select, zh {🇨🇳 简体中文} tw {🇭🇰 繁體中文} en {🇺🇸 English} fr {🇫🇷 Français} ja {🇯🇵 日本語} ko {🇰🇷 한국어} es {🇪🇸 Español} de {🇩🇪 Deutsch} pt {🇧🇷 Português} ar {🇦🇪 العربية} other {Unknown}}"
   },
   "Manifest": {
-    "name": "Flux AI Image Generator"
+    "name": "Polaroid AI Photo Generator"
   },
   "AppNavigation": {
     "Index": "Home",
-    "Generate": "Generate",
-    "History": "History",
+    "Generate": "Create Polaroid",
+    "History": "My Polaroids",
     "GiftCode": "Gift Code",
-    "ChargeOrder": "Charge Order"
+    "ChargeOrder": "Purchase Credits"
   },
   "Navigation": {
     "pricing": "Pricing",
-    "schnell": "Flux Schnell",
-    "explore": "Explore",
-    "title": "Flux AI Image Generator",
+    "schnell": "Free Generator",
+    "explore": "Gallery",
+    "title": "Polaroid AI Photo Generator",
     "blog": "Blog",
-    "prompt": "Flux AI Prompt Generator",
+    "prompt": "Polaroid Prompt Generator",
     "dashboard": "Dashboard",
     "tooltip": {
       "login": "Login"
@@ -403,7 +563,7 @@
   },
   "PageLayout": {
     "footer": {
-      "title": "Flux AI Image Generator",
+      "title": "Polaroid AI Photo Generator",
       "term": "Terms",
       "privacy": "Privacy",
       "contact": "Contact"

@@ -1,263 +1,280 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
-
-import { Menu, PanelLeftClose, PanelRightClose } from "lucide-react";
-import { useTranslations } from "next-intl";
-
-import { Icons } from "@/components/shared/icons";
-import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { 
+  Camera, 
+  History, 
+  CreditCard, 
+  Settings, 
+  BarChart3, 
+  Download,
+  Sparkles,
+  ChevronLeft,
+  ChevronRight,
+  Menu
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { siteConfig } from "@/config/site";
-import { useMediaQuery } from "@/hooks/use-media-query";
-import { Link, usePathname } from "@/lib/navigation";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { NavItem, SidebarNavItem } from "@/types";
 
-import { NavBar, NavbarLogo } from "./navbar";
-
-interface DashboardSidebarProps {
-  links: SidebarNavItem[];
+interface SidebarItem {
+  href: string;
+  label: string;
+  iconName: string;
+  badge?: string;
+  description?: string;
 }
 
-export function DashboardSidebar({ links }: DashboardSidebarProps) {
-  const path = usePathname();
-  const t = useTranslations("AppNavigation");
-  // NOTE: Use this if you want save in local storage -- Credits: Hosna Qasmei
-  //
-  // const [isSidebarExpanded, setIsSidebarExpanded] = useState(() => {
-  //   if (typeof window !== "undefined") {
-  //     const saved = window.localStorage.getItem("sidebarExpanded");
-  //     return saved !== null ? JSON.parse(saved) : true;
-  //   }
-  //   return true;
-  // });
+const getSidebarIcon = (iconName: string) => {
+  switch (iconName) {
+    case "Camera":
+      return <Camera className="w-5 h-5" />;
+    case "History":
+      return <History className="w-5 h-5" />;
+    case "Download":
+      return <Download className="w-5 h-5" />;
+    case "BarChart3":
+      return <BarChart3 className="w-5 h-5" />;
+    case "CreditCard":
+      return <CreditCard className="w-5 h-5" />;
+    case "Settings":
+      return <Settings className="w-5 h-5" />;
+    default:
+      return <Camera className="w-5 h-5" />;
+  }
+};
 
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     window.localStorage.setItem(
-  //       "sidebarExpanded",
-  //       JSON.stringify(isSidebarExpanded),
-  //     );
-  //   }
-  // }, [isSidebarExpanded]);
+const sidebarItems: SidebarItem[] = [
+  {
+    href: "/app/generate",
+    label: "生成宝丽来",
+    iconName: "Camera",
+    description: "创建新的宝丽来照片",
+  },
+  {
+    href: "/app/history",
+    label: "历史记录",
+    iconName: "History",
+    description: "查看生成历史",
+  },
+  {
+    href: "/app/downloads",
+    label: "下载管理",
+    iconName: "Download",
+    description: "管理下载的图片",
+  },
+  {
+    href: "/app/charts",
+    label: "数据统计",
+    iconName: "BarChart3",
+    description: "查看使用统计",
+  },
+];
 
-  const { isTablet } = useMediaQuery();
-  const [isSidebarExpanded, setIsSidebarExpanded] = useState(!isTablet);
+const accountItems: SidebarItem[] = [
+  {
+    href: "/app/order",
+    label: "积分充值",
+    iconName: "CreditCard",
+    description: "购买更多积分",
+  },
+  {
+    href: "/app/settings",
+    label: "账户设置",
+    iconName: "Settings",
+    description: "管理账户信息",
+  },
+];
 
-  const toggleSidebar = () => {
-    setIsSidebarExpanded(!isSidebarExpanded);
+interface DashboardSidebarProps {
+  userCredit?: number;
+  className?: string;
+  links?: any[]; // 添加links属性以兼容布局文件
+}
+
+export function DashboardSidebar({ userCredit = 0, className, links }: DashboardSidebarProps) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const pathname = usePathname();
+
+  const SidebarLink = ({ item }: { item: SidebarItem }) => {
+    const isActive = pathname === item.href;
+    
+    return (
+      <Link
+        href={item.href}
+        className={cn(
+          "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all hover:bg-polaroid-cream group",
+          isActive
+            ? "bg-polaroid-orange text-white shadow-sm"
+            : "text-gray-700 hover:text-polaroid-brown",
+          isCollapsed && "justify-center px-2"
+        )}
+      >
+        <div className={cn(
+          "flex-shrink-0",
+          isActive ? "text-white" : "text-gray-500 group-hover:text-polaroid-orange"
+        )}>
+          {getSidebarIcon(item.iconName)}
+        </div>
+        
+        {!isCollapsed && (
+          <>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <span>{item.label}</span>
+                {item.badge && (
+                  <Badge variant="secondary" className="ml-2">
+                    {item.badge}
+                  </Badge>
+                )}
+              </div>
+              {item.description && (
+                <p className={cn(
+                  "text-xs mt-0.5",
+                  isActive ? "text-white/80" : "text-gray-500"
+                )}>
+                  {item.description}
+                </p>
+              )}
+            </div>
+          </>
+        )}
+      </Link>
+    );
   };
 
-  useEffect(() => {
-    setIsSidebarExpanded(!isTablet);
-  }, [isTablet]);
-
   return (
-    <TooltipProvider delayDuration={0}>
-      <div className="sticky top-0 h-full">
-        <ScrollArea className="h-full overflow-y-auto border-r">
-          <aside
-            className={cn(
-              isSidebarExpanded ? "w-[220px] xl:w-[260px]" : "w-[68px]",
-              "hidden h-screen md:block",
-            )}
-          >
-            <div className="flex h-full max-h-screen flex-1 flex-col gap-2">
-              <div className="flex h-14 items-center p-4 lg:h-[60px]">
-                {isSidebarExpanded ? <NavbarLogo size="sm" /> : null}
-
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="ml-auto size-9 lg:size-8"
-                  onClick={toggleSidebar}
-                >
-                  {isSidebarExpanded ? (
-                    <PanelLeftClose
-                      size={18}
-                      className="stroke-muted-foreground"
-                    />
-                  ) : (
-                    <PanelRightClose
-                      size={18}
-                      className="stroke-muted-foreground"
-                    />
-                  )}
-                  <span className="sr-only">Toggle Sidebar</span>
-                </Button>
+    <div className={cn(
+      "flex flex-col h-full bg-white border-r border-gray-200 transition-all duration-300",
+      isCollapsed ? "w-16" : "w-64",
+      className
+    )}>
+      {/* 侧边栏头部 */}
+      <div className="p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between">
+          {!isCollapsed && (
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-polaroid-orange rounded-lg flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-white" />
               </div>
+              <span className="text-lg font-bold text-polaroid-brown">
+                宝丽来AI
+              </span>
+            </div>
+          )}
+          
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="h-8 w-8 p-0"
+          >
+            {isCollapsed ? (
+              <ChevronRight className="w-4 h-4" />
+            ) : (
+              <ChevronLeft className="w-4 h-4" />
+            )}
+          </Button>
+        </div>
+      </div>
 
-              <nav className="flex flex-1 flex-col gap-8 px-4 pt-4">
-                {links.map((section) => (
-                  <section
-                    key={section.title}
-                    className="flex flex-col gap-0.5"
-                  >
-                    {isSidebarExpanded ? (
-                      <p className="text-xs text-muted-foreground">
-                        {section.title}
-                      </p>
-                    ) : (
-                      <div className="h-4" />
-                    )}
-                    {section?.items?.map((item) => {
-                      const Icon = Icons[item.icon || "arrowRight"];
-                      return (
-                        item.href && (
-                          <Fragment key={`link-fragment-${item.title}`}>
-                            {isSidebarExpanded ? (
-                              <Link
-                                key={`link-${item.title}`}
-                                href={item.disabled ? "#" : item.href}
-                                className={cn(
-                                  "flex items-center gap-3 rounded-md p-2 text-sm font-medium hover:bg-muted",
-                                  path === item.href
-                                    ? "bg-muted"
-                                    : "text-muted-foreground hover:text-accent-foreground",
-                                  item.disabled &&
-                                    "cursor-not-allowed opacity-80 hover:bg-transparent hover:text-muted-foreground",
-                                )}
-                              >
-                                <Icon className="size-5" />
-                                {t(item.title)}
-                                {item.badge && (
-                                  <Badge className="ml-auto flex size-5 shrink-0 items-center justify-center rounded-full">
-                                    {item.badge}
-                                  </Badge>
-                                )}
-                              </Link>
-                            ) : (
-                              <Tooltip key={`tooltip-${item.title}`}>
-                                <TooltipTrigger asChild>
-                                  <Link
-                                    key={`link-tooltip-${item.title}`}
-                                    href={item.disabled ? "#" : item.href}
-                                    className={cn(
-                                      "flex items-center gap-3 rounded-md py-2 text-sm font-medium hover:bg-muted",
-                                      path === item.href
-                                        ? "bg-muted"
-                                        : "text-muted-foreground hover:text-accent-foreground",
-                                      item.disabled &&
-                                        "cursor-not-allowed opacity-80 hover:bg-transparent hover:text-muted-foreground",
-                                    )}
-                                  >
-                                    <span className="flex size-full items-center justify-center">
-                                      <Icon className="size-5" />
-                                    </span>
-                                  </Link>
-                                </TooltipTrigger>
-                                <TooltipContent side="right">
-                                  {t(item.title)}
-                                </TooltipContent>
-                              </Tooltip>
-                            )}
-                          </Fragment>
-                        )
-                      );
-                    })}
-                  </section>
-                ))}
-              </nav>
-
-              <div className="mt-auto xl:p-4">
-                {/* {isSidebarExpanded ? <UpgradeCard /> : null} */}
+      {/* 积分显示 */}
+      <div className="p-4">
+        <div className={cn(
+          "bg-gradient-to-r from-polaroid-cream to-polaroid-orange/10 rounded-lg p-3",
+          isCollapsed && "p-2"
+        )}>
+          {isCollapsed ? (
+            <div className="text-center">
+              <Sparkles className="w-5 h-5 text-polaroid-orange mx-auto" />
+              <div className="text-xs font-bold text-polaroid-brown mt-1">
+                {userCredit}
               </div>
             </div>
-          </aside>
-        </ScrollArea>
+          ) : (
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-1 mb-1">
+                <Sparkles className="w-4 h-4 text-polaroid-orange" />
+                <span className="text-sm font-medium text-polaroid-brown">
+                  当前积分
+                </span>
+              </div>
+              <div className="text-2xl font-bold text-polaroid-brown">
+                {userCredit}
+              </div>
+              <Button
+                size="sm"
+                className="w-full mt-2 bg-polaroid-orange hover:bg-polaroid-orange/90 text-white"
+                asChild
+              >
+                <Link href="/app/order">充值</Link>
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
-    </TooltipProvider>
+
+      {/* 导航菜单 */}
+      <div className="flex-1 px-4 space-y-6">
+        {/* 主要功能 */}
+        <div>
+          {!isCollapsed && (
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              主要功能
+            </h3>
+          )}
+          <div className="space-y-1">
+            {sidebarItems.map((item) => (
+              <SidebarLink key={item.href} item={item} />
+            ))}
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* 账户管理 */}
+        <div>
+          {!isCollapsed && (
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              账户管理
+            </h3>
+          )}
+          <div className="space-y-1">
+            {accountItems.map((item) => (
+              <SidebarLink key={item.href} item={item} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 底部信息 */}
+      {!isCollapsed && (
+        <div className="p-4 border-t border-gray-200">
+          <div className="text-xs text-gray-500 text-center">
+            <p>宝丽来AI生成器</p>
+            <p className="mt-1">v1.0.0</p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
-export function MobileSheetSidebar({ links }: DashboardSidebarProps) {
-  const path = usePathname();
-  const [open, setOpen] = useState(false);
-  const { isSm, isMobile } = useMediaQuery();
-  const t = useTranslations("AppNavigation");
+// MobileSheetSidebar组件 - 移动端侧边栏
+interface MobileSheetSidebarProps {
+  links?: any[];
+}
 
-  if (isSm || isMobile) {
-    return (
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            className="size-9 shrink-0 md:hidden"
-          >
-            <Menu className="size-5" />
-            <span className="sr-only">Toggle navigation menu</span>
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="flex flex-col p-0">
-          <ScrollArea className="h-full overflow-y-auto">
-            <div className="flex h-screen flex-col">
-              <nav className="flex flex-1 flex-col gap-y-8 p-6 text-lg font-medium">
-                <NavBar />
-
-                {links.map((section) => (
-                  <section
-                    key={section.title}
-                    className="flex flex-col gap-0.5"
-                  >
-                    <p className="text-xs text-muted-foreground">
-                      {section.title}
-                    </p>
-
-                    {section?.items?.map((item) => {
-                      const Icon = Icons[item.icon || "arrowRight"];
-                      return (
-                        item.href && (
-                          <Fragment key={`link-fragment-${item.title}`}>
-                            <Link
-                              key={`link-${item.title}`}
-                              onClick={() => {
-                                if (!item.disabled) setOpen(false);
-                              }}
-                              href={item.disabled ? "#" : item.href}
-                              className={cn(
-                                "flex items-center gap-3 rounded-md p-2 text-sm font-medium hover:bg-muted",
-                                path === item.href
-                                  ? "bg-muted"
-                                  : "text-muted-foreground hover:text-accent-foreground",
-                                item.disabled &&
-                                  "cursor-not-allowed opacity-80 hover:bg-transparent hover:text-muted-foreground",
-                              )}
-                            >
-                              <Icon className="size-5" />
-                              {t(item.title)}
-                              {item.badge && (
-                                <Badge className="ml-auto flex size-5 shrink-0 items-center justify-center rounded-full">
-                                  {item.badge}
-                                </Badge>
-                              )}
-                            </Link>
-                          </Fragment>
-                        )
-                      );
-                    })}
-                  </section>
-                ))}
-
-                <div className="mt-auto">{/* <UpgradeCard /> */}</div>
-              </nav>
-            </div>
-          </ScrollArea>
-        </SheetContent>
-      </Sheet>
-    );
-  }
-
+export function MobileSheetSidebar({ links }: MobileSheetSidebarProps) {
   return (
-    <div className="flex size-9 animate-pulse rounded-lg bg-muted md:hidden" />
+    <div className="md:hidden">
+      {/* 这里可以添加移动端侧边栏的实现 */}
+      <Button variant="ghost" size="sm">
+        <Menu className="w-5 h-5" />
+      </Button>
+    </div>
   );
 }

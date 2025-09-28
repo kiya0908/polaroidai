@@ -24,7 +24,7 @@ export default async function AdminSubscribersPage() {
   // (SELECT COUNT(*) FROM subscribers WHERE EXTRACT(YEAR FROM subscribed_at) = EXTRACT(YEAR FROM CURRENT_DATE) AND EXTRACT(MONTH FROM subscribed_at) = EXTRACT(MONTH FROM CURRENT_DATE)) AS this_month_count,
   // (SELECT COUNT(*) FROM subscribers WHERE subscribed_at IS NOT NULL) as total`,
   // );
-  const subs = await prisma.subscribers.findMany({
+  const subs = await prisma.polaroidai_subscribers.findMany({
     where: {
       subscribedAt: {
         lte: new Date(),

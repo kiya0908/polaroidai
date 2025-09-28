@@ -1,26 +1,21 @@
-import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
+"use client";
 
-import Playground from "@/components/playground";
-import { getChargeProduct } from "@/db/queries/charge-product";
+import { useState, useEffect } from "react";
+import PolaroidGenerator from "@/components/polaroid-generator";
 
-interface PageProps {
-  params: { locale: string };
-}
+export default function GeneratePage() {
+  const [userCredit, setUserCredit] = useState(100); // 模拟数据
 
-export async function generateMetadata({ params: { locale } }: PageProps) {
-  const t = await getTranslations({ locale, namespace: "Playground" });
-
-  return {
-    title: t("title"),
-    description: t("description"),
+  const handleCreditUpdate = (newCredit: number) => {
+    setUserCredit(newCredit);
   };
-}
 
-export default async function PlaygroundPage({
-  params: { locale },
-}: PageProps) {
-  unstable_setRequestLocale(locale);
-  const { data: chargeProduct } = await getChargeProduct(locale);
-
-  return <Playground locale={locale} chargeProduct={chargeProduct} />;
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <PolaroidGenerator 
+        userCredit={userCredit}
+        onCreditUpdate={handleCreditUpdate}
+      />
+    </div>
+  );
 }

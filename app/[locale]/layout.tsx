@@ -50,7 +50,7 @@ export async function generateMetadata({
 
   return {
     title: t("title"),
-    metadataBase: siteConfig.url,
+    metadataBase: new URL(siteConfig.url),
     alternates: {
       canonical: `/${locale === "en" ? "" : locale}`,
       languages: {

@@ -72,10 +72,59 @@
     }
   },
   "IndexPage": {
-    "intro": "介绍 Flux AI 图像生成器",
-    "description": "革新下一代高级文本到图像的开放模型，支持 flux.1 pro/dev和 flux.1 schnell模型。",
-    "title": "Flux AI 图像生成器",
-    "subtitle": "高级文本图像生成",
+    "intro": "🎉 介绍宝丽来AI照片生成器",
+    "description": "用AI技术将您的回忆转化为真实的复古宝丽来照片。通过文字描述创建怀旧即时照片，或上传图片进行宝丽来风格转换。",
+    "title": "宝丽来AI照片生成器",
+    "subtitle": "✨ 将回忆转化为真实的复古即时照片",
+    "generator": {
+      "textMode": {
+        "title": "文字生成宝丽来",
+        "description": "将任何文字描述转化为美丽的复古宝丽来照片",
+        "cost": "5积分/次",
+        "example": "海边日落，复古夏日氛围..."
+      },
+      "imageMode": {
+        "title": "图片转宝丽来",
+        "description": "上传您的照片，转换为令人惊叹的宝丽来风格",
+        "cost": "8积分/次",
+        "formats": "支持JPG、PNG格式，最大10MB"
+      }
+    },
+    "features": {
+      "speed": "10秒极速出片",
+      "frame": "经典白边框",
+      "vintage": "复古色调",
+      "transparent": "透明积分消费",
+      "title": "产品特点",
+      "action": {
+        "visit": "去生成"
+      },
+      "description": "宝丽来AI照片生成器将您的想法和图片转化为真实的复古宝丽来照片，具有经典白边框、复古色调和胶片颗粒质感。",
+      "item1": {
+        "title": "文字生成宝丽来",
+        "description": "将任何文字描述转化为美丽的复古宝丽来照片。只需描述您的场景，就能看到它以真实的复古美学呈现出来。"
+      },
+      "item2": {
+        "title": "图片转宝丽来",
+        "description": "上传您现有的照片，将其转换为令人惊叹的宝丽来风格图像，具有经典白边框、复古色彩和胶片颗粒效果。"
+      },
+      "item3": {
+        "title": "真实复古风格",
+        "description": "体验逼真的宝丽来美学，包括经典白边框、温暖复古色调、胶片颗粒质感和微妙的漏光效果，确保最大的真实性。"
+      },
+      "item4": {
+        "title": "闪电般快速生成",
+        "description": "在几秒钟内创建您的复古宝丽来照片。我们的AI驱动引擎快速提供高质量结果，非常适合即时怀旧和创意项目。"
+      },
+      "item5": {
+        "title": "高质量输出",
+        "description": "生成1080x1080分辨率的清晰、详细宝丽来照片。非常适合社交媒体分享、打印或添加到您的数字照片收藏中。"
+      },
+      "item6": {
+        "title": "易于使用",
+        "description": "为每个人设计的简单直观界面。无论您是为社交媒体创建内容还是保存回忆，我们的工具都让复古照片创作变得轻松。"
+      }
+    },
     "powered": {
       "title": "技术支持"
     },
@@ -86,44 +135,113 @@
     },
     "examples": {
       "label": "示例",
-      "title": "Flux AI 生成示例 - 高级文本图像转换",
-      "subtitle": "浏览 Flux AI 生成示例，从文本提示生成图像。体验下一代高级文本到图像的开放模型。"
-    },
-    "features": {
-      "title": "产品特点",
-      "action": {
-        "visit": "去生成"
-      },
-      "description": "Flux AI 图像生成器是一个强大的工具，可以根据文本提示生成图像。它使用先进的 AI 模型创建出色的图像，非常适合任何项目。",
-      "item1": {
-        "title": "FLUX.1 [pro]",
-        "description": "FLUX.1 的最佳版本，提供先进的性能图像生成，具有一流的提示跟随、视觉质量、图像细节和输出多样性。"
-      },
-      "item2": {
-        "title": "FLUX.1 [dev]",
-        "description": "FLUX.1 [dev] 具有类似的质量和提示遵循能力，同时比相同大小的标准模型更高效。"
-      },
-      "item3": {
-        "title": "FLUX.1 [schnell]",
-        "description": "专为本地开发和个人使用而量身定制的最快图像生成模型，价格成本更低，高效，文本提示生成图像"
-      },
-      "item4": {
-        "title": "极速生成",
-        "description": "Flux AI 在几秒钟内生成高质量图像，比 Stable Diffusion 3 和 Midjourney 快得多。凭借其极速生成能力，Flux AI 确保快速高效生成，为您节省宝贵的时间资源。"
-      },
-      "item5": {
-        "title": "可定制化",
-        "description": "先进的 Flux.1 模型比竞争对手生成更详细、更连贯的图像。凭借其可定制化的功能和用户友好的界面，Flux AI 图像生成器是从文本提示生成惊人图像的终极工具。"
-      },
-      "item6": {
-        "title": "易于使用",
-        "description": "比 ComfyUI 更易于使用，适合初学者和专业人士。Flux AI 图像生成器是从文本提示生成惊人图像的终极工具。Flux AI 让初学者和专业人士轻松创建出色视觉效果。"
-      }
+      "title": "宝丽来AI照片示例",
+      "subtitle": "从文字描述或上传图片创建真实的复古宝丽来照片。"
     },
     "schnell": {
-      "title": "Flux.1 [Schnell]",
-      "description": "Flux.1 [schnell] 是基础模型的精炼版本，运行速度比原版快10倍。它采用 Apache 2.0 许可，针对速度和效率进行了优化，满足那些需要快速生成图像而不影响质量的用户。这个模型非常适合本地开发和个人使用，在性能和可访问性之间达到了完美平衡。我们每月为用户提供5次免费机会，体验 Flux.1 [schnell] 模型的闪电般快速图像生成，让您亲身感受其令人难以置信的速度。",
+      "title": "免费宝丽来生成",
+      "description": "体验即时复古摄影的魔力，使用我们的免费宝丽来生成器。创建具有经典白边框、复古色彩分级和胶片颗粒质感的真实宝丽来照片。非常适合社交媒体、创意项目或为您的数字回忆增添怀旧魅力。我们每月提供5次免费生成机会，让您体验真实的宝丽来美学。",
       "action": "立即尝试"
+    },
+    "whatIs": {
+      "title": "什么是宝丽来AI照片生成器？",
+      "subtitle": "重新定义复古摄影，让AI技术为您重现经典即时照片的魅力",
+      "badge": "AI x 复古美学",
+      "description": {
+        "title": "将现代AI技术与经典宝丽来美学完美融合",
+        "content": "宝丽来AI照片生成器是一款专门用于创建真实复古宝丽来风格照片的AI工具。它不仅仅是一个滤镜，而是深度理解宝丽来相机的成像原理，包括独特的色彩科学、胶片颗粒、漏光效果和经典白边框，为您提供最接近真实宝丽来相机的数字化体验。"
+      },
+      "comparison": {
+        "title": "为什么选择AI而不是传统宝丽来？",
+        "traditional": "昂贵的相机设备 + 胶片成本 + 操作复杂性",
+        "ai": "一键生成 + 零成本试错 + 完美控制 + 即时分享"
+      },
+      "features": {
+        "authentic": {
+          "title": "真实复古质感",
+          "description": "精确还原宝丽来相机的色彩科学和胶片特性"
+        },
+        "ai": {
+          "title": "智能AI处理",
+          "description": "基于深度学习的图像生成，理解复古美学精髓"
+        },
+        "nostalgia": {
+          "title": "情感共鸣",
+          "description": "唤起美好回忆，创造具有温度的视觉作品"
+        },
+        "instant": {
+          "title": "即时创作",
+          "description": "10秒内获得专业级复古照片，随时随地创作"
+        }
+      }
+    },
+    "howItWorks": {
+      "title": "如何使用宝丽来AI？",
+      "subtitle": "简单4步，轻松创建专业级复古宝丽来照片",
+      "steps": {
+        "input": {
+          "title": "输入内容",
+          "description": "描述场景或上传照片",
+          "example": "海边日落，温馨氛围"
+        },
+        "process": {
+          "title": "AI智能处理",
+          "description": "分析并应用宝丽来风格",
+          "time": "10-15秒处理中"
+        },
+        "generate": {
+          "title": "生成宝丽来",
+          "description": "创建带白边框的复古照片",
+          "quality": "1080x1080高清输出"
+        },
+        "download": {
+          "title": "下载保存",
+          "description": "获得可打印的高质量图片",
+          "quality": "可打印品质"
+        }
+      },
+      "summary": {
+        "title": "就这么简单！",
+        "description": "无需专业摄影知识，人人都能创作出具有专业水准的复古宝丽来照片。从文字描述到精美作品，整个过程不超过30秒。"
+      },
+      "highlights": {
+        "fast": "10秒生成",
+        "authentic": "真实质感",
+        "easy": "简单易用"
+      }
+    },
+    "faq": {
+      "title": "常见问题解答",
+      "subtitle": "关于宝丽来AI照片生成器的一切疑问，我们都为您准备了答案",
+      "item1": {
+        "question": "宝丽来AI生成的照片有多真实？",
+        "answer": "我们的AI模型经过数千张真实宝丽来照片训练，能够精确还原宝丽来相机的色彩科学、胶片颗粒、边框比例和微妙的光学效果。生成的照片在视觉上与真实宝丽来照片几乎无法区分，满意度超过90%。"
+      },
+      "item2": {
+        "question": "积分系统是如何运作的？",
+        "answer": "我们采用透明的积分消费制：文字生成宝丽来消耗5积分，图片转换消耗8积分。新用户注册即获得50积分，每日还有1次免费生成机会。生成失败会全额退还积分，确保您的每一分投入都物有所值。"
+      },
+      "item3": {
+        "question": "生成一张宝丽来照片需要多长时间？",
+        "answer": "通常情况下，从提交请求到获得成品照片仅需10-15秒。我们的AI服务器经过优化，即使在高峰期也能保持稳定的处理速度。如果遇到排队情况，系统会显示预估等待时间。"
+      },
+      "item4": {
+        "question": "可以上传什么类型的图片？",
+        "answer": "支持JPG和PNG格式，最大文件大小10MB。为获得最佳效果，建议上传清晰、光线良好的照片。系统会自动优化图片尺寸和质量，无需您手动调整。"
+      },
+      "item5": {
+        "question": "生成的照片可以商用吗？",
+        "answer": "所有通过宝丽来AI生成的照片，您都拥有完整的使用权，包括商业用途。无需担心版权问题，可以安心用于社交媒体、印刷品、营销材料等任何场景。"
+      },
+      "item6": {
+        "question": "如果对生成结果不满意怎么办？",
+        "answer": "我们提供3次免费重新生成机会（每次仅消耗2积分）。如果仍不满意，可以调整描述文字或上传不同角度的照片。我们的客服团队也会协助您优化生成效果。"
+      },
+      "contact": {
+        "title": "还有其他问题？",
+        "description": "我们的团队随时为您提供帮助",
+        "response": "24小时内回复"
+      }
     },
     "action": {
       "pricing": "购买积分",
@@ -175,7 +293,7 @@
       },
       "item6": {
         "question": "如何获取在线支持？",
-        "answer": "您可以通过发送电子邮件至 support@fluxaipro.art 联系我们的支持团队。"
+        "answer": "您可以通过发送电子邮件至 support@polaroidai.pro 联系我们的支持团队。"
       }
     },
     "tip": {
@@ -203,13 +321,13 @@
   },
   "Playground": {
     "layout": {
-      "title": "免费 Flux.1 {model} 图像生成器：几秒钟内创造令人惊叹的图像",
-      "description": "探索免费的 Flux.1 模型图像生成器，这是您轻松创造令人惊叹视觉效果的首选工具。轻松生成高质量图像，无需任何费用即可释放您的创意。非常适合设计师、艺术家以及任何希望用独特图像增强项目的人。",
-      "keywords": "flux.1 图像生成器, flux.1 模型图像生成器, 免费图像生成器, AI 图像生成器, 图像生成工具, AI 创建图像, 在线生成图像, 图像创作软件, 图像设计工具, 图像生成平台"
+      "title": "免费宝丽来AI照片生成器：几秒钟内创造复古照片",
+      "description": "使用我们的免费宝丽来AI照片生成器转换您的回忆。从文字描述创建真实的复古宝丽来照片，或上传图片进行即时复古转换。非常适合社交媒体、创意项目和怀旧回忆。",
+      "keywords": "宝丽来ai照片生成器, 复古照片生成器, 怀旧照片创建器, 即时照片制作器, 宝丽来风格生成器, 复古摄影ai, 怀旧照片效果, 经典宝丽来边框"
     },
     "page": {
-      "title": "免费 Flux.1 {model} 图像生成器",
-      "subtitle": "令人惊叹的 AI 模型，免费体验高级文本到图像的开放模型。"
+      "title": "免费宝丽来AI照片生成器",
+      "subtitle": "使用AI从文字或图片创建真实的复古宝丽来照片。"
     },
     "settings": {
       "display": "显示{mode}",
@@ -243,11 +361,11 @@
       },
       "item6": {
         "question": "如何获得在线支持？",
-        "answer": "您可以通过 support@fluxaipro.art 联系我们。"
+        "answer": "您可以通过 support@polaroidai.pro 联系我们。"
       }
     },
-    "title": "Flux AI 图像生成器",
-    "description": "令人惊叹的AI模型，可以根据文本提示生成图像。",
+    "title": "宝丽来AI照片生成器",
+    "description": "使用AI技术创建真实的复古宝丽来照片。",
     "empty": {
       "title": "生成失败",
       "description": "错误信息: {error}",
@@ -255,19 +373,19 @@
     },
     "form": {
       "input": "输入",
-      "result": "结果",
-      "placeholder": "输入提示以生成图像...",
-      "model": "模型",
-      "lora": "Lora",
-      "loraTooltip": "选择 Lora",
-      "loraLabel": "Lora 名称",
-      "modelTooltip": "选择一个模型来生成图像。",
-      "submit": "生成",
-      "aspectRatio": "分辨率",
-      "aspectRatioTooltip": "生成图像的分辨率",
-      "inputImage": "图像",
-      "inputImageTooltip": "图像到图像模式的输入图像。您的输出纵横比将与此图像匹配",
-      "inputImagePlaceholder": "上传输入图像"
+      "result": "您的宝丽来",
+      "placeholder": "描述您想要的宝丽来照片场景...",
+      "model": "风格",
+      "lora": "效果",
+      "loraTooltip": "选择复古效果",
+      "loraLabel": "效果名称",
+      "modelTooltip": "为您的照片选择宝丽来风格。",
+      "submit": "创建宝丽来",
+      "aspectRatio": "格式",
+      "aspectRatioTooltip": "宝丽来格式（经典方形白边框）。",
+      "inputImage": "上传照片",
+      "inputImageTooltip": "上传您的照片转换为宝丽来风格",
+      "inputImagePlaceholder": "上传您的照片进行宝丽来转换"
     },
     "error": {
       "insufficientCredits": "积分告急，快来充值吧！",
@@ -296,20 +414,61 @@
     }
   },
   "History": {
-    "title": "生成记录",
-    "description": "查看您最近的图像生成记录。",
+    "title": "我的宝丽来收藏",
+    "description": "查看您的复古宝丽来照片收藏。",
     "empty": {
-      "title": "还没有历史记录",
-      "description": "当前空空如也，快去生成吧～"
+      "title": "还没有宝丽来照片",
+      "description": "创建您的第一张复古宝丽来照片，在这里查看。"
     },
     "action": {
-      "generate": "去生成",
-      "copy": "复制 Prompt",
-      "copySuccess": "Prompt 已复制到剪贴板。",
-      "download": "下载图像",
-      "downloadSuccess": "图像已下载。",
-      "downloadLoading": "正在下载...",
-      "upgrade": "通过 Schnell 的每月限量免费试用提升您的艺术创作。点击此处体验无水印的高级模型。"
+      "generate": "创建宝丽来",
+      "copy": "复制提示词",
+      "copySuccess": "提示词已复制到剪贴板。",
+      "download": "下载宝丽来",
+      "downloadSuccess": "宝丽来已下载。",
+      "downloadLoading": "正在下载..."
+    }
+  },
+  "PolaroidGenerator": {
+    "title": "创建您的复古宝丽来",
+    "subtitle": "将回忆转化为真实的即时照片",
+    "tabs": {
+      "text": "文字生成宝丽来",
+      "image": "图片转宝丽来"
+    },
+    "textMode": {
+      "title": "描述您的场景",
+      "placeholder": "海上日落，复古夏日氛围...",
+      "examples": [
+        "雨天里温馨的咖啡店",
+        "朋友们在海滩篝火旁欢笑",
+        "樱花下停着的复古汽车",
+        "在阳光窗边睡觉的猫咪"
+      ]
+    },
+    "imageMode": {
+      "title": "上传您的照片",
+      "subtitle": "将任何照片转换为复古宝丽来风格",
+      "dragText": "拖拽照片到这里",
+      "browseText": "或浏览文件",
+      "supportedFormats": "支持JPG、PNG格式，最大10MB"
+    },
+    "styleOptions": {
+      "title": "宝丽来风格",
+      "classic": "经典白边框",
+      "vintage": "复古褪色",
+      "warm": "暖色调",
+      "cool": "冷色复古"
+    },
+    "credits": {
+      "textCost": "每次生成消耗5积分",
+      "imageCost": "每次生成消耗8积分",
+      "balance": "您的余额：{credits}积分"
+    },
+    "generate": {
+      "button": "创建我的宝丽来",
+      "processing": "正在创建您的复古照片...",
+      "estimated": "预计时间：10-15秒"
     }
   },
   "Billings": {
@@ -368,23 +527,23 @@
     }
   },
   "LocaleLayout": {
-    "title": "Flux AI 在线图像生成器 - Flux AI",
-    "description": "利用 Flux.1 AI 的高级工具提升您的视觉内容：Flux Schnell 快速创作，Flux Dev 精细定制，以及 Flux Pro 无与伦比的专业品质。",
-    "keywords": "Flux AI, AI Flux, Flux 人工智能, AI 技术, 机器学习 Flux, Flux AI 工具, AI 应用, 人工智能解决方案, Flux 数据分析, AI 创新, 预测分析 Flux, Flux 机器学习, AI 开发, 下一代 AI"
+    "title": "宝丽来AI照片生成器 - 用AI创建复古照片",
+    "description": "使用AI将您的回忆转化为真实的复古宝丽来照片。从文字描述创建怀旧即时照片，或将您的图片转换为具有白边框和复古效果的经典宝丽来风格。",
+    "keywords": "宝丽来ai照片生成器, 复古照片生成器, 怀旧照片创建器, 即时照片制作器, 宝丽来风格生成器, 复古摄影ai, 怀旧照片效果, 经典宝丽来边框, ai照片复古, 复古图像生成器"
   },
   "LocaleSwitcher": {
     "label": "更改语言",
     "locale": "{locale, select, zh {🇨🇳 简体中文} tw {🇭🇰 繁體中文} en {🇺🇸 English} fr {🇫🇷 Français} ja {🇯🇵 日本語} ko {🇰🇷 한국어} es {🇪🇸 Español} de {🇩🇪 Deutsch} pt {🇧🇷 Português} ar {🇦🇪 العربية} other {未知}}"
   },
   "Manifest": {
-    "name": "Flux AI 图像生成器"
+    "name": "宝丽来AI照片生成器"
   },
   "Navigation": {
     "pricing": "定价",
-    "schnell": "Flux Schnell",
-    "explore": "发现",
-    "title": "Flux AI 图像生成器",
-    "prompt": "Flux AI 提示词生成器",
+    "schnell": "免费生成器",
+    "explore": "作品画廊",
+    "title": "宝丽来AI照片生成器",
+    "prompt": "宝丽来提示词生成器",
     "blog": "博客",
     "dashboard": "去使用",
     "tooltip": {
@@ -397,14 +556,14 @@
   },
   "AppNavigation": {
     "Index": "首页",
-    "Generate": "AI 生图",
-    "History": "历史记录",
+    "Generate": "创建宝丽来",
+    "History": "我的宝丽来",
     "GiftCode": "兑换",
-    "ChargeOrder": "充值订单"
+    "ChargeOrder": "购买积分"
   },
   "PageLayout": {
     "footer": {
-      "title": "Flux AI Image Generator",
+      "title": "宝丽来AI照片生成器",
       "term": "使用条款",
       "privacy": "隐私政策",
       "contact": "联系我们"

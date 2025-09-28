@@ -18,7 +18,7 @@ export default async function ConfirmPage({
 }) {
   unstable_setRequestLocale(params.locale);
 
-  const subscriber = await prisma.subscribers.findFirst({
+  const subscriber = await prisma.polaroidai_subscribers.findFirst({
     where: {
       token: params.token,
     },
@@ -28,7 +28,7 @@ export default async function ConfirmPage({
     redirect("/");
   }
 
-  await prisma.subscribers.update({
+  await prisma.polaroidai_subscribers.update({
     where: {
       id: subscriber.id,
     },

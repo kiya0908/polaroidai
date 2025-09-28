@@ -68,7 +68,7 @@ export default clerkMiddleware(async (auth, req) => {
     }
   }
 
-  if (geo && !isApi && env.VERCEL_ENV !== "development") {
+  if (geo && !isApi && env.VERCEL_ENV !== "development" && (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN)) {
     console.log("geo-->", geo);
     const country = geo.country;
     const city = geo.city;

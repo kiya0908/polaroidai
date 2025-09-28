@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     const { data } = await req.json();
     const parsed = newsletterFormSchema.parse(data);
 
-    const subscriber = await prisma.subscribers.findFirst({
+    const subscriber = await prisma.polaroidai_subscribers.findFirst({
       where: {
         email: parsed.email,
       },
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
         // }),
       });
 
-      await prisma.subscribers.create({
+      await prisma.polaroidai_subscribers.create({
         data: {
           email: parsed.email,
           token,

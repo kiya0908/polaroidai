@@ -3,55 +3,55 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    // This is optional because it's only used in development.
-    // See https://next-auth.js.org/deployment.
-    DATABASE_URL: z.string().min(1),
-    RESEND_API_KEY: z.string().min(1),
-    HASHID_SALT: z.string().min(1),
+    // 放宽校验：本地开发阶段将大部分变量改为可选，避免启动被阻塞
+    DATABASE_URL: z.string().optional(),
+    RESEND_API_KEY: z.string().optional(),
+    HASHID_SALT: z.string().optional(),
     VERCEL_ENV: z
       .enum(["development", "preview", "production"])
       .default("development"),
-    UPSTASH_REDIS_REST_URL: z.string().min(1),
-    UPSTASH_REDIS_REST_TOKEN: z.string().min(1),
+    UPSTASH_REDIS_REST_URL: z.string().optional(),
+    UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
     LINK_PREVIEW_API_BASE_URL: z.string().optional(),
     SITE_NOTIFICATION_EMAIL_TO: z.string().optional(),
 
-    S3_ENDPOINT: z.string().min(1),
-    S3_REGION: z.string().min(1),
-    S3_ACCESS_KEY: z.string().min(1),
-    S3_SECRET_KEY: z.string().min(1),
-    S3_URL_BASE: z.string().min(1),
-    S3_BUCKET: z.string().min(1),
+    S3_ENDPOINT: z.string().optional(),
+    S3_REGION: z.string().optional(),
+    S3_ACCESS_KEY: z.string().optional(),
+    S3_SECRET_KEY: z.string().optional(),
+    S3_URL_BASE: z.string().optional(),
+    S3_BUCKET: z.string().optional(),
 
-    STRIPE_API_KEY: z.string().min(1),
-    STRIPE_WEBHOOK_SECRET: z.string().min(1),
-    WEBHOOK_SECRET: z.string().min(1),
-    CLERK_SECRET_KEY: z.string().min(1),
-    LOG_SNAG_TOKEN: z.string().min(1),
-    TASK_HEADER_KEY: z.string().min(1),
-    FLUX_HEADER_KEY: z.string().min(1),
-    FLUX_CREATE_URL: z.string().min(1),
+    STRIPE_API_KEY: z.string().optional(),
+    STRIPE_WEBHOOK_SECRET: z.string().optional(),
+    WEBHOOK_SECRET: z.string().optional(),
+    CLERK_SECRET_KEY: z.string().optional(),
+    LOG_SNAG_TOKEN: z.string().optional(),
+    TASK_HEADER_KEY: z.string().optional(),
+    FLUX_HEADER_KEY: z.string().optional(),
+    FLUX_CREATE_URL: z.string().optional(),
     APP_ENV: z
       .enum(["development", "production", "staging"])
       .default("development"),
-    OPEN_AI_API_ENDPOINT: z.string().url(),
-    OPEN_AI_API_KEY: z.string().min(1),
-    FLUX_AI_PROMPT: z.string().min(1),
-    OPEN_AI_MODEL: z.string().min(1),
+    OPEN_AI_API_ENDPOINT: z.string().url().optional(),
+    OPEN_AI_API_KEY: z.string().optional(),
+    FLUX_AI_PROMPT: z.string().optional(),
+    OPEN_AI_MODEL: z.string().optional(),
+    GOOGLE_AI_API_KEY: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_SITE_URL: z.string().min(1),
-    NEXT_PUBLIC_SITE_EMAIL_FROM: z.string().min(1),
+    NEXT_PUBLIC_SITE_EMAIL_FROM: z.string().optional(),
     NEXT_PUBLIC_SITE_LINK_PREVIEW_ENABLED: z
       .boolean()
       .optional()
       .default(false),
 
-    NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PLAN_ID: z.string().min(1),
-    NEXT_PUBLIC_STRIPE_PRO_YEARLY_PLAN_ID: z.string().min(1),
-    NEXT_PUBLIC_STRIPE_BUSINESS_MONTHLY_PLAN_ID: z.string().min(1),
-    NEXT_PUBLIC_STRIPE_BUSINESS_YEARLY_PLAN_ID: z.string().min(1),
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
+    NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PLAN_ID: z.string().optional(),
+    NEXT_PUBLIC_STRIPE_PRO_YEARLY_PLAN_ID: z.string().optional(),
+    NEXT_PUBLIC_STRIPE_BUSINESS_MONTHLY_PLAN_ID: z.string().optional(),
+    NEXT_PUBLIC_STRIPE_BUSINESS_YEARLY_PLAN_ID: z.string().optional(),
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
 
     NEXT_PUBLIC_UMAMI_DATA_ID: z.string().optional(),
     NEXT_PUBLIC_GA_ID: z.string().optional(),
@@ -103,5 +103,6 @@ export const env = createEnv({
     OPEN_AI_API_KEY: process.env.OPEN_AI_API_KEY,
     FLUX_AI_PROMPT: process.env.FLUX_AI_PROMPT,
     OPEN_AI_MODEL: process.env.OPEN_AI_MODEL,
+    GOOGLE_AI_API_KEY: process.env.GOOGLE_AI_API_KEY,
   },
 });

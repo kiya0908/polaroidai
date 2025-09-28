@@ -8,7 +8,7 @@ import { Container } from "@/components/layout/container";
 import { prisma } from "@/db/prisma";
 
 async function getNewsletter(id: string) {
-  const newsletter = await prisma.newsletters.findFirst({
+  const newsletter = await prisma.polaroidai_newsletters.findFirst({
     where: {
       id: parseInt(id),
     },

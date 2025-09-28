@@ -1,89 +1,97 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSelectedLayoutSegment } from "next/navigation";
-
-import { Menu, X } from "lucide-react";
-import { useTranslations } from "next-intl";
-
-import { Icons } from "@/components/shared/icons";
-import { dashboardConfig } from "@/config/dashboard";
-import { docsConfig } from "@/config/docs";
-import { marketingConfig } from "@/config/marketing";
-import { siteConfig } from "@/config/site";
-import { Link } from "@/lib/navigation";
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Camera, History, CreditCard, Settings, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-import { UserInfo } from "../user-info";
-import { ModeToggle } from "./mode-toggle";
+interface MobileNavItem {
+  href: string;
+  label: string;
+  iconName: string;
+}
 
-export function NavMobile() {
-  const t = useTranslations("Navigation");
-  const [open, setOpen] = useState(false);
-  const selectedLayout = useSelectedLayoutSegment();
-  const dashBoard = selectedLayout === "app";
-  const documentation = selectedLayout === "docs";
-  const links = documentation
-    ? docsConfig.mainNav
-    : dashBoard
-      ? dashboardConfig.mainNav
-      : marketingConfig.mainNav;
+const getMobileIcon = (iconName: string) => {
+  switch (iconName) {
+    case "Home":
+      return <Home className="w-5 h-5" />;
+    case "Camera":
+      return <Camera className="w-5 h-5" />;
+    case "History":
+      return <History className="w-5 h-5" />;
+    case "CreditCard":
+      return <CreditCard className="w-5 h-5" />;
+    case "Settings":
+      return <Settings className="w-5 h-5" />;
+    default:
+      return <Home className="w-5 h-5" />;
+  }
+};
 
-  // prevent body scroll when modal is open
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [open]);
+const mobileNavItems: MobileNavItem[] = [
+  {
+    href: "/app",
+    label: "首页",
+    iconName: "Home",
+  },
+  {
+    href: "/app/generate",
+    label: "生成",
+    iconName: "Camera",
+  },
+  {
+    href: "/app/history",
+    label: "历史",
+    iconName: "History",
+  },
+  {
+    href: "/app/order",
+    label: "充值",
+    iconName: "CreditCard",
+  },
+  {
+    href: "/app/settings",
+    label: "设置",
+    iconName: "Settings",
+  },
+];
+
+export function MobileNav() {
+  const pathname = usePathname();
 
   return (
-    <>
-      <button
-        onClick={() => setOpen(!open)}
-        className={cn(
-          "fixed right-2 top-2.5 z-50 rounded-full p-2 transition-colors duration-200 hover:bg-muted focus:outline-none active:bg-muted md:hidden",
-          open && "hover:bg-muted active:bg-muted",
-        )}
-      >
-        {open ? (
-          <X className="size-5 text-muted-foreground" />
-        ) : (
-          <Menu className="size-5 text-muted-foreground" />
-        )}
-      </button>
-
-      <nav
-        className={cn(
-          "fixed inset-0 z-20 hidden w-full overflow-auto bg-background px-5 py-16 lg:hidden",
-          open && "block",
-        )}
-      >
-        <ul className="grid divide-y divide-muted">
-          {links.map(({ title, href }) => (
-            <li key={href} className="py-3">
-              <Link
-                href={href}
-                onClick={() => setOpen(false)}
-                className="flex w-full font-medium capitalize"
-              >
-                {t(title)}
-              </Link>
-            </li>
-          ))}
-
-          <UserInfo />
-        </ul>
-
-        <div className="mt-5 flex items-center justify-end space-x-4">
-          <Link href={siteConfig.links.github} target="_blank" rel="noreferrer">
-            <Icons.gitHub className="size-6" />
-            <span className="sr-only">GitHub</span>
-          </Link>
-          <ModeToggle />
-        </div>
-      </nav>
-    </>
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 md:hidden">
+      <div className="grid grid-cols-5 h-16">
+        {mobileNavItems.map((item) => {
+          const isActive = pathname === item.href || 
+            (item.href !== "/app" && pathname.startsWith(item.href));
+          
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "flex flex-col items-center justify-center gap-1 text-xs font-medium transition-colors",
+                isActive
+                  ? "text-polaroid-orange bg-polaroid-orange/5"
+                  : "text-gray-600 hover:text-polaroid-orange"
+              )}
+            >
+              <div className={cn(
+                "transition-colors",
+                isActive ? "text-polaroid-orange" : "text-gray-400"
+              )}>
+                {getMobileIcon(item.iconName)}
+              </div>
+              <span className="text-xs">{item.label}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
   );
 }
+
+// 导出别名以兼容不同的导入方式
+export { MobileNav as NavMobile };

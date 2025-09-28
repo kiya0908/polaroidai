@@ -17,7 +17,7 @@ export async function createAction(input: CreateSchema) {
   try {
     const data = input;
 
-    const subs = await prisma.subscribers.findMany({
+    const subs = await prisma.polaroidai_subscribers.findMany({
       where: {
         subscribedAt: {
           lte: new Date(),
@@ -43,7 +43,7 @@ export async function createAction(input: CreateSchema) {
       }),
     });
 
-    await prisma.newsletters.create({
+    await prisma.polaroidai_newsletters.create({
       data: {
         ...data,
       },

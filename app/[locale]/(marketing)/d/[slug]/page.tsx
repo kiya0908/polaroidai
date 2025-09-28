@@ -1,40 +1,35 @@
-import { redirect } from "next/navigation";
 
 import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { getFluxDataByPage, getFluxById } from "@/actions/flux-action";
+import { getPolaroidById, incrementViewCount } from "@/actions/polaroid-action";
 import { Link } from "@/lib/navigation";
-import { cn, createRatio } from "@/lib/utils";
-import { LoraConfig, ModelName, Ratio } from "@/config/constants";
+import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { formatDate } from "@/lib/utils"
 import { CopyButton } from "@/components/shared/copy-button";
-import { FluxTaskStatus } from "@/db/type";
 import { DownloadAction } from "@/components/history/download-action";
 import { env } from "@/env.mjs";
 import { prisma } from "@/db/prisma";
 import { auth } from "@clerk/nextjs/server";
-import { FluxHashids } from "@/db/dto/flux.dto";
+import { PolaroidHashids } from "@/db/dto/polaroid.dto";
 
 interface RootPageProps {
   params: { locale: string, slug: string };
 }
 
 export async function generateStaticParams() {
-  const fluxs = await prisma.fluxData.findMany({
+  const polaroids = await prisma.polaroidai_PolaroidGeneration.findMany({
     where: {
       isPrivate: false,
-      taskStatus: {
-        in: [FluxTaskStatus.Succeeded],
-      },
+      taskStatus: 'completed',
     },
     select: {
       id: true
     }
   });
-  return fluxs.map((flux) => ({
-    slug: FluxHashids.encode(flux.id)
+  return polaroids.map((polaroid) => ({
+    slug: PolaroidHashids.encode(polaroid.id)
   }))
 }
 
@@ -42,24 +37,24 @@ export async function generateMetadata({
   params: { locale, slug },
 }: Omit<RootPageProps, "children">) {
   const t = await getTranslations({ locale, namespace: "ExplorePage" });
-  const flux = await getFluxById(slug);
-  if (!flux) {
+  const polaroid = await getPolaroidById(slug);
+  if (!polaroid) {
     return notFound();
   }
   return {
     title: t("layout.title"),
-    description: flux.inputPrompt,
+    description: polaroid.inputContent || "Polaroid AI Generated Image",
     openGraph: {
-      title: "Flux AI Image Generator",
-      description: flux.inputPrompt,
+      title: "Polaroid AI Image Generator",
+      description: polaroid.inputContent || "Vintage Polaroid style image",
       images: [
         {
-          url: flux.imageUrl!,
+          url: polaroid.outputImageUrl!,
         },
       ],
       type: 'article',
     },
-    image: flux.imageUrl,
+    image: polaroid.outputImageUrl,
   };
 }
 const breakpointColumnsObj = {
@@ -68,100 +63,92 @@ const breakpointColumnsObj = {
   768: 2,
   640: 1,
 };
-export default async function FluxPage({
+export default async function PolaroidPage({
   params,
 }: RootPageProps) {
   unstable_setRequestLocale(params.locale);
   const t = await getTranslations({ namespace: "ExplorePage" });
-  const flux = await getFluxById(params.slug);
-  if (!flux) {
+  const polaroid = await getPolaroidById(params.slug);
+  if (!polaroid) {
     return notFound();
   }
   const { userId } = auth();
 
-  if (env.VERCEL_ENV === 'production') {
-    const [fluxId] = FluxHashids.decode(flux.id)
-    await prisma.fluxData.update({
-      where: {
-        id: fluxId as number
-      },
-      data: {
-        viewsNum: {
-          increment: 1
-        }
-      }
-    })
-    if (userId) {
-      await prisma.fluxViews.create({
-        data: {
-          fluxId: fluxId as number,
-          userId: userId
-        }
-      })
-    }
+  // 增加查看次数
+  if (env.VERCEL_ENV === 'production' && userId) {
+    await incrementViewCount(params.slug, userId);
   }
 
   return (
     <section className="container mx-auto py-20">
       <div className="flex flex-col md:flex-row min-h-screen">
         <div className="w-full md:w-1/2 checkerboard h-full flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-          <img
-            src={flux.imageUrl!}
-            alt={flux.inputPrompt!}
-            title={flux.inputPrompt!}
-            className={`h-full rounded-xl object-cover ${createRatio(flux.aspectRatio as Ratio)} pointer-events-none`}
-          />
+          <div className="relative">
+            <img
+              src={polaroid.outputImageUrl!}
+              alt={polaroid.inputContent || "Polaroid AI Generated Image"}
+              title={polaroid.inputContent || "Polaroid AI Generated Image"}
+              className="h-full max-h-96 rounded-xl object-cover shadow-lg border-8 border-white"
+              style={{ aspectRatio: '1/1.2' }} // 宝丽来经典比例
+            />
+            <div className="absolute -bottom-2 -right-2 bg-white text-black text-xs px-2 py-1 rounded shadow">
+              Polaroid AI
+            </div>
+          </div>
         </div>
         <div className="w-full md:w-1/2 p-4 bg-background text-foreground">
           <ScrollArea className="h-full">
             <Card className="border-none shadow-none">
               <CardContent className="p-6 space-y-4">
+                {polaroid.inputContent && (
+                  <div>
+                    <h2 className="text-lg font-semibold mb-2">输入描述</h2>
+                    <p className="text-sm text-muted-foreground">
+                      {polaroid.inputContent}
+                      <CopyButton
+                        value={polaroid.inputContent}
+                        className={cn(
+                          "relative ml-2",
+                          "duration-250 transition-all",
+                        )}
+                      />
+                    </p>
+                  </div>
+                )}
                 <div>
-                  <h2 className="text-lg font-semibold mb-2">{t("flux.prompt")}</h2>
+                  <h2 className="text-lg font-semibold mb-2">生成类型</h2>
                   <p className="text-sm text-muted-foreground">
-                    {flux.inputPrompt}
-                    <CopyButton
-                      value={flux.inputPrompt!}
-                      className={cn(
-                        "relative ml-2",
-                        "duration-250 transition-all",
-                      )}
-                    />
+                    {polaroid.inputType === 'text' ? '文字生成' : '图片转换'}
                   </p>
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold mb-2">{t("flux.executePrompt")}</h2>
+                  <h2 className="text-lg font-semibold mb-2">宝丽来风格</h2>
+                  <p className="text-sm text-muted-foreground">{polaroid.styleType}</p>
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold mb-2">处理时间</h2>
                   <p className="text-sm text-muted-foreground">
-                    {flux.executePrompt}
-                    <CopyButton
-                      value={flux.executePrompt!}
-                      className={cn(
-                        "relative ml-2",
-                        "duration-250 transition-all",
-                      )}
-                    />
+                    {polaroid.processingTime ? `${(polaroid.processingTime / 1000).toFixed(1)}秒` : '未知'}
                   </p>
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold mb-2">{t("flux.model")}</h2>
-                  <p className="text-sm text-muted-foreground">{ModelName[flux.model]}</p>
-                </div>
-                {flux.loraName && <div>
-                  <h2 className="text-lg font-semibold mb-2">{t("flux.lora")}</h2>
-                  <p className="text-sm text-muted-foreground">{LoraConfig[flux.loraName]?.styleName}</p>
-                </div>}
-                <div>
-                  <h2 className="text-lg font-semibold mb-2">{t("flux.resolution")}</h2>
-                  <p className="text-sm text-muted-foreground">{flux.aspectRatio}</p>
+                  <h2 className="text-lg font-semibold mb-2">积分消耗</h2>
+                  <p className="text-sm text-muted-foreground">{polaroid.creditCost} 积分</p>
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold mb-2">{t("flux.createdAt")}</h2>
-                  <p className="text-sm text-muted-foreground">{formatDate(flux.createdAt!)}</p>
+                  <h2 className="text-lg font-semibold mb-2">创建时间</h2>
+                  <p className="text-sm text-muted-foreground">{formatDate(polaroid.createdAt!)}</p>
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold mb-2">统计信息</h2>
+                  <p className="text-sm text-muted-foreground">
+                    查看 {polaroid.viewsNum} 次 · 下载 {polaroid.downloadNum} 次
+                  </p>
                 </div>
                 <div className="flex flex-row justify-between space-x-2 pt-0">
                   <DownloadAction
                     showText
-                    id={flux.id}
+                    id={polaroid.id}
                   />
                 </div>
               </CardContent>
