@@ -6,8 +6,33 @@ import { z } from "zod";
 
 import { FluxHashids } from "@/db/dto/flux.dto";
 import { prisma } from "@/db/prisma";
+import { env } from "@/env.mjs";
 import { getErrorMessage } from "@/lib/handle-error";
 import { redis } from "@/lib/redis";
+
+// 获取nano-banana结果的函数
+async function getNanoBananaResult(taskId: string) {
+  try {
+    const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("Authorization", `Bearer ${env.NANO_BANANA_API_KEY}`);
+
+    const response = await fetch(`${env.NANO_BANANA_API_URL}/v1/draw/result`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ id: taskId }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching nano-banana result:", error);
+    return null;
+  }
+}
 
 const ratelimit = new Ratelimit({
   redis,
@@ -57,13 +82,62 @@ export async function POST(req: NextRequest) {
         status: 404,
       });
     }
+
+    // 如果任务还在处理中，查询nano-banana的结果
+    if (fluxData.taskStatus === "processing" && fluxData.replicateId) {
+      const nanoBananaResult = await getNanoBananaResult(fluxData.replicateId);
+
+      if (nanoBananaResult && nanoBananaResult.code === 0) {
+        const resultData = nanoBananaResult.data;
+
+        // 根据官方文档的状态映射
+        let taskStatus = "processing";
+        if (resultData.status === "succeeded") {
+          taskStatus = "succeeded";
+        } else if (resultData.status === "failed") {
+          taskStatus = "failed";
+        }
+
+        // 更新数据库记录
+        if (taskStatus !== "processing") {
+          await prisma.fluxData.update({
+            where: { id: fluxData.id },
+            data: {
+              taskStatus,
+              imageUrl: taskStatus === "succeeded" && resultData.results?.[0]?.url ? resultData.results[0].url : null,
+              errorMsg: taskStatus === "failed" ? resultData.failure_reason || resultData.error : null,
+              executeEndTime: new Date(),
+            },
+          });
+
+          // 重新获取更新后的数据
+          const updatedFluxData = await prisma.fluxData.findUnique({
+            where: { id: fluxData.id },
+          });
+
+          if (updatedFluxData) {
+            const { executeEndTime, executeStartTime, loraUrl, ...rest } = updatedFluxData;
+            return NextResponse.json({
+              data: {
+                ...rest,
+                executeTime:
+                  executeEndTime && executeStartTime
+                    ? `${executeEndTime.getTime() - executeStartTime.getTime()}`
+                    : 0,
+                id: FluxHashids.encode(updatedFluxData.id),
+              },
+            });
+          }
+        }
+      }
+    }
     const { executeEndTime, executeStartTime, loraUrl, ...rest } = fluxData;
     return NextResponse.json({
       data: {
         ...rest,
         executeTime:
           executeEndTime && executeStartTime
-            ? `${executeEndTime - executeStartTime}`
+            ? `${executeEndTime.getTime() - executeStartTime.getTime()}`
             : 0,
         id: FluxHashids.encode(fluxData.id),
       },

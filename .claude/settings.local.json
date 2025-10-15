@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/LENOVO/AppData/Local/npm-cache/_logs/**)",
+      "Bash(pnpm --version)",
+      "Bash(pnpm add uuid)",
+      "Read(//c/Users/LENOVO/Desktop/polaroidai/doc/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

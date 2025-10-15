@@ -41,7 +41,7 @@ export default function HowItWorksSection() {
   const t = useTranslations("IndexPage");
 
   return (
-    <section className="py-20">
+    <section id="how-it-works" className="py-20">
       <MaxWidthWrapper>
         <HeaderSection
           title={t("howItWorks.title")}

@@ -38,6 +38,8 @@ export const env = createEnv({
     FLUX_AI_PROMPT: z.string().optional(),
     OPEN_AI_MODEL: z.string().optional(),
     GOOGLE_AI_API_KEY: z.string().optional(),
+    NANO_BANANA_API_KEY: z.string().optional(),
+    NANO_BANANA_API_URL: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_SITE_URL: z.string().min(1),
@@ -104,5 +106,7 @@ export const env = createEnv({
     FLUX_AI_PROMPT: process.env.FLUX_AI_PROMPT,
     OPEN_AI_MODEL: process.env.OPEN_AI_MODEL,
     GOOGLE_AI_API_KEY: process.env.GOOGLE_AI_API_KEY,
+    NANO_BANANA_API_KEY: process.env.NANO_BANANA_API_KEY,
+    NANO_BANANA_API_URL: process.env.NANO_BANANA_API_URL,
   },
 });

@@ -1,4 +1,97 @@
 {
+  "MVP": {
+    "title": "宝丽来AI生成器",
+    "subtitle": "输入文字描述，10秒生成复古宝丽来风格照片",
+    "testBanner": {
+      "title": "🎉 MVP测试版",
+      "description": "体验期间每人免费获得100积分 · 正式版即将推出",
+      "button": "开始体验"
+    },
+    "generator": {
+      "title": "描述你想要的照片",
+      "placeholder": "例如：一只可爱的橘猫坐在窗台上，温暖的午后阳光...",
+      "freeBadge": "免费生成 · 无需注册",
+      "textGenerationCost": "5积分/次",
+      "generate": "生成宝丽来照片",
+      "generating": "AI生成中..."
+    },
+    "result": {
+      "title": "生成结果",
+      "processing": "生成中，预计10-15秒...",
+      "altText": "生成的宝丽来照片",
+      "download": "下载高清原图",
+      "placeholder": "输入描述并点击生成按钮"
+    },
+    "footer": {
+      "description": "使用AI技术生成经典宝丽来风格照片 · 支持中英文描述 · 10秒出片"
+    },
+    "tabs": {
+      "textGeneration": "文字生成",
+      "imageComposition": "多图合成"
+    },
+    "imageMode": {
+      "uploadPrompt": "点击上传图片 (最多5张)",
+      "supportedFormats": "支持 JPG, PNG 格式",
+      "compositionPlaceholder": "描述你想要的合成效果...",
+      "startComposition": "开始合成",
+      "previewAlt": "预览 {index}"
+    },
+    "credits": {
+      "imageCompositionCost": "8积分/次",
+      "testCredits": "测试积分",
+      "mvpTestCredits": "MVP测试积分",
+      "textGenerationCost": "文字生成: 5积分",
+      "imageConversionCost": "图片转换: 8积分",
+      "rechargeNotice": "积分用完后正式版将支持充值"
+    },
+    "errors": {
+      "emptyPrompt": "请输入文字描述",
+      "generateFailed": "生成失败，请重试",
+      "networkError": "网络错误，请检查连接",
+      "noImagesUploaded": "请至少上传一张图片",
+      "emptyCompositionPrompt": "请输入描述文字"
+    },
+    "lowCreditsDialog": {
+      "title": "积分即将用完",
+      "description": "您的测试积分剩余不多了。想要获得更多积分？",
+      "currentBalance": "当前余额：{credits} 积分",
+      "contactPrompt": "需要更多积分？请通过邮件联系我们",
+      "contactEmail": "support@polaroidai.pro",
+      "continueButton": "继续使用",
+      "contactButton": "联系我们"
+    },
+    "generationToast": {
+      "title": "玩得开心吗？",
+      "description": "您已生成 {count} 张照片！继续创作更多精彩作品吧！",
+      "reminderTitle": "别忘了保存您的作品",
+      "reminderDescription": "您的创作历史保存在本地浏览器中"
+    }
+  },
+  "Navigation": {
+    "appName": "PolaroidAI",
+    "signIn": "登录",
+    "signUp": "注册",
+    "generate": "生成宝丽来",
+    "history": "历史记录",
+    "credits": "积分充值",
+    "language": "语言",
+    "pricing": "定价",
+    "schnell": "免费生成器",
+    "explore": "作品画廊",
+    "title": "宝丽来AI照片生成器",
+    "prompt": "宝丽来提示词生成器",
+    "blog": "博客",
+    "dashboard": "去使用",
+    "home": "首页",
+    "features": "功能介绍",
+    "howItWorks": "使用教程",
+    "faq": "常见问题",
+    "navigation": "导航",
+    "appFeatures": "应用功能",
+    "tooltip": {
+      "login": "登录"
+    }
+  },
   "Error": {
     "description": "<p>很抱歉，我们遇到了一个错误。</p><p>您可以尝试<retry>重新加载</retry>您正在访问的页面。</p>",
     "title": "出错了！"
@@ -135,8 +228,11 @@
     },
     "examples": {
       "label": "示例",
-      "title": "宝丽来AI照片示例",
-      "subtitle": "从文字描述或上传图片创建真实的复古宝丽来照片。"
+      "title": "社区反馈",
+      "subtitle": "看看用户在社交媒体上对Polaroid AI体验的评价。",
+      "tweetError": "无法加载推文 {tweetId}",
+      "tweetErrorDescription": "推文可能已被删除或设为私有",
+      "communityFeedback": "来自社交媒体的实时社区反馈"
     },
     "schnell": {
       "title": "免费宝丽来生成",
@@ -218,8 +314,8 @@
         "answer": "我们的AI模型经过数千张真实宝丽来照片训练，能够精确还原宝丽来相机的色彩科学、胶片颗粒、边框比例和微妙的光学效果。生成的照片在视觉上与真实宝丽来照片几乎无法区分，满意度超过90%。"
       },
       "item2": {
-        "question": "积分系统是如何运作的？",
-        "answer": "我们采用透明的积分消费制：文字生成宝丽来消耗5积分，图片转换消耗8积分。新用户注册即获得50积分，每日还有1次免费生成机会。生成失败会全额退还积分，确保您的每一分投入都物有所值。"
+        "question": "积分系统是如何运作的？【MVP测试版】",
+        "answer": "当前为MVP测试版本，每位用户自动获得100免费测试积分。文字生成宝丽来消耗5积分，图片转换消耗8积分。测试积分用完后，正式版将支持充值购买。这是我们用来验证产品功能和收集用户反馈的测试阶段。"
       },
       "item3": {
         "question": "生成一张宝丽来照片需要多长时间？",
@@ -234,8 +330,8 @@
         "answer": "所有通过宝丽来AI生成的照片，您都拥有完整的使用权，包括商业用途。无需担心版权问题，可以安心用于社交媒体、印刷品、营销材料等任何场景。"
       },
       "item6": {
-        "question": "如果对生成结果不满意怎么办？",
-        "answer": "我们提供3次免费重新生成机会（每次仅消耗2积分）。如果仍不满意，可以调整描述文字或上传不同角度的照片。我们的客服团队也会协助您优化生成效果。"
+        "question": "MVP测试版什么时候结束？",
+        "answer": "MVP测试版预计持续1-2个月，收集用户反馈并优化产品功能。正式版上线后，将提供多种充值套餐供选择。测试期间的生成记录将会保留，感谢您的参与和支持！"
       },
       "contact": {
         "title": "还有其他问题？",
@@ -537,18 +633,6 @@
   },
   "Manifest": {
     "name": "宝丽来AI照片生成器"
-  },
-  "Navigation": {
-    "pricing": "定价",
-    "schnell": "免费生成器",
-    "explore": "作品画廊",
-    "title": "宝丽来AI照片生成器",
-    "prompt": "宝丽来提示词生成器",
-    "blog": "博客",
-    "dashboard": "去使用",
-    "tooltip": {
-      "login": "登录"
-    }
   },
   "NotFoundPage": {
     "description": "请检查浏览器地址栏或使用导航前往已知页面。",

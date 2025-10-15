@@ -4,6 +4,9 @@ import { PricingCards } from "@/components/pricing-cards";
 import { PricingFaq } from "@/components/pricing-faq";
 import { getChargeProduct } from "@/db/queries/charge-product";
 
+// 使用动态渲染避免构建时数据库连接问题
+export const dynamic = 'force-dynamic';
+
 type Props = {
   params: { locale: string };
 };

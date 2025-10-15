@@ -48,7 +48,7 @@ export async function SiteFooter({ className }: React.HTMLAttributes<HTMLElement
       </div>
       <div className="mt-4 flex max-w-7xl flex-col items-center justify-between gap-4 text-sm md:flex-row">
         <div className="flex items-center gap-2">
-          <Icons.logo className="h-6 w-6" />
+          <img src="/favicon-32x32.png" alt="PolaroidAI Logo" className="h-6 w-6" />
           <span className="font-medium">PolaroidAI.Art Inc.</span>
         </div>
         <div className="flex flex-col items-center gap-4 md:flex-row">

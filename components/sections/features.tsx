@@ -44,7 +44,7 @@ export default function Features() {
   const t = useTranslations("IndexPage");
 
   return (
-    <section className="py-20">
+    <section id="features" className="py-20">
       <div className="pb-6 pt-4">
         <MaxWidthWrapper>
           <HeaderSection

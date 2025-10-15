@@ -117,37 +117,52 @@ export async function POST(req: NextRequest, { params }: Params) {
     }
 
     headers.append("Content-Type", "application/json");
-    headers.append("API-TOKEN", env.FLUX_HEADER_KEY);
+    headers.append("Authorization", `Bearer ${env.NANO_BANANA_API_KEY}`);
 
-    const res = await fetch(`${env.FLUX_CREATE_URL}/flux/create`, {
+    // 根据官方文档构建请求参数
+    const requestBody = {
+      model: "nano-banana-fast", // 官方文档支持的模型
+      prompt: inputPrompt,
+      webHook: "-1", // 使用轮询模式获取结果
+      shutProgress: false
+    };
+
+    // 如果有参考图，添加到请求中
+    if (inputImageUrl) {
+      requestBody.urls = [inputImageUrl];
+    }
+
+    const res = await fetch(`${env.NANO_BANANA_API_URL}/v1/draw/nano-banana`, {
       method: "POST",
       headers,
-      body: JSON.stringify({
-        model: modelName,
-        input_image_url: inputImageUrl,
-        input_prompt: inputPrompt,
-        aspect_ratio: aspectRatio,
-        is_private: isPrivate,
-        user_id: userId,
-        lora_name: loraName,
-        locale,
-      }),
+      body: JSON.stringify(requestBody),
     }).then((res) => res.json());
-    if (!res?.replicate_id && res.error) {
+
+    // 根据官方文档，检查返回格式
+    if (res.code !== 0 || !res.data?.id) {
       return NextResponse.json(
-        { error: res.error || "Create Generator Error" },
+        { error: res.msg || "Create Generator Error" },
         { status: 400 },
       );
     }
-    console.log('res?.replicate_id,-->', res?.replicate_id)
-    const fluxData = await prisma.fluxData.findFirst({
-      where: {
-        replicateId: res.replicate_id,
+
+    console.log('nano-banana response-->', res);
+
+    // 创建本地数据库记录
+    const fluxData = await prisma.fluxData.create({
+      data: {
+        replicateId: res.data.id, // 使用返回的id
+        model: "nano-banana-fast",
+        inputPrompt,
+        aspectRatio: "1:1", // 默认宽高比
+        imageUrl: null,
+        taskStatus: "processing",
+        userId,
+        isPrivate: isPrivate,
+        errorMsg: null,
+        executeStartTime: new Date(), // 设置开始时间
       },
     });
-    if (!fluxData) {
-      return NextResponse.json({ error: "Create Task Error" }, { status: 400 });
-    }
 
     await prisma.$transaction(async (tx) => {
       const newAccount = await tx.userCredit.update({

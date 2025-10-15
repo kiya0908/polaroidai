@@ -12,16 +12,16 @@ export default function IndexPage({ params: { locale } }: Props) {
     <article className="container max-w-6xl py-6 lg:py-12">
       <div className="space-y-4">
         <h1 className="inline-block font-heading text-3xl lg:text-4xl">
-          Privacy
+          Privacy Policy
         </h1>
         <p className="text-base text-muted-foreground">
-          Please read our privacy policy.
+          Learn how PolaroidAI protects your privacy and data.
         </p>
       </div>
       <hr className="my-4" />
       <div className="mdx">
         <p className="leading-7 [&:not(:first-child)]:mt-6">
-          Last updated: Jane 18, 2024
+          Last updated: September 30, 2025
         </p>
         <p className="leading-7 [&:not(:first-child)]:mt-6">
           This Privacy Policy describes Our policies and procedures on the
@@ -32,15 +32,7 @@ export default function IndexPage({ params: { locale } }: Props) {
         <p className="leading-7 [&:not(:first-child)]:mt-6">
           We use Your Personal data to provide and improve the Service. By using
           the Service, You agree to the collection and use of information in
-          accordance with this Privacy Policy. This Privacy Policy has been
-          created with the help of the{" "}
-          <a
-            className="font-medium underline underline-offset-4"
-            href="https://www.freeprivacypolicy.com/free-privacy-policy-generator/"
-          >
-            Free Privacy Policy Generator
-          </a>
-          .
+          accordance with this Privacy Policy.
         </p>
         <h2
           className="mt-10 scroll-m-20 border-b pb-1 text-2xl font-semibold tracking-tight first:mt-0"
@@ -109,7 +101,7 @@ export default function IndexPage({ params: { locale } }: Props) {
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
               <strong>Company</strong> (referred to as either "the Company",
-              "We", "Us" or "Our" in this Agreement) refers to FluxAIProTeam.
+              "We", "Us" or "Our" in this Agreement) refers to PolaroidAI.
             </p>
           </li>
           <li className="mt-2">
@@ -139,7 +131,7 @@ export default function IndexPage({ params: { locale } }: Props) {
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
-              <strong>Service</strong> refers to the Website.
+              <strong>Service</strong> refers to the PolaroidAI website and AI image generation service.
             </p>
           </li>
           <li className="mt-2">
@@ -162,12 +154,12 @@ export default function IndexPage({ params: { locale } }: Props) {
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
-              <strong>Website</strong> refers to FluxAIProTeam, accessible from{" "}
+              <strong>Website</strong> refers to PolaroidAI, accessible from{" "}
               <a
                 className="font-medium underline underline-offset-4"
-                href="https://fluxaipro.art"
+                href="https://polaroidai.pro"
               >
-                https://fluxaipro.art
+                https://polaroidai.pro
               </a>
             </p>
           </li>
@@ -219,7 +211,7 @@ export default function IndexPage({ params: { locale } }: Props) {
           Personal Data
         </h4>
         <p className="leading-7 [&:not(:first-child)]:mt-6">
-          While using Our Service, We may ask You to provide Us with certain
+          While using Our AI-powered polaroid image generation Service, We may ask You to provide Us with certain
           personally identifiable information that can be used to contact or
           identify You. Personally identifiable information may include, but is
           not limited to:
@@ -228,6 +220,21 @@ export default function IndexPage({ params: { locale } }: Props) {
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
               Email address
+            </p>
+          </li>
+          <li className="mt-2">
+            <p className="leading-7 [&:not(:first-child)]:mt-6">
+              Account information (username, profile data)
+            </p>
+          </li>
+          <li className="mt-2">
+            <p className="leading-7 [&:not(:first-child)]:mt-6">
+              Images you upload for processing
+            </p>
+          </li>
+          <li className="mt-2">
+            <p className="leading-7 [&:not(:first-child)]:mt-6">
+              Text descriptions you provide for image generation
             </p>
           </li>
           <li className="mt-2">
@@ -404,24 +411,28 @@ export default function IndexPage({ params: { locale } }: Props) {
         <ul className="my-6 ml-6 list-disc">
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
-              <strong>To provide and maintain our Service</strong>, including to
-              monitor the usage of our Service.
+              <strong>To provide and maintain our AI image generation Service</strong>, including to
+              process your images and text descriptions through Gemini AI technology to create polaroid-style images.
             </p>
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
-              <strong>To manage Your Account:</strong> to manage Your
-              registration as a user of the Service. The Personal Data You
-              provide can give You access to different functionalities of the
-              Service that are available to You as a registered user.
+              <strong>To manage Your Account and credit system:</strong> to manage Your
+              registration as a user of the Service and track your credit consumption for AI generations.
+            </p>
+          </li>
+          <li className="mt-2">
+            <p className="leading-7 [&:not(:first-child)]:mt-6">
+              <strong>For AI processing:</strong> Your uploaded images and text descriptions
+              are sent to Google's Gemini AI service for processing. We do not store or have access to
+              the AI processing beyond what is necessary to provide the service.
             </p>
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
               <strong>For the performance of a contract:</strong> the
               development, compliance and undertaking of the purchase contract
-              for the products, items or services You have purchased or of any
-              other contract with Us through the Service.
+              for the credits or services You have purchased through the Service.
             </p>
           </li>
           <li className="mt-2">
@@ -526,9 +537,13 @@ export default function IndexPage({ params: { locale } }: Props) {
           The Company will retain Your Personal Data only for as long as is
           necessary for the purposes set out in this Privacy Policy. We will
           retain and use Your Personal Data to the extent necessary to comply
-          with our legal obligations (for example, if we are required to retain
-          your data to comply with applicable laws), resolve disputes, and
+          with our legal obligations, resolve disputes, and
           enforce our legal agreements and policies.
+        </p>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          <strong>Image Data Retention:</strong> User-uploaded images are automatically deleted from our servers
+          within 24 hours after processing, as outlined in our PRD security design. Generated polaroid images
+          are stored for 30 days to allow you to access your generation history, after which they are permanently deleted.
         </p>
         <p className="leading-7 [&:not(:first-child)]:mt-6">
           The Company will also retain Usage Data for internal analysis

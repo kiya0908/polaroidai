@@ -14,16 +14,16 @@ export default function IndexPage({ params: { locale } }: Props) {
     <article className="container max-w-6xl py-6 lg:py-12">
       <div className="space-y-4">
         <h1 className="inline-block font-heading text-3xl lg:text-4xl">
-          Terms &amp; Conditions
+          Terms of Service
         </h1>
         <p className="text-base text-muted-foreground">
-          Please read our terms and conditions.
+          Terms and conditions for using PolaroidAI service.
         </p>
       </div>
       <hr className="my-4" />
       <div className="mdx">
         <p className="leading-7 [&:not(:first-child)]:mt-6">
-          Last updated: May 29, 2024
+          Last updated: September 30, 2025
         </p>
         <p className="leading-7 [&:not(:first-child)]:mt-6">
           Please read these terms and conditions carefully before using Our
@@ -89,13 +89,27 @@ export default function IndexPage({ params: { locale } }: Props) {
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
-              <strong>Country</strong> refers to: Singapore
+              <strong>Credits</strong> refers to the virtual currency used within the Service
+              to pay for AI image generation operations. Text generation costs 5 credits per request,
+              and image conversion costs 8 credits per request.
+            </p>
+          </li>
+          <li className="mt-2">
+            <p className="leading-7 [&:not(:first-child)]:mt-6">
+              <strong>AI Generation</strong> refers to the process of creating polaroid-style images
+              using artificial intelligence technology (Google Gemini AI) based on your text descriptions
+              or uploaded images.
+            </p>
+          </li>
+          <li className="mt-2">
+            <p className="leading-7 [&:not(:first-child)]:mt-6">
+              <strong>Country</strong> refers to: China
             </p>
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
               <strong>Company</strong> (referred to as either "the Company",
-              "We", "Us" or "Our" in this Agreement) refers to FluxAIProTeam.
+              "We", "Us" or "Our" in this Agreement) refers to PolaroidAI.
             </p>
           </li>
           <li className="mt-2">
@@ -106,7 +120,7 @@ export default function IndexPage({ params: { locale } }: Props) {
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
-              <strong>Service</strong> refers to the Website.
+              <strong>Service</strong> refers to the PolaroidAI AI image generation website and related services.
             </p>
           </li>
           <li className="mt-2">
@@ -135,12 +149,12 @@ export default function IndexPage({ params: { locale } }: Props) {
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
-              <strong>Website</strong> refers to FluxAIProTeam, accessible from{" "}
+              <strong>Website</strong> refers to PolaroidAI, accessible from{" "}
               <a
                 className="font-medium underline underline-offset-4"
-                href="https://fluxaipro.art"
+                href="https://polaroidai.pro"
               >
-                https://fluxaipro.art
+                https://polaroidai.pro
               </a>
             </p>
           </li>
@@ -195,6 +209,88 @@ export default function IndexPage({ params: { locale } }: Props) {
           rights and how the law protects You. Please read Our Privacy Policy
           carefully before using Our Service.
         </p>
+        <h2
+          className="mt-10 scroll-m-20 border-b pb-1 text-2xl font-semibold tracking-tight first:mt-0"
+          id="service-usage-rules"
+        >
+          <a
+            className="subheading-anchor font-medium underline underline-offset-4"
+            aria-label="Link to section"
+            href="#service-usage-rules"
+          >
+            <span className="icon icon-link" />
+          </a>
+          Service Usage Rules
+        </h2>
+        <h3
+          className="mt-8 scroll-m-20 text-xl font-semibold tracking-tight"
+          id="credit-system"
+        >
+          <a
+            className="subheading-anchor font-medium underline underline-offset-4"
+            aria-label="Link to section"
+            href="#credit-system"
+          >
+            <span className="icon icon-link" />
+          </a>
+          Credit System
+        </h3>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          Our Service operates on a credit-based system. Each AI generation consumes credits according to the following rates:
+        </p>
+        <ul className="my-6 ml-6 list-disc">
+          <li className="mt-2">Text-to-image generation: 5 credits per request</li>
+          <li className="mt-2">Image-to-polaroid conversion: 8 credits per request</li>
+          <li className="mt-2">New users receive 50 free credits upon registration</li>
+          <li className="mt-2">Daily free generation: 1 free generation per day</li>
+        </ul>
+        <h3
+          className="mt-8 scroll-m-20 text-xl font-semibold tracking-tight"
+          id="content-restrictions"
+        >
+          <a
+            className="subheading-anchor font-medium underline underline-offset-4"
+            aria-label="Link to section"
+            href="#content-restrictions"
+          >
+            <span className="icon icon-link" />
+          </a>
+          Content Restrictions
+        </h3>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          You agree not to use the Service to generate content that:
+        </p>
+        <ul className="my-6 ml-6 list-disc">
+          <li className="mt-2">Is illegal, harmful, threatening, abusive, or objectionable</li>
+          <li className="mt-2">Contains explicit sexual content or nudity</li>
+          <li className="mt-2">Violates intellectual property rights of others</li>
+          <li className="mt-2">Contains hate speech or promotes violence</li>
+          <li className="mt-2">Impersonates others or creates deepfakes without consent</li>
+        </ul>
+        <h3
+          className="mt-8 scroll-m-20 text-xl font-semibold tracking-tight"
+          id="ai-limitations"
+        >
+          <a
+            className="subheading-anchor font-medium underline underline-offset-4"
+            aria-label="Link to section"
+            href="#ai-limitations"
+          >
+            <span className="icon icon-link" />
+          </a>
+          AI Service Limitations
+        </h3>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          Our AI generation service has the following limitations:
+        </p>
+        <ul className="my-6 ml-6 list-disc">
+          <li className="mt-2">Generated images are provided "as-is" with no guarantee of specific quality or accuracy</li>
+          <li className="mt-2">Processing time may vary but typically completes within 10 seconds</li>
+          <li className="mt-2">Failed generations will result in full credit refund</li>
+          <li className="mt-2">Maximum 3 automatic retries for failed generations</li>
+          <li className="mt-2">Input text descriptions limited to 500 characters</li>
+          <li className="mt-2">Image uploads limited to 10MB and JPG/PNG formats</li>
+        </ul>
         <h2
           className="mt-10 scroll-m-20 border-b pb-1 text-2xl font-semibold tracking-tight first:mt-0"
           id="links-to-other-websites"

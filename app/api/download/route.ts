@@ -10,6 +10,9 @@ import { FluxTaskStatus } from "@/db/type";
 import { getErrorMessage } from "@/lib/handle-error";
 import { redis } from "@/lib/redis";
 
+// API 路由应该动态渲染，不在构建时预渲染
+export const dynamic = 'force-dynamic';
+
 const searchParamsSchema = z.object({
   fluxId: z.string(),
 });

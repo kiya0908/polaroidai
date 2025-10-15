@@ -37,12 +37,12 @@
     --surface-alpha-strong: rgba(97,97,97,.1);
     --stop-color: white;
 
-    /* 宝丽来主题变量 */
-    --polaroid-orange: 22 100% 63%;     /* #FF8C42 */
-    --polaroid-cream: 60 100% 98%;      /* #FFFEF7 */
-    --polaroid-brown: 25 75% 31%;       /* #8B4513 */
-    --polaroid-vintage: 22 100% 63%;
-    --polaroid-sepia: 60 100% 98%;
+    /* 宝丽来主题变量 - 基于favicon rgb(217, 134, 58) */
+    --polaroid-orange: 28 68% 54%;        /* #D9863A - favicon颜色 */
+    --polaroid-cream: 37 44% 96%;         /* #FBF8F3 - 温暖米色 */
+    --polaroid-brown: 28 74% 32%;         /* #8B4D1A - 深棕色 */
+    --polaroid-vintage: 28 68% 54%;       /* 主色调 */
+    --polaroid-sepia: 37 44% 96%;         /* 米色调 */
   }
 
   .dark {
@@ -78,9 +78,9 @@
     --stop-color: black;
 
     /* 暗色模式下的宝丽来主题 */
-    --polaroid-orange: 22 85% 55%;      /* 稍微暗一点的橘色 */
-    --polaroid-cream: 60 50% 15%;       /* 暗色模式下的米白色 */
-    --polaroid-brown: 25 60% 40%;       /* 稍微亮一点的棕色 */
+    --polaroid-orange: 28 65% 50%;       /* 暗色模式下稍微暗一点的橘色 */
+    --polaroid-cream: 37 30% 20%;        /* 暗色模式下的米色 */
+    --polaroid-brown: 28 60% 40%;        /* 暗色模式下稍微亮一点的棕色 */
   }
 }
 
@@ -211,10 +211,10 @@
 }
 
 .retro-shadow {
-  box-shadow: 
-    0 4px 6px -1px rgba(139, 69, 19, 0.1),
-    0 2px 4px -1px rgba(139, 69, 19, 0.06),
-    inset 0 1px 0 rgba(255, 254, 247, 0.1);
+  box-shadow:
+    0 4px 6px -1px rgba(139, 77, 26, 0.1),    /* 基于新的棕色 */
+    0 2px 4px -1px rgba(139, 77, 26, 0.06),   /* #8B4D1A */
+    inset 0 1px 0 rgba(251, 248, 243, 0.1);   /* 基于新的米色 #FBF8F3 */
 }
 
 .film-grain {

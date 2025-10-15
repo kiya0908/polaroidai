@@ -31,6 +31,10 @@ import { Analytics } from "@/components/analytics";
 import ClaritySnippet from "@/components/ClaritySnippet";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { Toaster } from "@/components/ui/toaster";
+import { GuestAuthProvider } from "@/components/mvp/guest-auth-provider";
+import { LowCreditsDialog } from "@/components/mvp/low-credits-dialog";
+import { GenerationToastTrigger } from "@/components/mvp/generation-toast-trigger";
+import { isGuestMode } from "@/lib/mvp-config";
 import { locales } from "@/config";
 import { siteConfig } from "@/config/site";
 import { env } from "@/env.mjs";
@@ -101,18 +105,34 @@ export default async function RootLayout({
   // side is the easiest way to get started
   const messages = await getMessages();
 
+  const useGuestAuth = isGuestMode();
+
+  // 内容包装器 - 根据模式选择Provider
+  const ContentWrapper = ({ children }: { children: React.ReactNode }) => {
+    if (useGuestAuth) {
+      // MVP模式：使用游客认证
+      return <GuestAuthProvider>{children}</GuestAuthProvider>;
+    }
+    // 生产模式：使用Clerk
+    return (
+      <ClerkProvider localization={localeMap[locale] ?? enUS}>
+        {children}
+      </ClerkProvider>
+    );
+  };
+
   return (
-    <ClerkProvider localization={localeMap[locale] ?? enUS}>
-      <html lang={locale} suppressHydrationWarning>
-        <head />
-        <body
-          className={cn(
-            "min-h-screen bg-background font-sans antialiased",
-            fontSans.variable,
-            fontUrban.variable,
-            fontHeading.variable,
-          )}
-        >
+    <html lang={locale} suppressHydrationWarning>
+      <head />
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable,
+          fontUrban.variable,
+          fontHeading.variable,
+        )}
+      >
+        <ContentWrapper>
           <NextIntlClientProvider messages={messages}>
             <ThemeProvider
               attribute="class"
@@ -123,24 +143,26 @@ export default async function RootLayout({
               <QueryProvider>{children}</QueryProvider>
               <Analytics />
               <Toaster />
+              <LowCreditsDialog />
+              <GenerationToastTrigger />
               <TailwindIndicator />
             </ThemeProvider>
           </NextIntlClientProvider>
-          {env.NEXT_PUBLIC_GA_ID && (
-            <>
-              <GoogleAnalytics gaId={env.NEXT_PUBLIC_GA_ID} />
-              <ClaritySnippet />
-            </>
-          )}
-          {env.NEXT_PUBLIC_UMAMI_DATA_ID && (
-            <Script
-              async
-              src="https://sa.douni.one/st.js"
-              data-website-id={env.NEXT_PUBLIC_UMAMI_DATA_ID}
-            />
-          )}
-        </body>
-      </html>
-    </ClerkProvider>
+        </ContentWrapper>
+        {env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <GoogleAnalytics gaId={env.NEXT_PUBLIC_GA_ID} />
+            <ClaritySnippet />
+          </>
+        )}
+        {env.NEXT_PUBLIC_UMAMI_DATA_ID && (
+          <Script
+            async
+            src="https://sa.douni.one/st.js"
+            data-website-id={env.NEXT_PUBLIC_UMAMI_DATA_ID}
+          />
+        )}
+      </body>
+    </html>
   );
 }

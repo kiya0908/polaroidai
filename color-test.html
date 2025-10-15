@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolaroidAI 配色方案测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #FBF8F3; /* polaroid-cream */
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .color-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px -1px rgba(139, 77, 26, 0.1);
+            border: 1px solid #F5E0C7;
+        }
+        .color-sample {
+            width: 100px;
+            height: 60px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 10px;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .main-orange { background: #D9863A; }
+        .main-cream { background: #FBF8F3; }
+        .main-brown { background: #8B4D1A; }
+        .vintage-50 { background: #FDF9F5; }
+        .vintage-100 { background: #FBF2E8; }
+        .vintage-200 { background: #F5E0C7; }
+        .vintage-300 { background: #EFC99A; }
+        .vintage-400 { background: #E3A76A; }
+        .vintage-500 { background: #D9863A; }
+        .vintage-600 { background: #C5722B; }
+        .vintage-700 { background: #A45E1F; }
+        .vintage-800 { background: #8B4D1A; }
+        .vintage-900 { background: #6D3B14; }
+        .text-orange { color: #D9863A; }
+        .text-brown { color: #8B4D1A; }
+        .button-demo {
+            background: #D9863A;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.2s;
+        }
+        .button-demo:hover {
+            background: #C5722B;
+            transform: translateY(-1px);
+        }
+        h1 { color: #8B4D1A; }
+        h2 { color: #D9863A; }
+        .code {
+            background: #F5E0C7;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #6D3B14;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="color-card">
+            <h1>🎨 PolaroidAI 新配色方案</h1>
+            <p>基于favicon颜色 <span class="code">rgb(217, 134, 58)</span> 的全新配色方案</p>
+        </div>
+
+        <div class="color-card">
+            <h2>主要颜色</h2>
+            <div>
+                <div class="color-sample main-orange"></div>
+                <strong class="text-orange">#D9863A</strong> - Polaroid Orange (favicon颜色)
+            </div>
+            <div>
+                <div class="color-sample main-cream"></div>
+                <strong>#FBF8F3</strong> - Polaroid Cream (温暖米色)
+            </div>
+            <div>
+                <div class="color-sample main-brown"></div>
+                <strong class="text-brown">#8B4D1A</strong> - Polaroid Brown (深棕色)
+            </div>
+        </div>
+
+        <div class="color-card">
+            <h2>Vintage色谱 (50-900)</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                <div>
+                    <div class="color-sample vintage-50"></div>
+                    <div style="text-align: center; font-size: 12px;">50</div>
+                </div>
+                <div>
+                    <div class="color-sample vintage-100"></div>
+                    <div style="text-align: center; font-size: 12px;">100</div>
+                </div>
+                <div>
+                    <div class="color-sample vintage-200"></div>
+                    <div style="text-align: center; font-size: 12px;">200</div>
+                </div>
+                <div>
+                    <div class="color-sample vintage-300"></div>
+                    <div style="text-align: center; font-size: 12px;">300</div>
+                </div>
+                <div>
+                    <div class="color-sample vintage-400"></div>
+                    <div style="text-align: center; font-size: 12px;">400</div>
+                </div>
+                <div>
+                    <div class="color-sample vintage-500"></div>
+                    <div style="text-align: center; font-size: 12px; color: white; font-weight: bold;">500</div>
+                </div>
+                <div>
+                    <div class="color-sample vintage-600"></div>
+                    <div style="text-align: center; font-size: 12px;">600</div>
+                </div>
+                <div>
+                    <div class="color-sample vintage-700"></div>
+                    <div style="text-align: center; font-size: 12px;">700</div>
+                </div>
+                <div>
+                    <div class="color-sample vintage-800"></div>
+                    <div style="text-align: center; font-size: 12px;">800</div>
+                </div>
+                <div>
+                    <div class="color-sample vintage-900"></div>
+                    <div style="text-align: center; font-size: 12px;">900</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="color-card">
+            <h2>按钮样式演示</h2>
+            <button class="button-demo">主要按钮</button>
+            <button class="button-demo" style="background: #8B4D1A;">深色按钮</button>
+            <button class="button-demo" style="background: transparent; color: #D9863A; border: 2px solid #D9863A;">轮廓按钮</button>
+        </div>
+
+        <div class="color-card">
+            <h2>Tailwind CSS 类名</h2>
+            <div style="background: #F5E0C7; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 14px;">
+                <div><strong>主要颜色:</strong></div>
+                <div>bg-polaroid-orange → #D9863A</div>
+                <div>bg-polaroid-cream → #FBF8F3</div>
+                <div>bg-polaroid-brown → #8B4D1A</div>
+                <br>
+                <div><strong>Vintage渐变:</strong></div>
+                <div>bg-polaroid-vintage-50 → #FDF9F5</div>
+                <div>bg-polaroid-vintage-500 → #D9863A (主色)</div>
+                <div>bg-polaroid-vintage-900 → #6D3B14</div>
+                <br>
+                <div><strong>文字颜色:</strong></div>
+                <div>text-polaroid-orange</div>
+                <div>text-polaroid-brown</div>
+            </div>
+        </div>
+
+        <div class="color-card">
+            <h2>✅ 更新完成</h2>
+            <p>已成功更新以下文件:</p>
+            <ul>
+                <li><span class="code">tailwind.config.ts</span> - Tailwind颜色配置</li>
+                <li><span class="code">styles/globals.css</span> - CSS变量</li>
+                <li><span class="code">navbar.tsx, footer.tsx</span> - Logo图标</li>
+            </ul>
+            <p class="text-brown">所有使用 <span class="code">polaroid-*</span> 类名的组件都会自动应用新的配色方案！</p>
+        </div>
+    </div>
+</body>
+</html>

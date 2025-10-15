@@ -46,7 +46,7 @@ export default function PolaroidFAQ() {
   const t = useTranslations("IndexPage");
 
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-50/50 to-gray-50/50 dark:from-slate-950/20 dark:to-gray-950/20">
+    <section id="faq" className="py-20 bg-gradient-to-br from-slate-50/50 to-gray-50/50 dark:from-slate-950/20 dark:to-gray-950/20">
       <MaxWidthWrapper>
         <div className="max-w-4xl mx-auto">
           <HeaderSection

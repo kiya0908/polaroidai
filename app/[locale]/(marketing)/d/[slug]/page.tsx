@@ -18,20 +18,9 @@ interface RootPageProps {
   params: { locale: string, slug: string };
 }
 
-export async function generateStaticParams() {
-  const polaroids = await prisma.polaroidai_PolaroidGeneration.findMany({
-    where: {
-      isPrivate: false,
-      taskStatus: 'completed',
-    },
-    select: {
-      id: true
-    }
-  });
-  return polaroids.map((polaroid) => ({
-    slug: PolaroidHashids.encode(polaroid.id)
-  }))
-}
+// 禁用静态生成，使用动态渲染
+// 原因：构建时无法稳定连接数据库，且图片内容经常变化
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
   params: { locale, slug },

@@ -2,13 +2,7 @@
 
 import { Suspense } from "react";
 import { useTranslations } from "next-intl";
-import dynamic from "next/dynamic";
-
-// 动态导入Tweet组件，禁用SSR以避免hydration错误
-const Tweet = dynamic(() => import("react-tweet").then((mod) => ({ default: mod.Tweet })), {
-  ssr: false,
-  loading: () => <TweetSkeleton />,
-});
+import { Tweet } from "react-tweet";
 
 import { HeaderSection } from "@/components/shared/header-section";
 import { cn } from "@/lib/utils";
@@ -16,15 +10,16 @@ import { cn } from "@/lib/utils";
 // 示例推文ID - 这些是实际存在的Twitter ID，用于展示社区反馈
 const EXAMPLE_TWEET_IDS = [
   "1969813979636900078",
+  "1970938323511201884", 
   "1969820383487590795",
-  "1969681790685122877",
+  "1969681790685122877", 
 ];
 
 // Tweet组件的加载状态
 function TweetSkeleton() {
   return (
     <div className="animate-pulse">
-      <div className="w-full rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+      <div className="mx-auto w-full max-w-md rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
         <div className="flex items-center space-x-3">
           <div className="h-10 w-10 rounded-full bg-gray-300 dark:bg-gray-600"></div>
           <div className="space-y-2">
@@ -41,10 +36,10 @@ function TweetSkeleton() {
   );
 }
 
-// 错误状态组件（暂时未使用）
+// 错误状态组件
 function TweetError({ tweetId }: { tweetId: string }) {
   return (
-    <div className="w-full rounded-lg border border-red-200 bg-red-50 p-4 text-center dark:border-red-800 dark:bg-red-900/10">
+    <div className="mx-auto w-full max-w-md rounded-lg border border-red-200 bg-red-50 p-4 text-center dark:border-red-800 dark:bg-red-900/10">
       <p className="text-sm text-red-600 dark:text-red-400">
         无法加载推文 {tweetId}
       </p>
@@ -58,7 +53,7 @@ function TweetError({ tweetId }: { tweetId: string }) {
 // 单个Tweet容器组件
 function TweetContainer({ tweetId }: { tweetId: string }) {
   return (
-    <div className="w-full">
+    <div className="mx-auto w-full max-w-lg">
       <Suspense fallback={<TweetSkeleton />}>
         <div className="tweet-container w-full">
           <Tweet id={tweetId} />
@@ -82,11 +77,11 @@ export default function Examples() {
           />
         </div>
 
-        {/* Twitter推文网格容器 */}
-        <div className="mx-auto mt-12 w-full max-w-6xl px-4 sm:mt-16 sm:px-6">
+        {/* Twitter时间线容器 */}
+        <div className="mx-auto mt-12 w-full max-w-2xl px-4 sm:mt-16 sm:px-0">
           <div
             className={cn(
-              "grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3"
+              "space-y-4 sm:space-y-6 lg:space-y-8"
             )}
           >
             {EXAMPLE_TWEET_IDS.map((tweetId, index) => (
@@ -94,16 +89,16 @@ export default function Examples() {
                 key={tweetId}
                 className={cn(
                   "transform transition-all duration-300 ease-in-out",
-                  // 增强悬停效果
-                  "hover:scale-[1.02] hover:shadow-lg",
+                  // 悬停效果
+                  "hover:scale-[1.01] hover:shadow-md",
                   // 渐入动画
                   "animate-in fade-in-50 slide-in-from-bottom-2",
-                  // 网格项优化
-                  "w-full"
+                  // 移动端优化
+                  "mx-auto w-full"
                 )}
                 style={{
-                  // 为每个推文添加不同的延迟，调整为100ms间隔
-                  animationDelay: `${index * 100}ms`,
+                  // 为每个推文添加不同的延迟
+                  animationDelay: `${index * 150}ms`,
                 }}
               >
                 <TweetContainer tweetId={tweetId} />
@@ -118,7 +113,7 @@ export default function Examples() {
             </p>
             <div className="mt-3 flex items-center justify-center space-x-2 text-xs text-gray-500 dark:text-gray-500">
               <span className="text-blue-500">🐦</span>
-              <span>{t("examples.communityFeedback")}</span>
+              <span>Real-time community feedback from social media</span>
             </div>
           </div>
         </div>

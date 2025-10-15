@@ -1,4 +1,97 @@
 {
+  "MVP": {
+    "title": "Polaroid AI Generator",
+    "subtitle": "Enter text description, generate vintage Polaroid-style photos in 10 seconds",
+    "testBanner": {
+      "title": "🎉 MVP Test Version",
+      "description": "100 free credits for everyone during beta · Official launch coming soon",
+      "button": "Start Experience"
+    },
+    "generator": {
+      "title": "Describe Your Desired Photo",
+      "placeholder": "e.g., A cute orange cat sitting on a windowsill, warm afternoon sunlight...",
+      "freeBadge": "Free Generation · No Registration",
+      "textGenerationCost": "5 Credits per generation",
+      "generate": "Generate Polaroid Photo",
+      "generating": "AI Generating..."
+    },
+    "result": {
+      "title": "Generation Result",
+      "processing": "Generating, estimated 10-15 seconds...",
+      "altText": "Generated Polaroid photo",
+      "download": "Download High-Quality Original",
+      "placeholder": "Enter description and click generate button"
+    },
+    "footer": {
+      "description": "Generate classic Polaroid-style photos using AI technology · Support English & Chinese descriptions · 10-second output"
+    },
+    "tabs": {
+      "textGeneration": "Text Generation",
+      "imageComposition": "Multi-Image Composition"
+    },
+    "imageMode": {
+      "uploadPrompt": "Click to upload images (up to 5)",
+      "supportedFormats": "Supports JPG, PNG formats",
+      "compositionPlaceholder": "Describe your desired composition effect...",
+      "startComposition": "Start Composition",
+      "previewAlt": "Preview {index}"
+    },
+    "credits": {
+      "imageCompositionCost": "8 Credits per generation",
+      "testCredits": "Test Credits",
+      "mvpTestCredits": "MVP Test Credits",
+      "textGenerationCost": "Text Generation: 5 Credits",
+      "imageConversionCost": "Image Conversion: 8 Credits",
+      "rechargeNotice": "Recharge will be available in the official version"
+    },
+    "errors": {
+      "emptyPrompt": "Please enter text description",
+      "generateFailed": "Generation failed, please try again",
+      "networkError": "Network error, please check your connection",
+      "noImagesUploaded": "Please upload at least one image",
+      "emptyCompositionPrompt": "Please enter description text"
+    },
+    "lowCreditsDialog": {
+      "title": "Credits Running Low",
+      "description": "You're running low on test credits. Need more credits?",
+      "currentBalance": "Current balance: {credits} credits",
+      "contactPrompt": "Need more credits? Contact us via email",
+      "contactEmail": "support@polaroidai.pro",
+      "continueButton": "Continue",
+      "contactButton": "Contact Us"
+    },
+    "generationToast": {
+      "title": "Enjoying the experience?",
+      "description": "You've created {count} photos! Keep creating amazing works!",
+      "reminderTitle": "Don't forget to save your work",
+      "reminderDescription": "Your creation history is saved in your local browser"
+    }
+  },
+  "Navigation": {
+    "appName": "PolaroidAI",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "generate": "Generate Polaroid",
+    "history": "History",
+    "credits": "Credits",
+    "language": "Language",
+    "pricing": "Pricing",
+    "schnell": "Free Generator",
+    "explore": "Gallery",
+    "title": "Polaroid AI Photo Generator",
+    "blog": "Blog",
+    "prompt": "Polaroid Prompt Generator",
+    "dashboard": "Dashboard",
+    "home": "Home",
+    "features": "Features",
+    "howItWorks": "How It Works",
+    "faq": "FAQ",
+    "navigation": "Navigation",
+    "appFeatures": "App Features",
+    "tooltip": {
+      "login": "Login"
+    }
+  },
   "Error": {
     "description": "<p>We've unfortunately encountered an error.</p><p>You can try to <retry>reload the page</retry> you were visiting.</p>",
     "title": "Something went wrong!"
@@ -92,8 +185,11 @@
     },
     "examples": {
       "label": "Example",
-      "title": "Polaroid AI Photo Examples",
-      "subtitle": "Create authentic vintage Polaroid photos from text descriptions or uploaded images."
+      "title": "Community Feedback",
+      "subtitle": "See what users are saying about their Polaroid AI experience on social media.",
+      "tweetError": "Failed to load tweet {tweetId}",
+      "tweetErrorDescription": "The tweet may have been deleted or made private",
+      "communityFeedback": "Real-time community feedback from social media"
     },
     "features": {
       "speed": "10-second generation",
@@ -218,8 +314,8 @@
         "answer": "Our AI model is trained on thousands of real Polaroid photos and can accurately reproduce the color science, film grain, border proportions, and subtle optical effects of Polaroid cameras. The generated photos are visually almost indistinguishable from real Polaroid photos, with a satisfaction rate exceeding 90%."
       },
       "item2": {
-        "question": "How does the credit system work?",
-        "answer": "We use a transparent credit consumption system: text-to-Polaroid generation consumes 5 credits, image conversion consumes 8 credits. New users get 50 credits upon registration, plus 1 free generation daily. Generation failures result in full credit refund, ensuring every investment is worthwhile."
+        "question": "How does the credit system work? [MVP Test Version]",
+        "answer": "This is the MVP test version - every user automatically receives 100 free test credits. Text-to-Polaroid generation consumes 5 credits, image conversion consumes 8 credits. After test credits are used up, the official version will support credit purchases. This is our testing phase to validate product features and collect user feedback."
       },
       "item3": {
         "question": "How long does it take to generate a Polaroid photo?",
@@ -234,8 +330,8 @@
         "answer": "You own complete usage rights for all photos generated through Polaroid AI, including commercial use. No copyright concerns - feel free to use them for social media, print materials, marketing content, and any other applications."
       },
       "item6": {
-        "question": "What if I'm not satisfied with the generation results?",
-        "answer": "We provide 3 free regeneration opportunities (consuming only 2 credits each time). If still unsatisfied, you can adjust the description text or upload photos from different angles. Our customer service team will also assist you in optimizing generation results."
+        "question": "When will the MVP test version end?",
+        "answer": "The MVP test version is expected to last 1-2 months to collect user feedback and optimize product features. After the official launch, various credit packages will be available. Generation records during the test period will be preserved. Thank you for your participation and support!"
       },
       "contact": {
         "title": "Have other questions?",
@@ -544,18 +640,6 @@
     "History": "My Polaroids",
     "GiftCode": "Gift Code",
     "ChargeOrder": "Purchase Credits"
-  },
-  "Navigation": {
-    "pricing": "Pricing",
-    "schnell": "Free Generator",
-    "explore": "Gallery",
-    "title": "Polaroid AI Photo Generator",
-    "blog": "Blog",
-    "prompt": "Polaroid Prompt Generator",
-    "dashboard": "Dashboard",
-    "tooltip": {
-      "login": "Login"
-    }
   },
   "NotFoundPage": {
     "description": "Please double-check the browser address bar or use the navigation to go to a known page.",

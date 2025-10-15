@@ -7,6 +7,9 @@ import { DashboardHeader } from "@/components/dashboard/header";
 import { DashboardShell } from "@/components/dashboard/shell";
 import GiftCodeForm from "@/components/forms/gift-code-form";
 
+// 使用动态渲染避免构建时数据库连接问题
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
   params: { locale: string };
 }
