@@ -1,17 +1,11 @@
+//语言选项设置：默认语言、支持语言、路径配置、语言前缀、端口、主机
 import { LocalePrefix, Pathnames } from "next-intl/routing";
 
 export const defaultLocale = "en" as const;
 export const locales = [
+  // MVP: Only Chinese and English
   "en",
   "zh",
-  "tw",
-  "fr",
-  "ja",
-  "ko",
-  "de",
-  "pt",
-  "es",
-  "ar",
 ] as const;
 
 export type Locale = (typeof locales)[number];
