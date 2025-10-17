@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateImageWithNanoBanana, detectImageStyle } from "@/lib/nano-banana";
+import { MVP_CONFIG } from "@/lib/mvp-config";
 
 export const maxDuration = 60;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,6 +19,15 @@ import MVPPricingCard from "@/components/sections/mvp-pricing-card";
 import { MVPTestBanner } from "@/components/mvp/test-banner";
 import { MVPCreditsDisplay } from "@/components/mvp/credits-display";
 
+// 导入积分系统
+import {
+  getGuestCredits,
+  deductGuestCredits,
+  hasEnoughCredits,
+  recordGeneration
+} from "@/lib/guest-auth";
+import { MVP_CONFIG } from "@/lib/mvp-config";
+
 interface GenerationResult {
   id: string;
   outputImageUrl: string;
@@ -35,6 +44,14 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<GenerationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // 积分系统状态
+  const [currentCredits, setCurrentCredits] = useState(100);
+
+  // 初始化积分
+  useEffect(() => {
+    setCurrentCredits(getGuestCredits());
+  }, []);
 
   // 新增：图片上传相关状态
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -68,6 +85,17 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
   };
 
   const handleGenerate = async () => {
+    // 计算所需积分
+    const requiredCredits = activeTab === "text"
+      ? MVP_CONFIG.credits.textGeneration
+      : MVP_CONFIG.credits.imageConversion;
+
+    // 检查积分是否足够
+    if (!hasEnoughCredits(requiredCredits)) {
+      setError(t("errors.insufficientCredits", { required: requiredCredits, current: currentCredits }));
+      return;
+    }
+
     // 根据当前选项卡进行不同的验证
     if (activeTab === "text") {
       if (!prompt.trim()) {
@@ -91,20 +119,23 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
 
     try {
       let requestBody;
+      let generationType: 'text' | 'image' | 'multi';
 
       if (activeTab === "text") {
+        generationType = 'text';
         requestBody = {
           type: "text",
           content: prompt,
         };
       } else {
+        generationType = 'multi';
         // 多图合成模式
         const formData = new FormData();
         selectedImages.forEach((image, index) => {
           formData.append(`image_${index}`, image);
         });
         formData.append("prompt", prompt);
-        formData.append("type", "images");
+        formData.append("type", "multiImage");
 
         const response = await fetch("/api/mvp-generate", {
           method: "POST",
@@ -114,6 +145,22 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
         const data = await response.json();
 
         if (data.success) {
+          // ✅ 扣除积分
+          const deducted = deductGuestCredits(requiredCredits);
+          if (deducted) {
+            setCurrentCredits(getGuestCredits());
+
+            // 记录生成历史
+            recordGeneration({
+              id: data.data.id,
+              prompt: prompt,
+              imageUrl: data.data.outputImageUrl,
+              type: generationType,
+              creditsUsed: requiredCredits,
+              createdAt: Date.now(),
+            });
+          }
+
           setResult(data.data);
         } else {
           setError(data.error?.message || t("errors.generateFailed"));
@@ -132,6 +179,22 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
       const data = await response.json();
 
       if (data.success) {
+        // ✅ 扣除积分
+        const deducted = deductGuestCredits(requiredCredits);
+        if (deducted) {
+          setCurrentCredits(getGuestCredits());
+
+          // 记录生成历史
+          recordGeneration({
+            id: data.data.id,
+            prompt: prompt,
+            imageUrl: data.data.outputImageUrl,
+            type: generationType,
+            creditsUsed: requiredCredits,
+            createdAt: Date.now(),
+          });
+        }
+
         setResult(data.data);
       } else {
         setError(data.error?.message || t("errors.generateFailed"));

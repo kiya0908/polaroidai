@@ -1,3 +1,6 @@
+// 禁用静态生成 - MVP模式下不需要这些页面
+export const dynamic = 'force-dynamic';
+
 import { redirect } from "next/navigation";
 
 import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
