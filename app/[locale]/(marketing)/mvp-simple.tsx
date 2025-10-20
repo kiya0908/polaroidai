@@ -131,10 +131,10 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
         generationType = 'multi';
         // 多图合成模式
         const formData = new FormData();
-        selectedImages.forEach((image, index) => {
-          formData.append(`image_${index}`, image);
+        selectedImages.forEach((image) => {
+          formData.append("images", image);
         });
-        formData.append("prompt", prompt);
+        formData.append("content", prompt);
         formData.append("type", "multiImage");
 
         const response = await fetch("/api/mvp-generate", {
