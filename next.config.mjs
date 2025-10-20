@@ -11,6 +11,12 @@ import("./env.mjs");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // 强制所有 API 路由为动态，防止构建时静态化
+  // 这对 MVP 分支特别重要，避免构建时访问不存在的数据库/认证服务
+  experimental: {
+    taint: true,
+  },
+
   typescript: {
     // 暂时忽略类型错误，允许构建继续
     ignoreBuildErrors: true,

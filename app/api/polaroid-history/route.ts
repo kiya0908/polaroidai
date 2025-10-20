@@ -3,14 +3,18 @@ import { z } from "zod";
 
 import { PolaroidHashids } from "@/db/dto/polaroid.dto";
 import { prisma } from "@/db/prisma";
-import { 
-  createAPIMiddleware, 
-  BusinessError, 
+import {
+  createAPIMiddleware,
+  BusinessError,
   paginatedResponse,
   successResponse,
   RATE_LIMITS,
-  COMMON_SCHEMAS 
+  COMMON_SCHEMAS
 } from "@/lib/api-middleware";
+
+// 强制此路由为动态，防止构建时静态化
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 // 查询参数验证Schema
 const HistoryQuerySchema = COMMON_SCHEMAS.pagination.extend({

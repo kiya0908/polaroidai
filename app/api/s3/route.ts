@@ -6,6 +6,10 @@ import { MediaDto, MediaDtoSchema, MediaHashids } from "@/db/dto/media.dto";
 import { prisma } from "@/db/prisma";
 import { ratelimit } from "@/lib/redis";
 
+// 强制此路由为动态，防止构建时静态化
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 function getKey(id?: string) {
   return `s3${id ? `:${id}` : ""}`;
 }

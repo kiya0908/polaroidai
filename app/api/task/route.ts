@@ -10,6 +10,10 @@ import { env } from "@/env.mjs";
 import { getErrorMessage } from "@/lib/handle-error";
 import { redis } from "@/lib/redis";
 
+// 强制此路由为动态，防止构建时静态化
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 // 获取nano-banana结果的函数
 async function getNanoBananaResult(taskId: string) {
   try {

@@ -5,6 +5,8 @@ import { getTweet } from "react-tweet/api";
 
 type RouteSegment = { params: { id: string } };
 
+// 强制此路由为动态，防止构建时静态化
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request, { params }: RouteSegment) {
   try {

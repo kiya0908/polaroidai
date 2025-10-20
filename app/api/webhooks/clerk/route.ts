@@ -6,6 +6,10 @@ import { Webhook } from "svix";
 import { getUserCredit } from "@/db/queries/account";
 import { env } from "@/env.mjs";
 
+// 强制此路由为动态，防止构建时静态化
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = env.WEBHOOK_SECRET;

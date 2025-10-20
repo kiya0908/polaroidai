@@ -3,6 +3,8 @@ import { type NextRequest, NextResponse } from 'next/server'
 
 import { redis } from '@/lib/redis'
 
+// 强制此路由为动态，防止构建时静态化
+export const dynamic = 'force-dynamic';
 export const runtime = 'edge'
 
 export async function GET(req: NextRequest) {

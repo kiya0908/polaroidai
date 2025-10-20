@@ -11,6 +11,10 @@ import { Currency, OrderPhase, PaymentChannelType } from "@/db/type";
 import { getErrorMessage } from "@/lib/handle-error";
 import { redis } from "@/lib/redis";
 
+// 强制此路由为动态，防止构建时静态化
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 const ratelimit = new Ratelimit({
   redis,
   limiter: Ratelimit.slidingWindow(2, "5 s"),

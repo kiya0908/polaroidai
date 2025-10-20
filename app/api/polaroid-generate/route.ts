@@ -6,12 +6,16 @@ import { prisma } from "@/db/prisma";
 import { getUserCredit } from "@/db/queries/account";
 import { BillingType } from "@/db/type";
 import { generatePolaroidImage } from "@/lib/gemini";
-import { 
-  createAPIMiddleware, 
-  BusinessError, 
+import {
+  createAPIMiddleware,
+  BusinessError,
   successResponse,
-  RATE_LIMITS 
+  RATE_LIMITS
 } from "@/lib/api-middleware";
+
+// 强制此路由为动态，防止构建时静态化
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export const maxDuration = 60;
 

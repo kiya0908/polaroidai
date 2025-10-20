@@ -13,6 +13,10 @@ import { logsnag } from "@/lib/log-snag";
 import { stripe } from "@/lib/stripe";
 import { formatPrice } from "@/lib/utils";
 
+// 强制此路由为动态，防止构建时静态化
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 export async function GET() {
   return new Response("OK", { status: 200 });
 }

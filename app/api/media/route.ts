@@ -10,6 +10,10 @@ import { getErrorMessage } from "@/lib/handle-error";
 import { redis } from "@/lib/redis";
 import { S3Service } from "@/lib/s3";
 
+// 强制此路由为动态，防止构建时静态化
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 function getKey(id: string) {
   return `media:${id}`;
 }

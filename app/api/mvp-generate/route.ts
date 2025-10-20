@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { generateImageWithNanoBanana, detectImageStyle } from "@/lib/nano-banana";
 import { MVP_CONFIG } from "@/lib/mvp-config";
 
+// 强制此路由为动态，防止构建时静态化
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 export const maxDuration = 60;
 
 // 文件上传限制配置

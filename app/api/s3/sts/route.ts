@@ -8,6 +8,10 @@ import { env } from "@/env.mjs";
 import { redis } from "@/lib/redis";
 import { S3Service } from "@/lib/s3";
 
+// 强制此路由为动态，防止构建时静态化
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 const ratelimit = new Ratelimit({
   redis,
   limiter: Ratelimit.slidingWindow(10, "10 s"),

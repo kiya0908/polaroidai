@@ -10,6 +10,10 @@ import { env } from "@/env.mjs";
 import { getErrorMessage } from "@/lib/handle-error";
 import { logsnag } from "@/lib/log-snag";
 
+// 强制此路由为动态，防止构建时静态化
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 const WebhookSchema = z.object({
   taskStatus: z.string(),
   replicateId: z.string(),
