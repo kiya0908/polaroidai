@@ -16,7 +16,7 @@ export const config = {
   matcher: [
     "/",
     "/(zh|en)/:path*",
-    "/((?!static|.*\\..*|_next).*)",
+    "/((?!static|.*\\..*|_next|sitemap.xml|robots.txt).*)",
   ], // Run middleware on API routes],
 };
 const isProtectedRoute = createRouteMatcher([
