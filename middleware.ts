@@ -16,14 +16,19 @@ export const config = {
   matcher: [
     "/",
     "/(zh|en)/:path*",
-    "/((?!static|.*\\..*|_next|sitemap.xml|robots.txt).*)",
-  ], // Run middleware on API routes],
+    "/((?!static|.*\\..*|_next|favicon.ico|sitemap.xml|robots.txt).*)",
+  ].filter(Boolean), // Run middleware on API routes],
 };
+
 const isProtectedRoute = createRouteMatcher([
   "/:locale/app(.*)",
   "/:locale/admin(.*)",
 ]);
-const isPublicRoute = createRouteMatcher(["/api/webhooks(.*)"]);
+const isPublicRoute = createRouteMatcher([
+  "/api/webhooks(.*)",
+  "/sitemap.xml",
+  "/robots.txt"
+]);
 
 const nextIntlMiddleware = createMiddleware({
   defaultLocale,
