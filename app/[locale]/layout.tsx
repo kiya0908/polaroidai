@@ -60,14 +60,14 @@ export async function generateMetadata({
       languages: {
         "x-default": "/",
         zh: "/zh",
-        tw: "/tw",
-        ja: "/ja",
-        fr: "/fr",
-        es: "/es",
-        de: "/de",
-        ko: "/ko",
-        pt: "/pt",
-        ar: "/ar"
+        //tw: "/tw",
+        //ja: "/ja",
+        //fr: "/fr",
+        //es: "/es",
+        //de: "/de",
+        //ko: "/ko",
+        //pt: "/pt",
+        //ar: "/ar"
       },
     },
     openGraph: {
@@ -85,14 +85,14 @@ export function generateStaticParams() {
 const localeMap = {
   en: enUS,
   zh: zhCN,
-  tw: zhTW,
-  ja: jaJP,
-  ko: koKR,
-  fr: frFR,
-  es: esES,
-  de: deDE,
-  pt: ptPT,
-  ar: arSA,
+  //tw: zhTW,
+  //ja: jaJP,
+  //ko: koKR,
+  //fr: frFR,
+  //es: esES,
+  //de: deDE,
+  //pt: ptPT,
+  //ar: arSA,
 };
 
 export default async function RootLayout({
