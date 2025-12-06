@@ -12,6 +12,8 @@ import { NavBar, NavbarUserInfo } from "@/components/layout/navbar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
 import { dashboardConfig } from "@/config/dashboard";
+import { MVP_CONFIG } from "@/lib/mvp-config";
+import { MVPTestBanner } from "@/components/mvp/test-banner";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
@@ -43,12 +45,25 @@ export default function DashboardLayout({
 }: DashboardLayoutProps) {
   unstable_setRequestLocale(locale);
 
+  const isMVP = MVP_CONFIG.guest.enabled;
+
+  // MVP模式下过滤掉部分功能
   const filteredLinks = dashboardConfig.sidebarNav.map((section) => ({
     ...section,
+    items: isMVP
+      ? (section.items?.filter((item) => {
+          // MVP模式下隐藏这些功能
+          const hiddenInMVP = ['/app/giftcode', '/app/order'];
+          return !hiddenInMVP.some(path => item.href?.includes(path));
+        }) || [])
+      : (section.items || []),
   }));
 
   return (
     <MaxWidthWrapper className="max-w-[1650px] px-0">
+      {/* MVP测试横幅 */}
+      {isMVP && <MVPTestBanner />}
+
       <div className="relative flex min-h-screen w-full">
         <DashboardSidebar links={filteredLinks} />
 

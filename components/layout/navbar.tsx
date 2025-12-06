@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton, useUser } from "@clerk/nextjs";
@@ -10,6 +10,9 @@ import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import { cn } from "@/lib/utils";
+import { isGuestMode } from "@/lib/mvp-config";
+import { getGuestCredits, getOrCreateGuestUser } from "@/lib/guest-auth";
+import { GuestUserButton } from "@/components/mvp/guest-auth-provider";
 
 interface NavItem {
   href: string;
@@ -56,7 +59,27 @@ interface NavbarProps {
 export function Navbar({ userCredit = 0 }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const { isSignedIn, user } = useUser();
+  const isMVP = isGuestMode();
+
+  // Clerk 认证 (生产模式)
+  const clerkUser = useUser();
+
+  // MVP模式下的游客积分
+  const [guestCredits, setGuestCredits] = useState(0);
+  useEffect(() => {
+    if (isMVP) {
+      setGuestCredits(getGuestCredits());
+      const interval = setInterval(() => {
+        setGuestCredits(getGuestCredits());
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isMVP]);
+
+  // 根据模式选择认证状态
+  const isSignedIn = isMVP ? true : clerkUser.isSignedIn;
+  const user = isMVP ? getOrCreateGuestUser() : clerkUser.user;
+  const displayCredits = isMVP ? guestCredits : userCredit;
 
   const NavLink = ({ item, mobile = false }: { item: NavItem; mobile?: boolean }) => {
     const isActive = pathname === item.href;
@@ -109,12 +132,12 @@ export function Navbar({ userCredit = 0 }: NavbarProps) {
                 </div>
                 
                 {/* 积分显示 */}
-                <Badge 
-                  variant="outline" 
+                <Badge
+                  variant="outline"
                   className="border-polaroid-orange text-polaroid-orange px-3 py-1"
                 >
                   <Sparkles className="w-3 h-3 mr-1" />
-                  {userCredit} 积分
+                  {displayCredits} 积分
                 </Badge>
               </>
             )}
@@ -125,13 +148,17 @@ export function Navbar({ userCredit = 0 }: NavbarProps) {
               <LocaleSwitcher />
 
               {isSignedIn ? (
-                <UserButton
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-8 h-8",
-                    },
-                  }}
-                />
+                isMVP ? (
+                  <GuestUserButton />
+                ) : (
+                  <UserButton
+                    appearance={{
+                      elements: {
+                        avatarBox: "w-8 h-8",
+                      },
+                    }}
+                  />
+                )
               ) : (
                 <div className="flex items-center gap-2">
                   <Button variant="ghost" asChild>
@@ -158,23 +185,29 @@ export function Navbar({ userCredit = 0 }: NavbarProps) {
                   {/* 用户信息 */}
                   {isSignedIn && (
                     <div className="flex items-center gap-3 p-4 bg-polaroid-cream rounded-lg">
-                      <UserButton
-                        appearance={{
-                          elements: {
-                            avatarBox: "w-10 h-10",
-                          },
-                        }}
-                      />
+                      {isMVP ? (
+                        <div className="w-10 h-10 rounded-full bg-vintage-500 flex items-center justify-center text-white font-semibold">
+                          G
+                        </div>
+                      ) : (
+                        <UserButton
+                          appearance={{
+                            elements: {
+                              avatarBox: "w-10 h-10",
+                            },
+                          }}
+                        />
+                      )}
                       <div className="flex-1">
                         <p className="font-medium text-polaroid-brown">
-                          {user?.firstName || user?.username || "用户"}
+                          {isMVP ? (user as any)?.fullName || "游客" : (user as any)?.firstName || (user as any)?.username || "用户"}
                         </p>
-                        <Badge 
-                          variant="outline" 
+                        <Badge
+                          variant="outline"
                           className="border-polaroid-orange text-polaroid-orange"
                         >
                           <Sparkles className="w-3 h-3 mr-1" />
-                          {userCredit} 积分
+                          {displayCredits} 积分
                         </Badge>
                       </div>
                     </div>
@@ -217,9 +250,16 @@ export function Navbar({ userCredit = 0 }: NavbarProps) {
 
 // NavbarUserInfo组件 - 用户信息显示
 export function NavbarUserInfo() {
-  const { isSignedIn, user } = useUser();
+  const isMVP = isGuestMode();
+  const clerkUser = useUser();
 
-  if (!isSignedIn) {
+  // MVP模式下始终显示游客按钮
+  if (isMVP) {
+    return <GuestUserButton />;
+  }
+
+  // 生产模式
+  if (!clerkUser.isSignedIn) {
     return (
       <Button asChild size="sm">
         <Link href="/sign-in">登录</Link>

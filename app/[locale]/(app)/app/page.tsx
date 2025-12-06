@@ -1,31 +1,55 @@
-import { Metadata } from "next";
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { unstable_setRequestLocale } from "next-intl/server";
-import { Camera, History, CreditCard, Sparkles, TrendingUp, Download } from "lucide-react";
+import { Camera, History, CreditCard, Sparkles, TrendingUp, Download, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
-export const metadata: Metadata = {
-  title: "仪表板 - 宝丽来AI生成器",
-  description: "查看你的宝丽来生成统计和快速操作",
-};
+import { useUnifiedAuth } from "@/lib/auth-adapter";
+import { isGuestMode } from "@/lib/mvp-config";
+import { getGenerationHistory, getGenerationCount } from "@/lib/guest-auth";
 
 interface DashboardPageProps {
   params: { locale: string };
 }
 
 export default function DashboardPage({ params }: DashboardPageProps) {
-  unstable_setRequestLocale(params.locale);
+  const { user, credits, isLoaded, isGuest } = useUnifiedAuth();
+  const isMVP = isGuestMode();
 
-  // TODO: 从API获取真实数据
-  const stats = {
-    totalGenerated: 42,
-    totalDownloads: 38,
-    creditsUsed: 210,
-    creditsRemaining: 100,
-  };
+  // MVP模式下从localStorage获取统计数据
+  const [stats, setStats] = useState({
+    totalGenerated: 0,
+    totalDownloads: 0,
+    creditsUsed: 0,
+    creditsRemaining: 0,
+  });
+
+  useEffect(() => {
+    if (isMVP) {
+      const history = getGenerationHistory();
+      const generationCount = getGenerationCount();
+      const creditsUsed = history.reduce((sum, item) => sum + item.creditsUsed, 0);
+
+      setStats({
+        totalGenerated: generationCount,
+        totalDownloads: history.length, // 假设所有生成的都下载了
+        creditsUsed: creditsUsed,
+        creditsRemaining: credits,
+      });
+    } else {
+      // 生产模式：从API获取数据
+      // TODO: 实现API调用
+      setStats({
+        totalGenerated: 0,
+        totalDownloads: 0,
+        creditsUsed: 0,
+        creditsRemaining: credits,
+      });
+    }
+  }, [isMVP, credits]);
 
   const quickActions = [
     {

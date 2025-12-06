@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { 
-  Camera, 
-  History, 
-  CreditCard, 
-  Settings, 
-  BarChart3, 
+import {
+  Camera,
+  History,
+  CreditCard,
+  Settings,
+  BarChart3,
   Download,
   Sparkles,
   ChevronLeft,
@@ -19,6 +19,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { isGuestMode } from "@/lib/mvp-config";
+import { getGuestCredits } from "@/lib/guest-auth";
 
 interface SidebarItem {
   href: string;
@@ -47,47 +49,59 @@ const getSidebarIcon = (iconName: string) => {
   }
 };
 
-const sidebarItems: SidebarItem[] = [
-  {
-    href: "/app/generate",
-    label: "生成宝丽来",
-    iconName: "Camera",
-    description: "创建新的宝丽来照片",
-  },
-  {
-    href: "/app/history",
-    label: "历史记录",
-    iconName: "History",
-    description: "查看生成历史",
-  },
-  {
-    href: "/app/downloads",
-    label: "下载管理",
-    iconName: "Download",
-    description: "管理下载的图片",
-  },
-  {
-    href: "/app/charts",
-    label: "数据统计",
-    iconName: "BarChart3",
-    description: "查看使用统计",
-  },
-];
+// 获取侧边栏项目（根据MVP模式过滤）
+const getSidebarItems = (isMVP: boolean): SidebarItem[] => {
+  const items: SidebarItem[] = [
+    {
+      href: "/app/generate",
+      label: "生成宝丽来",
+      iconName: "Camera",
+      description: "创建新的宝丽来照片",
+    },
+    {
+      href: "/app/history",
+      label: "历史记录",
+      iconName: "History",
+      description: "查看生成历史",
+    },
+    {
+      href: "/app/downloads",
+      label: "下载管理",
+      iconName: "Download",
+      description: "管理下载的图片",
+    },
+    {
+      href: "/app/charts",
+      label: "数据统计",
+      iconName: "BarChart3",
+      description: "查看使用统计",
+    },
+  ];
+  return items;
+};
 
-const accountItems: SidebarItem[] = [
-  {
-    href: "/app/order",
-    label: "积分充值",
-    iconName: "CreditCard",
-    description: "购买更多积分",
-  },
-  {
+const getAccountItems = (isMVP: boolean): SidebarItem[] => {
+  const items: SidebarItem[] = [];
+
+  // MVP模式下隐藏积分充值
+  if (!isMVP) {
+    items.push({
+      href: "/app/order",
+      label: "积分充值",
+      iconName: "CreditCard",
+      description: "购买更多积分",
+    });
+  }
+
+  items.push({
     href: "/app/settings",
     label: "账户设置",
     iconName: "Settings",
     description: "管理账户信息",
-  },
-];
+  });
+
+  return items;
+};
 
 interface DashboardSidebarProps {
   userCredit?: number;
@@ -98,6 +112,26 @@ interface DashboardSidebarProps {
 export function DashboardSidebar({ userCredit = 0, className, links }: DashboardSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
+  const isMVP = isGuestMode();
+
+  // MVP模式下从localStorage获取积分
+  const [guestCredits, setGuestCredits] = useState(0);
+  useEffect(() => {
+    if (isMVP) {
+      setGuestCredits(getGuestCredits());
+      const interval = setInterval(() => {
+        setGuestCredits(getGuestCredits());
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isMVP]);
+
+  // 根据模式选择积分来源
+  const displayCredits = isMVP ? guestCredits : userCredit;
+
+  // 根据MVP模式获取侧边栏项目
+  const sidebarItems = getSidebarItems(isMVP);
+  const accountItems = getAccountItems(isMVP);
 
   const SidebarLink = ({ item }: { item: SidebarItem }) => {
     const isActive = pathname === item.href;
@@ -191,7 +225,7 @@ export function DashboardSidebar({ userCredit = 0, className, links }: Dashboard
             <div className="text-center">
               <Sparkles className="w-5 h-5 text-polaroid-orange mx-auto" />
               <div className="text-xs font-bold text-polaroid-brown mt-1">
-                {userCredit}
+                {displayCredits}
               </div>
             </div>
           ) : (
@@ -203,15 +237,23 @@ export function DashboardSidebar({ userCredit = 0, className, links }: Dashboard
                 </span>
               </div>
               <div className="text-2xl font-bold text-polaroid-brown">
-                {userCredit}
+                {displayCredits}
               </div>
-              <Button
-                size="sm"
-                className="w-full mt-2 bg-polaroid-orange hover:bg-polaroid-orange/90 text-white"
-                asChild
-              >
-                <Link href="/app/order">充值</Link>
-              </Button>
+              {/* MVP模式下隐藏充值按钮 */}
+              {!isMVP && (
+                <Button
+                  size="sm"
+                  className="w-full mt-2 bg-polaroid-orange hover:bg-polaroid-orange/90 text-white"
+                  asChild
+                >
+                  <Link href="/app/order">充值</Link>
+                </Button>
+              )}
+              {isMVP && (
+                <p className="text-xs text-muted-foreground mt-2">
+                  测试模式积分
+                </p>
+              )}
             </div>
           )}
         </div>
