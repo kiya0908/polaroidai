@@ -1,22 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Menu, X, Sparkles, Camera, History, CreditCard, Settings } from "lucide-react";
+import { Menu, Sparkles, Camera, History, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import { cn } from "@/lib/utils";
-import { isGuestMode } from "@/lib/mvp-config";
-import { getGuestCredits, getOrCreateGuestUser } from "@/lib/guest-auth";
-import { GuestUserButton } from "@/components/mvp/guest-auth-provider";
+import { useTranslations } from "next-intl";
 
 interface NavItem {
   href: string;
-  label: string;
+  labelKey: string;
   iconName: string;
   badge?: string;
 }
@@ -24,17 +22,17 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     href: "/app/generate",
-    label: "生成宝丽来",
+    labelKey: "generate",
     iconName: "Camera",
   },
   {
     href: "/app/history",
-    label: "历史记录",
+    labelKey: "history",
     iconName: "History",
   },
   {
     href: "/app/order",
-    label: "积分充值",
+    labelKey: "recharge",
     iconName: "CreditCard",
   },
 ];
@@ -53,37 +51,20 @@ const getNavIcon = (iconName: string) => {
 };
 
 interface NavbarProps {
-  userCredit?: number;
+  // 移除了 userCredit 参数，因为不再在 navbar 中显示积分
 }
 
-export function Navbar({ userCredit = 0 }: NavbarProps) {
+export function Navbar({}: NavbarProps = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const isMVP = isGuestMode();
+  const t = useTranslations("Navbar");
 
-  // Clerk 认证 (生产模式)
-  const clerkUser = useUser();
-
-  // MVP模式下的游客积分
-  const [guestCredits, setGuestCredits] = useState(0);
-  useEffect(() => {
-    if (isMVP) {
-      setGuestCredits(getGuestCredits());
-      const interval = setInterval(() => {
-        setGuestCredits(getGuestCredits());
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [isMVP]);
-
-  // 根据模式选择认证状态
-  const isSignedIn = isMVP ? true : clerkUser.isSignedIn;
-  const user = isMVP ? getOrCreateGuestUser() : clerkUser.user;
-  const displayCredits = isMVP ? guestCredits : userCredit;
+  // Clerk 认证
+  const { isSignedIn, user } = useUser();
 
   const NavLink = ({ item, mobile = false }: { item: NavItem; mobile?: boolean }) => {
     const isActive = pathname === item.href;
-    
+
     return (
       <Link
         href={item.href}
@@ -97,7 +78,7 @@ export function Navbar({ userCredit = 0 }: NavbarProps) {
         onClick={() => mobile && setIsOpen(false)}
       >
         {getNavIcon(item.iconName)}
-        {item.label}
+        {t(item.labelKey)}
         {item.badge && (
           <Badge variant="secondary" className="ml-auto">
             {item.badge}
@@ -117,29 +98,18 @@ export function Navbar({ userCredit = 0 }: NavbarProps) {
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold text-polaroid-brown">
-              宝丽来AI
+              {t("brandName")}
             </span>
           </Link>
 
           {/* 桌面端导航 */}
           <div className="hidden md:flex items-center gap-6">
             {isSignedIn && (
-              <>
-                <div className="flex items-center gap-4">
-                  {navItems.map((item) => (
-                    <NavLink key={item.href} item={item} />
-                  ))}
-                </div>
-                
-                {/* 积分显示 */}
-                <Badge
-                  variant="outline"
-                  className="border-polaroid-orange text-polaroid-orange px-3 py-1"
-                >
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  {displayCredits} 积分
-                </Badge>
-              </>
+              <div className="flex items-center gap-4">
+                {navItems.map((item) => (
+                  <NavLink key={item.href} item={item} />
+                ))}
+              </div>
             )}
 
             {/* 用户菜单 */}
@@ -148,24 +118,20 @@ export function Navbar({ userCredit = 0 }: NavbarProps) {
               <LocaleSwitcher />
 
               {isSignedIn ? (
-                isMVP ? (
-                  <GuestUserButton />
-                ) : (
-                  <UserButton
-                    appearance={{
-                      elements: {
-                        avatarBox: "w-8 h-8",
-                      },
-                    }}
-                  />
-                )
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-8 h-8",
+                    },
+                  }}
+                />
               ) : (
                 <div className="flex items-center gap-2">
                   <Button variant="ghost" asChild>
-                    <Link href="/sign-in">登录</Link>
+                    <Link href="/sign-in">{t("signIn")}</Link>
                   </Button>
                   <Button asChild className="bg-polaroid-orange hover:bg-polaroid-orange/90">
-                    <Link href="/sign-up">注册</Link>
+                    <Link href="/sign-up">{t("signUp")}</Link>
                   </Button>
                 </div>
               )}
@@ -185,30 +151,17 @@ export function Navbar({ userCredit = 0 }: NavbarProps) {
                   {/* 用户信息 */}
                   {isSignedIn && (
                     <div className="flex items-center gap-3 p-4 bg-polaroid-cream rounded-lg">
-                      {isMVP ? (
-                        <div className="w-10 h-10 rounded-full bg-vintage-500 flex items-center justify-center text-white font-semibold">
-                          G
-                        </div>
-                      ) : (
-                        <UserButton
-                          appearance={{
-                            elements: {
-                              avatarBox: "w-10 h-10",
-                            },
-                          }}
-                        />
-                      )}
+                      <UserButton
+                        appearance={{
+                          elements: {
+                            avatarBox: "w-10 h-10",
+                          },
+                        }}
+                      />
                       <div className="flex-1">
                         <p className="font-medium text-polaroid-brown">
-                          {isMVP ? (user as any)?.fullName || "游客" : (user as any)?.firstName || (user as any)?.username || "用户"}
+                          {(user as any)?.firstName || (user as any)?.username || t("user")}
                         </p>
-                        <Badge
-                          variant="outline"
-                          className="border-polaroid-orange text-polaroid-orange"
-                        >
-                          <Sparkles className="w-3 h-3 mr-1" />
-                          {displayCredits} 积分
-                        </Badge>
                       </div>
                     </div>
                   )}
@@ -223,10 +176,10 @@ export function Navbar({ userCredit = 0 }: NavbarProps) {
                   ) : (
                     <div className="space-y-2">
                       <Button variant="ghost" asChild className="w-full justify-start">
-                        <Link href="/sign-in">登录</Link>
+                        <Link href="/sign-in">{t("signIn")}</Link>
                       </Button>
                       <Button asChild className="w-full bg-polaroid-orange hover:bg-polaroid-orange/90">
-                        <Link href="/sign-up">注册</Link>
+                        <Link href="/sign-up">{t("signUp")}</Link>
                       </Button>
                     </div>
                   )}
@@ -234,7 +187,7 @@ export function Navbar({ userCredit = 0 }: NavbarProps) {
                   {/* 语言切换 - 移动端 */}
                   <div className="pt-4 border-t">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700">语言</span>
+                      <span className="text-sm font-medium text-gray-700">{t("language")}</span>
                       <LocaleSwitcher />
                     </div>
                   </div>
@@ -245,36 +198,6 @@ export function Navbar({ userCredit = 0 }: NavbarProps) {
         </div>
       </div>
     </nav>
-  );
-}
-
-// NavbarUserInfo组件 - 用户信息显示
-export function NavbarUserInfo() {
-  const isMVP = isGuestMode();
-  const clerkUser = useUser();
-
-  // MVP模式下始终显示游客按钮
-  if (isMVP) {
-    return <GuestUserButton />;
-  }
-
-  // 生产模式
-  if (!clerkUser.isSignedIn) {
-    return (
-      <Button asChild size="sm">
-        <Link href="/sign-in">登录</Link>
-      </Button>
-    );
-  }
-
-  return (
-    <UserButton
-      appearance={{
-        elements: {
-          avatarBox: "w-8 h-8",
-        },
-      }}
-    />
   );
 }
 

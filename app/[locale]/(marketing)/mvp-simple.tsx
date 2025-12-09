@@ -7,7 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Download, Loader2, Camera, Upload, X, Image as ImageIcon } from "lucide-react";
+import { Download, Loader2, Camera, Upload, X, Image as ImageIcon, LogIn } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 // 导入现有的组件
 import WhatIsSection from "@/components/sections/what-is-section";
@@ -16,17 +18,6 @@ import Features from "@/components/sections/features";
 import Examples from "@/components/sections/examples";
 import PolaroidFAQ from "@/components/sections/polaroid-faq";
 import MVPPricingCard from "@/components/sections/mvp-pricing-card";
-import { MVPTestBanner } from "@/components/mvp/test-banner";
-import { MVPCreditsDisplay } from "@/components/mvp/credits-display";
-
-// 导入积分系统
-import {
-  getGuestCredits,
-  deductGuestCredits,
-  hasEnoughCredits,
-  recordGeneration
-} from "@/lib/guest-auth";
-import { MVP_CONFIG } from "@/lib/mvp-config";
 
 interface GenerationResult {
   id: string;
@@ -40,18 +31,22 @@ interface MVPPageProps {
 
 export default function MVPSimplePage({ locale }: MVPPageProps) {
   const t = useTranslations("MVP");
+  const { isSignedIn, user } = useUser();
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<GenerationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // 积分系统状态
-  const [currentCredits, setCurrentCredits] = useState(100);
+  // 积分系统状态（暂时使用模拟数据，等待后端实现）
+  const [currentCredits, setCurrentCredits] = useState(0);
 
-  // 初始化积分
+  // TODO: 等待后端积分系统实现后，从 API 获取用户积分
   useEffect(() => {
-    setCurrentCredits(getGuestCredits());
-  }, []);
+    if (isSignedIn) {
+      // 暂时使用模拟数据
+      setCurrentCredits(100);
+    }
+  }, [isSignedIn]);
 
   // 新增：图片上传相关状态
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -85,16 +80,18 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
   };
 
   const handleGenerate = async () => {
-    // 计算所需积分
-    const requiredCredits = activeTab === "text"
-      ? MVP_CONFIG.credits.textGeneration
-      : MVP_CONFIG.credits.imageConversion;
-
-    // 检查积分是否足够
-    if (!hasEnoughCredits(requiredCredits)) {
-      setError(t("errors.insufficientCredits", { required: requiredCredits, current: currentCredits }));
+    // 检查登录状态
+    if (!isSignedIn) {
+      setError(t("errors.loginRequired") || "请先登录后使用");
       return;
     }
+
+    // TODO: 等待后端积分系统实现后，添加积分检查逻辑
+    // const requiredCredits = activeTab === "text" ? 5 : 10;
+    // if (currentCredits < requiredCredits) {
+    //   setError("积分不足");
+    //   return;
+    // }
 
     // 根据当前选项卡进行不同的验证
     if (activeTab === "text") {
@@ -145,21 +142,12 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
         const data = await response.json();
 
         if (data.success) {
-          // ✅ 扣除积分
-          const deducted = deductGuestCredits(requiredCredits);
-          if (deducted) {
-            setCurrentCredits(getGuestCredits());
-
-            // 记录生成历史
-            recordGeneration({
-              id: data.data.id,
-              prompt: prompt,
-              imageUrl: data.data.outputImageUrl,
-              type: generationType,
-              creditsUsed: requiredCredits,
-              createdAt: Date.now(),
-            });
-          }
+          // TODO: 等待后端积分系统实现后，调用 API 扣除积分
+          // await fetch('/api/credits/deduct', {
+          //   method: 'POST',
+          //   body: JSON.stringify({ amount: requiredCredits })
+          // });
+          // setCurrentCredits(prev => prev - requiredCredits);
 
           setResult(data.data);
         } else {
@@ -179,21 +167,12 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
       const data = await response.json();
 
       if (data.success) {
-        // ✅ 扣除积分
-        const deducted = deductGuestCredits(requiredCredits);
-        if (deducted) {
-          setCurrentCredits(getGuestCredits());
-
-          // 记录生成历史
-          recordGeneration({
-            id: data.data.id,
-            prompt: prompt,
-            imageUrl: data.data.outputImageUrl,
-            type: generationType,
-            creditsUsed: requiredCredits,
-            createdAt: Date.now(),
-          });
-        }
+        // TODO: 等待后端积分系统实现后，调用 API 扣除积分
+        // await fetch('/api/credits/deduct', {
+        //   method: 'POST',
+        //   body: JSON.stringify({ amount: requiredCredits })
+        // });
+        // setCurrentCredits(prev => prev - requiredCredits);
 
         setResult(data.data);
       } else {
@@ -219,17 +198,21 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
-      {/* MVP测试版横幅 */}
-      <MVPTestBanner />
-
-      {/* MVP生成器部分 */}
+      {/* 生成器部分 */}
       <div className="py-12">
         <div className="container mx-auto max-w-4xl px-4">
           {/* 页面标题和积分显示 */}
           <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <MVPCreditsDisplay />
-            </div>
+            {isSignedIn && (
+              <div className="flex justify-center mb-4">
+                <Badge
+                  variant="outline"
+                  className="border-polaroid-orange text-polaroid-orange px-4 py-2 text-lg"
+                >
+                  {currentCredits}
+                </Badge>
+              </div>
+            )}
             <h1 className="text-4xl font-bold bg-gradient-to-r from-[#FF8C42] to-[#8B4513] bg-clip-text text-transparent mb-4">
               {t("title")}
             </h1>
@@ -238,7 +221,7 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative">
             {/* 输入区域 */}
             <Card>
               <CardHeader>
@@ -382,7 +365,7 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
             </Card>
 
             {/* 结果区域 */}
-            <Card>
+            <Card className={!isSignedIn ? "pointer-events-none" : ""}>
               <CardHeader>
                 <CardTitle>{t("result.title")}</CardTitle>
               </CardHeader>
