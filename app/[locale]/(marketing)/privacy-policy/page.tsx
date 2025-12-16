@@ -21,7 +21,7 @@ export default function IndexPage({ params: { locale } }: Props) {
       <hr className="my-4" />
       <div className="mdx">
         <p className="leading-7 [&:not(:first-child)]:mt-6">
-          Last updated: Jane 18, 2024
+          Last updated: December 10, 2025
         </p>
         <p className="leading-7 [&:not(:first-child)]:mt-6">
           This Privacy Policy describes Our policies and procedures on the
@@ -109,7 +109,7 @@ export default function IndexPage({ params: { locale } }: Props) {
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
               <strong>Company</strong> (referred to as either "the Company",
-              "We", "Us" or "Our" in this Agreement) refers to FluxAIProTeam.
+              "We", "Us" or "Our" in this Agreement) refers to PolaroidAI.
             </p>
           </li>
           <li className="mt-2">
@@ -139,7 +139,8 @@ export default function IndexPage({ params: { locale } }: Props) {
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
-              <strong>Service</strong> refers to the Website.
+              <strong>Service</strong> refers to the AI-powered Polaroid-style
+              image generation service provided through the Website.
             </p>
           </li>
           <li className="mt-2">
@@ -162,12 +163,12 @@ export default function IndexPage({ params: { locale } }: Props) {
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
-              <strong>Website</strong> refers to FluxAIProTeam, accessible from{" "}
+              <strong>Website</strong> refers to PolaroidAI, accessible from{" "}
               <a
                 className="font-medium underline underline-offset-4"
-                href="https://fluxaipro.art"
+                href="https://polaroidai.pro"
               >
-                https://fluxaipro.art
+                https://polaroidai.pro
               </a>
             </p>
           </li>
@@ -385,6 +386,75 @@ export default function IndexPage({ params: { locale } }: Props) {
           regarding cookies, please visit our Cookies Policy or the Cookies
           section of our Privacy Policy.
         </p>
+        <h3
+          className="mt-8 scroll-m-20 text-xl font-semibold tracking-tight"
+          id="image-data"
+        >
+          <a
+            className="subheading-anchor font-medium underline underline-offset-4"
+            aria-label="Link to section"
+            href="#image-data"
+          >
+            <span className="icon icon-link" />
+          </a>
+          Image Data
+        </h3>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          When using our AI image generation service, we collect and process
+          the following image-related data:
+        </p>
+        <ul className="my-6 ml-6 list-disc">
+          <li className="mt-2">
+            <strong>Uploaded Images:</strong> Photos you upload for
+            Polaroid-style conversion are temporarily stored for processing.
+          </li>
+          <li className="mt-2">
+            <strong>Text Prompts:</strong> Text descriptions you provide for
+            image generation (maximum 500 characters).
+          </li>
+          <li className="mt-2">
+            <strong>Generated Images:</strong> The Polaroid-style images
+            created by our AI service.
+          </li>
+          <li className="mt-2">
+            <strong>Generation History:</strong> Records of your image
+            generation activities, stored for 30 days.
+          </li>
+        </ul>
+        <h4
+          className="mt-8 scroll-m-20 text-lg font-semibold tracking-tight"
+          id="image-data-retention"
+        >
+          <a
+            className="subheading-anchor font-medium underline underline-offset-4"
+            aria-label="Link to section"
+            href="#image-data-retention"
+          >
+            <span className="icon icon-link" />
+          </a>
+          Image Data Retention and Deletion
+        </h4>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          To protect your privacy, we implement the following data retention
+          policies:
+        </p>
+        <ul className="my-6 ml-6 list-disc">
+          <li className="mt-2">
+            <strong>Uploaded images are automatically deleted within 24 hours</strong>{" "}
+            after processing is complete.
+          </li>
+          <li className="mt-2">
+            Generated images and history records are retained for 30 days,
+            after which they are automatically deleted.
+          </li>
+          <li className="mt-2">
+            Generation records are anonymized for internal analytics purposes.
+          </li>
+          <li className="mt-2">
+            You can request immediate deletion of your data at any time by
+            contacting us.
+          </li>
+        </ul>
         <h3
           className="mt-8 scroll-m-20 text-xl font-semibold tracking-tight"
           id="use-of-your-personal-data"
@@ -702,6 +772,64 @@ export default function IndexPage({ params: { locale } }: Props) {
           electronic storage is 100% secure. While We strive to use commercially
           acceptable means to protect Your Personal Data, We cannot guarantee
           its absolute security.
+        </p>
+        <h2
+          className="mt-10 scroll-m-20 border-b pb-1 text-2xl font-semibold tracking-tight first:mt-0"
+          id="gdpr-compliance"
+        >
+          <a
+            className="subheading-anchor font-medium underline underline-offset-4"
+            aria-label="Link to section"
+            href="#gdpr-compliance"
+          >
+            <span className="icon icon-link" />
+          </a>
+          GDPR Compliance
+        </h2>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          If you are a resident of the European Economic Area (EEA), you have
+          certain data protection rights under the General Data Protection
+          Regulation (GDPR). We aim to take reasonable steps to allow you to
+          correct, amend, delete, or limit the use of your Personal Data.
+        </p>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          You have the following rights:
+        </p>
+        <ul className="my-6 ml-6 list-disc">
+          <li className="mt-2">
+            <strong>Right to Access:</strong> You have the right to request
+            copies of your personal data.
+          </li>
+          <li className="mt-2">
+            <strong>Right to Rectification:</strong> You have the right to
+            request correction of inaccurate personal data.
+          </li>
+          <li className="mt-2">
+            <strong>Right to Erasure:</strong> You have the right to request
+            deletion of your personal data under certain conditions.
+          </li>
+          <li className="mt-2">
+            <strong>Right to Restrict Processing:</strong> You have the right
+            to request restriction of processing your personal data.
+          </li>
+          <li className="mt-2">
+            <strong>Right to Data Portability:</strong> You have the right to
+            request transfer of your data to another organization.
+          </li>
+          <li className="mt-2">
+            <strong>Right to Object:</strong> You have the right to object to
+            our processing of your personal data.
+          </li>
+        </ul>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          To exercise any of these rights, please contact us at{" "}
+          <a
+            className="font-medium underline underline-offset-4"
+            href="mailto:support@polaroidai.pro"
+          >
+            support@polaroidai.pro
+          </a>
+          .
         </p>
         <h2
           className="mt-10 scroll-m-20 border-b pb-1 text-2xl font-semibold tracking-tight first:mt-0"

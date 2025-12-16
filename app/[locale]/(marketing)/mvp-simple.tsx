@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,18 +37,7 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
   const [result, setResult] = useState<GenerationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // 积分系统状态（暂时使用模拟数据，等待后端实现）
-  const [currentCredits, setCurrentCredits] = useState(0);
-
-  // TODO: 等待后端积分系统实现后，从 API 获取用户积分
-  useEffect(() => {
-    if (isSignedIn) {
-      // 暂时使用模拟数据
-      setCurrentCredits(100);
-    }
-  }, [isSignedIn]);
-
-  // 新增：图片上传相关状态
+  // 图片上传相关状态
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -201,18 +190,8 @@ export default function MVPSimplePage({ locale }: MVPPageProps) {
       {/* 生成器部分 */}
       <div className="py-12">
         <div className="container mx-auto max-w-4xl px-4">
-          {/* 页面标题和积分显示 */}
+          {/* 页面标题 */}
           <div className="text-center mb-8">
-            {isSignedIn && (
-              <div className="flex justify-center mb-4">
-                <Badge
-                  variant="outline"
-                  className="border-polaroid-orange text-polaroid-orange px-4 py-2 text-lg"
-                >
-                  {currentCredits}
-                </Badge>
-              </div>
-            )}
             <h1 className="text-4xl font-bold bg-gradient-to-r from-[#FF8C42] to-[#8B4513] bg-clip-text text-transparent mb-4">
               {t("title")}
             </h1>

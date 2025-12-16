@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { z } from "zod";
 
 import { Credits, model, Ratio } from "@/config/constants";
-import { FluxHashids } from "@/db/dto/flux.dto";
+import { FluxHashids } from "@/db/dto/polaroid.dto";
 import { prisma } from "@/db/prisma";
 import { getUserCredit } from "@/db/queries/account";
 import { BillingType } from "@/db/type";

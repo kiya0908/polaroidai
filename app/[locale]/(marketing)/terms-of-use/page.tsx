@@ -23,7 +23,7 @@ export default function IndexPage({ params: { locale } }: Props) {
       <hr className="my-4" />
       <div className="mdx">
         <p className="leading-7 [&:not(:first-child)]:mt-6">
-          Last updated: May 29, 2024
+          Last updated: December 10, 2025
         </p>
         <p className="leading-7 [&:not(:first-child)]:mt-6">
           Please read these terms and conditions carefully before using Our
@@ -89,13 +89,13 @@ export default function IndexPage({ params: { locale } }: Props) {
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
-              <strong>Country</strong> refers to: Singapore
+              <strong>Country</strong> refers to: China
             </p>
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
               <strong>Company</strong> (referred to as either "the Company",
-              "We", "Us" or "Our" in this Agreement) refers to FluxAIProTeam.
+              "We", "Us" or "Our" in this Agreement) refers to PolaroidAI.
             </p>
           </li>
           <li className="mt-2">
@@ -106,7 +106,9 @@ export default function IndexPage({ params: { locale } }: Props) {
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
-              <strong>Service</strong> refers to the Website.
+              <strong>Service</strong> refers to the AI-powered Polaroid-style
+              image generation service provided through the Website, including
+              text-to-image generation and photo-to-Polaroid conversion features.
             </p>
           </li>
           <li className="mt-2">
@@ -135,12 +137,12 @@ export default function IndexPage({ params: { locale } }: Props) {
           </li>
           <li className="mt-2">
             <p className="leading-7 [&:not(:first-child)]:mt-6">
-              <strong>Website</strong> refers to FluxAIProTeam, accessible from{" "}
+              <strong>Website</strong> refers to PolaroidAI, accessible from{" "}
               <a
                 className="font-medium underline underline-offset-4"
-                href="https://fluxaipro.art"
+                href="https://polaroidai.pro"
               >
-                https://fluxaipro.art
+                https://polaroidai.pro
               </a>
             </p>
           </li>
@@ -194,6 +196,106 @@ export default function IndexPage({ params: { locale } }: Props) {
           use the Application or the Website and tells You about Your privacy
           rights and how the law protects You. Please read Our Privacy Policy
           carefully before using Our Service.
+        </p>
+        <h2
+          className="mt-10 scroll-m-20 border-b pb-1 text-2xl font-semibold tracking-tight first:mt-0"
+          id="ai-image-generation-service"
+        >
+          <a
+            className="subheading-anchor font-medium underline underline-offset-4"
+            aria-label="Link to section"
+            href="#ai-image-generation-service"
+          >
+            <span className="icon icon-link" />
+          </a>
+          AI Image Generation Service
+        </h2>
+        <h3
+          className="mt-8 scroll-m-20 text-xl font-semibold tracking-tight"
+          id="service-description"
+        >
+          <a
+            className="subheading-anchor font-medium underline underline-offset-4"
+            aria-label="Link to section"
+            href="#service-description"
+          >
+            <span className="icon icon-link" />
+          </a>
+          Service Description
+        </h3>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          PolaroidAI provides an AI-powered image generation service that
+          converts text descriptions or uploaded photos into Polaroid-style
+          images. The Service uses advanced AI technology (Gemini) to create
+          authentic vintage Polaroid aesthetics.
+        </p>
+        <h3
+          className="mt-8 scroll-m-20 text-xl font-semibold tracking-tight"
+          id="credits-system"
+        >
+          <a
+            className="subheading-anchor font-medium underline underline-offset-4"
+            aria-label="Link to section"
+            href="#credits-system"
+          >
+            <span className="icon icon-link" />
+          </a>
+          Credits System
+        </h3>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          The Service operates on a credit-based consumption model:
+        </p>
+        <ul className="my-6 ml-6 list-disc">
+          <li className="mt-2">Text-to-image generation: 5 credits per generation</li>
+          <li className="mt-2">Photo-to-Polaroid conversion: 8 credits per conversion</li>
+          <li className="mt-2">New users receive 50 free credits upon registration</li>
+          <li className="mt-2">One free generation opportunity per day</li>
+          <li className="mt-2">Credits are fully refunded if generation fails</li>
+        </ul>
+        <h3
+          className="mt-8 scroll-m-20 text-xl font-semibold tracking-tight"
+          id="content-guidelines"
+        >
+          <a
+            className="subheading-anchor font-medium underline underline-offset-4"
+            aria-label="Link to section"
+            href="#content-guidelines"
+          >
+            <span className="icon icon-link" />
+          </a>
+          Content Guidelines
+        </h3>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          You agree not to use the Service to generate content that:
+        </p>
+        <ul className="my-6 ml-6 list-disc">
+          <li className="mt-2">Is illegal, harmful, or violates any applicable laws</li>
+          <li className="mt-2">Contains explicit, violent, or inappropriate material</li>
+          <li className="mt-2">Infringes on intellectual property rights of others</li>
+          <li className="mt-2">Impersonates or misrepresents any person or entity</li>
+          <li className="mt-2">Contains malicious content or promotes harmful activities</li>
+        </ul>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          We reserve the right to refuse generation requests and terminate
+          accounts that violate these guidelines.
+        </p>
+        <h3
+          className="mt-8 scroll-m-20 text-xl font-semibold tracking-tight"
+          id="intellectual-property"
+        >
+          <a
+            className="subheading-anchor font-medium underline underline-offset-4"
+            aria-label="Link to section"
+            href="#intellectual-property"
+          >
+            <span className="icon icon-link" />
+          </a>
+          Intellectual Property
+        </h3>
+        <p className="leading-7 [&:not(:first-child)]:mt-6">
+          You retain ownership of the images you upload. For AI-generated
+          content, you are granted a non-exclusive license to use the generated
+          images for personal and commercial purposes, subject to these Terms.
         </p>
         <h2
           className="mt-10 scroll-m-20 border-b pb-1 text-2xl font-semibold tracking-tight first:mt-0"

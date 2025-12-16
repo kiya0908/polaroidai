@@ -1,4 +1,5 @@
 import * as React from "react";
+import Image from "next/image";
 
 import { getTranslations } from "next-intl/server";
 
@@ -48,7 +49,13 @@ export async function SiteFooter({ className }: React.HTMLAttributes<HTMLElement
       </div>
       <div className="mt-4 flex max-w-7xl flex-col items-center justify-between gap-4 text-sm md:flex-row">
         <div className="flex items-center gap-2">
-          <Icons.logo className="h-6 w-6" />
+          <Image
+            src="/android-chrome-192x192.png"
+            alt="PolaroidAI Logo"
+            width={24}
+            height={24}
+            className="rounded"
+          />
           <span className="font-medium">PolaroidAI.Art Inc.</span>
         </div>
         <div className="flex flex-col items-center gap-4 md:flex-row">

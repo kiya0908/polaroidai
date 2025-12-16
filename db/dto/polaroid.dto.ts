@@ -9,6 +9,9 @@ export const PolaroidHashids = new Hashids(
   "abcdefghijklmnopqrstuvwxyz1234567890",
 );
 
+// 兼容旧代码的别名 (原 flux.dto.ts)
+export const FluxHashids = PolaroidHashids;
+
 // 宝丽来下载记录ID哈希化
 export const PolaroidDownloadHashids = new Hashids(
   env.HASHID_SALT + "polaroid_download",

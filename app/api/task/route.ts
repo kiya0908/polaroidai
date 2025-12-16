@@ -4,7 +4,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { z } from "zod";
 
-import { FluxHashids } from "@/db/dto/flux.dto";
+import { FluxHashids } from "@/db/dto/polaroid.dto";
 import { prisma } from "@/db/prisma";
 import { getErrorMessage } from "@/lib/handle-error";
 import { redis } from "@/lib/redis";

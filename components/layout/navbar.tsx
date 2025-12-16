@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { Menu, Sparkles, Camera, History, CreditCard } from "lucide-react";
@@ -94,9 +95,13 @@ export function Navbar({}: NavbarProps = {}) {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-polaroid-orange rounded-lg flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
+            <Image
+              src="/android-chrome-192x192.png"
+              alt={t("brandName")}
+              width={32}
+              height={32}
+              className="rounded-lg"
+            />
             <span className="text-xl font-bold text-polaroid-brown">
               {t("brandName")}
             </span>

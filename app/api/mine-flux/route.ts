@@ -4,7 +4,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
 
 import { model } from "@/config/constants";
-import { FluxHashids } from "@/db/dto/flux.dto";
+import { FluxHashids } from "@/db/dto/polaroid.dto";
 import { prisma } from "@/db/prisma";
 import { FluxTaskStatus } from "@/db/type";
 import { getErrorMessage } from "@/lib/handle-error";
