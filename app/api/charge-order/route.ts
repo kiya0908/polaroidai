@@ -151,8 +151,8 @@ export async function POST(req: NextRequest) {
         console.log('Creem客户端初始化成功，开始创建checkout session...');
         console.log('📦 请求参数:', {
           productId: creemProductId,
-          successUrl: `${url || `http://localhost:3000/pricing`}?success=true`,
-          cancelUrl: `${url || `http://localhost:3000/pricing`}?success=false`,
+          successUrl: `${url || `http://localhost:3000/app`}?success=true`,
+          cancelUrl: `${url || `http://localhost:3000/app`}?success=false`,
           customerEmail: user.primaryEmailAddress.emailAddress,
           customerName: user.fullName || user.username || "",
         });
@@ -160,8 +160,8 @@ export async function POST(req: NextRequest) {
         // 创建Creem checkout session
         const creemCheckout = await creem.checkouts.create({
           productId: creemProductId,
-          successUrl: `${url || `http://localhost:3000/pricing`}?success=true`,
-          cancelUrl: `${url || `http://localhost:3000/pricing`}?success=false`,
+          successUrl: `${url || `http://localhost:3000/app`}?success=true`,
+          cancelUrl: `${url || `http://localhost:3000/app`}?success=false`,
           customer: {
             email: user.primaryEmailAddress.emailAddress,
             name: user.fullName || user.username || "",

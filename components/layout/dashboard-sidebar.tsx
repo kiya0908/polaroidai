@@ -104,30 +104,24 @@ const getAccountItems = (isMVP: boolean): SidebarItem[] => {
 };
 
 interface DashboardSidebarProps {
-  userCredit?: number;
   className?: string;
-  links?: any[]; // 添加links属性以兼容布局文件
+  links?: any[];
 }
 
-export function DashboardSidebar({ userCredit = 0, className, links }: DashboardSidebarProps) {
+export function DashboardSidebar({ className, links }: DashboardSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
   const isMVP = isGuestMode();
 
-  // MVP模式下从localStorage获取积分
+  // 从localStorage获取积分
   const [guestCredits, setGuestCredits] = useState(0);
   useEffect(() => {
-    if (isMVP) {
+    setGuestCredits(getGuestCredits());
+    const interval = setInterval(() => {
       setGuestCredits(getGuestCredits());
-      const interval = setInterval(() => {
-        setGuestCredits(getGuestCredits());
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [isMVP]);
-
-  // 根据模式选择积分来源
-  const displayCredits = isMVP ? guestCredits : userCredit;
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   // 根据MVP模式获取侧边栏项目
   const sidebarItems = getSidebarItems(isMVP);
@@ -225,7 +219,7 @@ export function DashboardSidebar({ userCredit = 0, className, links }: Dashboard
             <div className="text-center">
               <Sparkles className="w-5 h-5 text-polaroid-orange mx-auto" />
               <div className="text-xs font-bold text-polaroid-brown mt-1">
-                {displayCredits}
+                {guestCredits}
               </div>
             </div>
           ) : (
@@ -237,7 +231,7 @@ export function DashboardSidebar({ userCredit = 0, className, links }: Dashboard
                 </span>
               </div>
               <div className="text-2xl font-bold text-polaroid-brown">
-                {displayCredits}
+                {guestCredits}
               </div>
               {/* MVP模式下隐藏充值按钮 */}
               {!isMVP && (

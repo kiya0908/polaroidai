@@ -51,11 +51,7 @@ const getNavIcon = (iconName: string) => {
   }
 };
 
-interface NavbarProps {
-  // 移除了 userCredit 参数，因为不再在 navbar 中显示积分
-}
-
-export function Navbar({}: NavbarProps = {}) {
+export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const t = useTranslations("Navbar");
@@ -208,3 +204,16 @@ export function Navbar({}: NavbarProps = {}) {
 
 // 导出别名以兼容不同的导入方式
 export { Navbar as NavBar };
+
+// Dashboard layout 使用的用户信息组件
+export function NavbarUserInfo() {
+  return (
+    <UserButton
+      appearance={{
+        elements: {
+          avatarBox: "w-8 h-8",
+        },
+      }}
+    />
+  );
+}

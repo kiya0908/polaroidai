@@ -93,7 +93,7 @@ export function CreemBillingButton({
           currency: "USD",
           channel: "Creem",
           creemProductId,
-          url: url(pathname).href,
+          url: url("/app").href,
         }),
       });
 
