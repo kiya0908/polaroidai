@@ -7,38 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model ChargeOrder {
-  id                Int       @id @default(autoincrement())
-  userId            String    @map("user_id") @db.VarChar(200)
-  userInfo          Json?     @map("user_info") @db.Json
-  amount            Int
-  phase             String    @db.VarChar
-  channel           String    @db.VarChar
-  currency          String    @db.VarChar
-  paymentAt         DateTime? @map("payment_at") @db.Timestamp(6)
-  result            Json?     @db.Json
-  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt         DateTime  @default(now()) @map("updated_at") @db.Timestamp(6)
-  provider_order_id String?   @db.VarChar
-
-  @@map("charge_order")
-}
-
-model ChargeProduct {
-  id          Int      @id @default(autoincrement())
-  amount      Int
-  currency    String   @db.VarChar
-  locale      String?  @db.VarChar
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamp(6)
-  description String?  @db.VarChar
-  features    Json?    @db.Json
-  name        String   @db.VarChar
-
-  @@unique([name, locale])
-  @@map("charge_product")
-}
-
 model polaroidai_UserCredit {
   id        Int      @id @default(autoincrement())
   userId    String   @unique @map("user_id") @db.VarChar(200)
@@ -252,54 +220,4 @@ model polaroidai_subscribers {
   updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@map("polaroidai_subscribers")
-}
-
-model conversion_history {
-  id                  Int       @id @default(autoincrement())
-  user_id             String    @db.VarChar(200)
-  original_file_name  String    @db.VarChar(255)
-  original_file_size  Int
-  converted_file_name String?   @db.VarChar(255)
-  download_url        String?
-  url_expires_at      DateTime? @db.Timestamp(6)
-  conversion_cost     Float?
-  status              String    @db.VarChar(50)
-  error_message       String?
-  created_at          DateTime  @default(now()) @db.Timestamp(6)
-  updated_at          DateTime  @default(now()) @db.Timestamp(6)
-}
-
-model test_polaroidai_simple {
-  id         Int      @id @default(autoincrement())
-  user_id    String   @db.VarChar(200)
-  content    String?
-  created_at DateTime @default(now()) @db.Timestamp(6)
-}
-
-model user_conversion_usage {
-  id                     Int       @id @default(autoincrement())
-  user_id                String    @unique @db.VarChar(200)
-  daily_conversion_count Int       @default(0)
-  last_conversion_date   DateTime? @db.Date
-  created_at             DateTime  @default(now()) @db.Timestamp(6)
-  updated_at             DateTime  @default(now()) @db.Timestamp(6)
-}
-
-model user_payment_info {
-  id                        Int       @id @default(autoincrement())
-  user_id                   String    @unique @db.VarChar(200)
-  user_info                 Json?     @db.Json
-  stripe_customer_id        String?   @db.VarChar
-  stripe_subscription_id    String?   @db.VarChar
-  stripe_price_id           String?   @db.VarChar
-  stripe_current_period_end DateTime? @db.Timestamp(6)
-  created_at                DateTime  @default(now()) @db.Timestamp(6)
-  updated_at                DateTime  @default(now()) @db.Timestamp(6)
-  paypal_subscription_id    String?   @db.VarChar
-  subscription_expires_at   DateTime? @db.Timestamp(6)
-  subscription_plan_id      String?   @db.VarChar
-  subscription_provider     String?   @default("creem") @db.VarChar
-  subscription_status       String?   @db.VarChar
-  creem_customer_id         String?   @db.VarChar
-  creem_subscription_id     String?   @db.VarChar
 }

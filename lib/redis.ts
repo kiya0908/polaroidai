@@ -12,12 +12,30 @@ type NoopRedis = {
   set: (...args: unknown[]) => Promise<void>;
   get: (...args: unknown[]) => Promise<unknown>;
   del: (...args: unknown[]) => Promise<void>;
+  scriptLoad: (...args: unknown[]) => Promise<string>;
+  eval: (...args: unknown[]) => Promise<unknown>;
+  multi: () => any;
+  sadd: (...args: unknown[]) => Promise<number>;
+  srem: (...args: unknown[]) => Promise<number>;
+  sismember: (...args: unknown[]) => Promise<boolean>;
+  exists: (...args: unknown[]) => Promise<boolean>;
+  expire: (...args: unknown[]) => Promise<boolean>;
+  pipelines: () => any;
 };
 
 const createNoopRedis = (): NoopRedis => ({
   async set() {},
   async get() { return null; },
   async del() {},
+  async scriptLoad() { return "mock-script"; },
+  async eval() { return null; },
+  multi() { return { exec: async () => [], watch: async () => {}, unwatch: async () => {} }; },
+  async sadd() { return 1; },
+  async srem() { return 1; },
+  async sismember() { return false; },
+  async exists() { return false; },
+  async expire() { return true; },
+  pipelines() { return { exec: async () => [] }; },
 });
 
 export const redis: Redis | NoopRedis = hasUpstashCreds

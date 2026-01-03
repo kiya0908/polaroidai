@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Download, Share2, Eye, Clock, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +21,11 @@ interface PolaroidPreviewProps {
 
 export function PolaroidPreview({ result, onDownload, onShare }: PolaroidPreviewProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [dateLabel, setDateLabel] = useState("");
+
+  useEffect(() => {
+    setDateLabel(new Date().toLocaleDateString());
+  }, []);
 
   const formatProcessingTime = (time: number) => {
     return `${(time / 1000).toFixed(1)}秒`;
@@ -79,7 +84,7 @@ export function PolaroidPreview({ result, onDownload, onShare }: PolaroidPreview
           {/* 宝丽来底部标签区域 */}
           <div className="absolute bottom-4 left-4 right-4 text-center">
             <div className="text-xs text-gray-500 font-mono">
-              Polaroid AI • {new Date().toLocaleDateString()}
+              Polaroid AI • {dateLabel}
             </div>
           </div>
         </div>

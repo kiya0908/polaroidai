@@ -357,7 +357,8 @@
     "label": "Pricing",
     "action": {
       "signin": "Sign in",
-      "buy": "One Time Payment"
+      "buy": "One Time Payment",
+      "unavailable": "Unavailable"
     },
     "contact": {
       "title": "Contact us",
@@ -368,28 +369,28 @@
       "title": "Frequently asked questions",
       "subtitle": "Explore our comprehensive FAQ to find quick answers to common inquiries. If you need further assistance, don't hesitate to contact us for personalized help.",
       "item1": {
-        "question": "How does Flux AI compare to Stable Diffusion 3?",
-        "answer": "Flux AI offers faster generation times, higher image quality, and a more user-friendly interface compared to Stable Diffusion 3. The Flux.1 model incorporates the latest advancements in AI research."
+        "question": "What is Polaroid AI?",
+        "answer": "Polaroid AI is an AI-powered photo generator that creates vintage Polaroid-style photos from text descriptions or image compositions in just 10 seconds."
       },
       "item2": {
-        "question": "Is Flux AI available on GitHub or Hugging Face?",
-        "answer": "Yes, Flux AI is open-source and available on both GitHub and Hugging Face."
+        "question": "How does the credit system work?",
+        "answer": "Credits are used to generate photos. Text generation costs 5 credits per photo, and multi-image composition costs 8 credits per photo. You can purchase credits through one-time payments."
       },
       "item3": {
-        "question": "What makes Flux AI different from other AI image generators?",
-        "answer": "Flux AI combines speed, quality, and ease of use. It's faster than Midjourney, more user-friendly than ComfyUI, and produces higher quality images than many competitors."
+        "question": "What payment methods do you accept?",
+        "answer": "We accept credit card payments through Creem, a secure payment processor. All transactions are encrypted and secure."
       },
       "item4": {
-        "question": "How to use Flux AI?",
-        "answer": "To use Flux AI, simply visit fluxaipro.art, enter your prompt, and witness the creation of breathtaking visuals in a matter of seconds."
+        "question": "How do I use Polaroid AI?",
+        "answer": "Simply enter a text description of your desired photo, or upload multiple images for composition. Click generate, and your vintage Polaroid-style photo will be ready in about 10 seconds."
       },
       "item5": {
-        "question": "What pricing plans does Flux AI offer?",
-        "answer": "We use points to use our services, and you can click on the price card to buy points (only one payment is required)."
+        "question": "Can I download the generated photos?",
+        "answer": "Yes! All generated photos can be downloaded in high-quality format. Your creation history is saved in your browser for easy access."
       },
       "item6": {
-        "question": "How can I get support for Online?",
-        "answer": "You can reach out to us at support@polaroidai.pro."
+        "question": "How can I get support?",
+        "answer": "You can reach out to us at support@polaroidai.pro for any questions or issues. We're here to help!"
       }
     },
     "tip": {

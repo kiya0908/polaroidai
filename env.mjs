@@ -22,8 +22,8 @@ export const env = createEnv({
     S3_URL_BASE: z.string().optional(),
     S3_BUCKET: z.string().optional(),
 
-    STRIPE_API_KEY: z.string().optional(),
-    STRIPE_WEBHOOK_SECRET: z.string().optional(),
+    CREEM_API_KEY: z.string().optional(),
+    CREEM_WEBHOOK_SECRET: z.string().optional(),
     WEBHOOK_SECRET: z.string().optional(),
     CLERK_SECRET_KEY: z.string().optional(),
     LOG_SNAG_TOKEN: z.string().optional(),
@@ -47,10 +47,6 @@ export const env = createEnv({
       .optional()
       .default(false),
 
-    NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PLAN_ID: z.string().optional(),
-    NEXT_PUBLIC_STRIPE_PRO_YEARLY_PLAN_ID: z.string().optional(),
-    NEXT_PUBLIC_STRIPE_BUSINESS_MONTHLY_PLAN_ID: z.string().optional(),
-    NEXT_PUBLIC_STRIPE_BUSINESS_YEARLY_PLAN_ID: z.string().optional(),
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
 
     NEXT_PUBLIC_UMAMI_DATA_ID: z.string().optional(),
@@ -81,16 +77,8 @@ export const env = createEnv({
     S3_URL_BASE: process.env.S3_URL_BASE,
     S3_BUCKET: process.env.S3_BUCKET,
 
-    STRIPE_API_KEY: process.env.STRIPE_API_KEY,
-    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
-    NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PLAN_ID:
-      process.env.NEXT_PUBLIC_STRIPE_PRO_MONTHLY_PLAN_ID,
-    NEXT_PUBLIC_STRIPE_PRO_YEARLY_PLAN_ID:
-      process.env.NEXT_PUBLIC_STRIPE_PRO_YEARLY_PLAN_ID,
-    NEXT_PUBLIC_STRIPE_BUSINESS_MONTHLY_PLAN_ID:
-      process.env.NEXT_PUBLIC_STRIPE_BUSINESS_MONTHLY_PLAN_ID,
-    NEXT_PUBLIC_STRIPE_BUSINESS_YEARLY_PLAN_ID:
-      process.env.NEXT_PUBLIC_STRIPE_BUSINESS_YEARLY_PLAN_ID,
+    CREEM_API_KEY: process.env.CREEM_API_KEY,
+    CREEM_WEBHOOK_SECRET: process.env.CREEM_WEBHOOK_SECRET,
     TASK_HEADER_KEY: process.env.TASK_HEADER_KEY,
     FLUX_HEADER_KEY: process.env.FLUX_HEADER_KEY,
     FLUX_CREATE_URL: process.env.FLUX_CREATE_URL,

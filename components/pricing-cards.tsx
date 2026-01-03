@@ -7,7 +7,7 @@ import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
 import { useReward } from "react-rewards";
 
-import { BillingFormButton } from "@/components/forms/billing-form-button";
+import { CreemBillingButton } from "@/components/forms/creem-billing-button";
 import { HeaderSection } from "@/components/shared/header-section";
 import { Icons } from "@/components/shared/icons";
 import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
@@ -105,7 +105,7 @@ const PricingCard = ({
             ))} */}
         </ul>
         <SignedIn>
-          <BillingFormButton offer={offer} btnText={t("action.buy")} />
+          <CreemBillingButton offer={offer} btnText={t("action.buy")} />
         </SignedIn>
 
         <SignedOut>
