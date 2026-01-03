@@ -39,6 +39,9 @@ next-env.d.ts
 # email
 /.react-email/
 
+# local database
+/postgres
+
 .vscode
 .contentlayer
 
