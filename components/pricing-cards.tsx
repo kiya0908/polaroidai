@@ -48,7 +48,7 @@ const PricingCard = ({
     <div
       className={cn(
         "relative flex flex-col overflow-hidden rounded-3xl border shadow-sm",
-        offer.amount === 1990 ? "-m-0.5 border-2 border-purple-400" : "",
+        offer.isPopular ? "-m-0.5 border-2 border-purple-400" : "",
       )}
       key={offer.title}
     >
@@ -112,7 +112,7 @@ const PricingCard = ({
           <div className="flex justify-center">
             <SignInButton mode="modal" forceRedirectUrl={url(pathname).href}>
               <Button
-                variant={offer.amount === 1990 ? "default" : "outline"}
+                variant={offer.isPopular ? "default" : "outline"}
                 className="w-full"
                 // onClick={() => setShowSignInModal(true)}
               >
@@ -260,10 +260,20 @@ export function PricingCards({
           </ToggleGroup>
         </div> */}
 
-        <div className="grid gap-5 bg-inherit py-5 md:grid-cols-3">
-          {chargeProduct?.map((offer) => (
-            <PricingCard offer={offer} key={offer.id} />
-          ))}
+        <div className="w-full overflow-x-auto pb-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40">
+          <div 
+            className="flex gap-5 bg-inherit py-5 md:grid md:justify-center"
+            style={{ 
+              // 动态设置grid列数：最多3列，超过3个产品时使用滚动
+              gridTemplateColumns: `repeat(${Math.min(chargeProduct?.length || 3, 3)}, minmax(280px, 1fr))`,
+            }}
+          >
+            {chargeProduct?.map((offer) => (
+              <div key={offer.id} className="min-w-[280px] flex-shrink-0 md:min-w-0 md:flex-shrink">
+                <PricingCard offer={offer} />
+              </div>
+            ))}
+          </div>
         </div>
 
         <p className="mt-3 text-balance text-center text-base text-muted-foreground">
@@ -301,12 +311,21 @@ export function PricingCardDialog({
 }) {
   const t = useTranslations("PricingPage");
   const { isSm, isMobile } = useMediaQuery();
+  
+  // 移动端只显示最受欢迎的产品，如果没有则显示第一个
   const product = useMemo(() => {
     if (isSm || isMobile) {
-      return ([chargeProduct?.[1]] ?? []) as ChargeProductSelectDto[];
+      const popularProduct = chargeProduct?.find(p => p.isPopular);
+      if (popularProduct) {
+        return [popularProduct] as ChargeProductSelectDto[];
+      }
+      return chargeProduct?.slice(0, 1) ?? ([] as ChargeProductSelectDto[]);
     }
     return chargeProduct ?? ([] as ChargeProductSelectDto[]);
-  }, [isSm, isMobile]);
+  }, [isSm, isMobile, chargeProduct]);
+
+  // 动态计算grid列数
+  const gridCols = Math.min(product?.length || 1, 3);
 
   return (
     <Dialog
@@ -318,7 +337,14 @@ export function PricingCardDialog({
       <DialogContent className="w-[96vw] md:w-[960px] md:max-w-[960px]">
         <DialogHeader>
           <DialogTitle>{t("title")}</DialogTitle>
-          <div className="grid grid-cols-1 gap-5 bg-inherit py-5 lg:grid-cols-3">
+          <div 
+            className="grid grid-cols-1 gap-5 bg-inherit py-5"
+            style={{
+              gridTemplateColumns: isSm || isMobile 
+                ? '1fr' 
+                : `repeat(${gridCols}, minmax(0, 1fr))`,
+            }}
+          >
             {product?.map((offer) => (
               <PricingCard offer={offer} key={offer.id} />
             ))}

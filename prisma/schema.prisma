@@ -137,18 +137,21 @@ model polaroidai_media {
 }
 
 model polaroidai_ChargeProduct {
-  id             Int      @id @default(autoincrement())
-  amount         Int
-  originalAmount Int      @map("original_amount")
-  credit         Int
-  currency       String   @db.VarChar
-  locale         String   @db.VarChar
-  title          String   @db.VarChar
-  tag            Json?    @db.Json
-  message        String?
-  state          String   @db.VarChar
-  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  id              Int      @id @default(autoincrement())
+  amount          Int
+  originalAmount  Int      @map("original_amount")
+  credit          Int
+  currency        String   @db.VarChar
+  locale          String   @db.VarChar
+  title           String   @db.VarChar
+  tag             Json?    @db.Json
+  message         String?
+  state           String   @db.VarChar
+  creemProductId  String?  @map("creem_product_id") @db.VarChar
+  isPopular       Boolean  @default(false) @map("is_popular")
+  sortOrder       Int      @default(0) @map("sort_order")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@map("polaroidai_charge_product")
 }

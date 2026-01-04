@@ -23,7 +23,10 @@ function getFallbackProducts(locale: string = "en") {
         message: "适合尝鲜使用,1000积分,一次性付款,无订阅",
         state: "active",
         tag: ["推荐新手"],
-        id: "fallback_zh_1"
+        id: "fallback_zh_1",
+        creemProductId: "prod_7lvdtQGtIcLEZu2rTBppgN",
+        isPopular: false,
+        sortOrder: 1,
       },
       {
         amount: 1990,
@@ -35,7 +38,10 @@ function getFallbackProducts(locale: string = "en") {
         message: "最超值选择,2500积分,节省20%,一次性付款",
         state: "active",
         tag: ["最受欢迎", "限时优惠"],
-        id: "fallback_zh_2"
+        id: "fallback_zh_2",
+        creemProductId: "prod_66bghBzS1egNxmz4vp7TwW",
+        isPopular: true,
+        sortOrder: 2,
       },
       {
         amount: 9900,
@@ -47,7 +53,10 @@ function getFallbackProducts(locale: string = "en") {
         message: "适合重度用户,10000积分,最大价值,一次性付款",
         state: "active",
         tag: ["专业之选", "最大优惠"],
-        id: "fallback_zh_3"
+        id: "fallback_zh_3",
+        creemProductId: "prod_O2wLG60Wu0otsJyWUokdH",
+        isPopular: false,
+        sortOrder: 3,
       }
     ];
   } else {
@@ -62,7 +71,10 @@ function getFallbackProducts(locale: string = "en") {
         message: "Perfect for trying out,1000 credits,One-time payment,No subscription",
         state: "active",
         tag: ["Recommended for beginners"],
-        id: "fallback_en_1"
+        id: "fallback_en_1",
+        creemProductId: "prod_7lvdtQGtIcLEZu2rTBppgN",
+        isPopular: false,
+        sortOrder: 1,
       },
       {
         amount: 1990,
@@ -74,7 +86,10 @@ function getFallbackProducts(locale: string = "en") {
         message: "Best value for regular users,2500 credits,Save 20%,One-time payment",
         state: "active",
         tag: ["Most Popular", "Limited Time Offer"],
-        id: "fallback_en_2"
+        id: "fallback_en_2",
+        creemProductId: "prod_66bghBzS1egNxmz4vp7TwW",
+        isPopular: true,
+        sortOrder: 2,
       },
       {
         amount: 9900,
@@ -86,7 +101,10 @@ function getFallbackProducts(locale: string = "en") {
         message: "For power users,10000 credits,Maximum value,One-time payment",
         state: "active",
         tag: ["Professional Choice", "Best Value"],
-        id: "fallback_en_3"
+        id: "fallback_en_3",
+        creemProductId: "prod_O2wLG60Wu0otsJyWUokdH",
+        isPopular: false,
+        sortOrder: 3,
       }
     ];
   }

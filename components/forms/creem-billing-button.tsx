@@ -17,13 +17,6 @@ interface CreemBillingButtonProps {
   btnText?: string;
 }
 
-// Creem 产品 ID 映射
-const CREEM_PRODUCT_MAP: Record<number, string> = {
-  1000: "prod_7lvdtQGtIcLEZu2rTBppgN", // 1000积分 - $9.9
-  2500: "prod_66bghBzS1egNxmz4vp7TwW", // 2500积分 - $19.9
-  10000: "prod_O2wLG60Wu0otsJyWUokdH", // 10000积分 - $99
-};
-
 export function CreemBillingButton({
   offer,
   btnText = "Buy Plan",
@@ -34,22 +27,14 @@ export function CreemBillingButton({
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
-  // 根据积分数量获取 Creem 产品 ID
-  console.log('产品数据调试:', {
-    credit: offer.credit,
-    creditType: typeof offer.credit,
-    amount: offer.amount,
-    id: offer.id,
-    CREEM_MAP_KEYS: Object.keys(CREEM_PRODUCT_MAP)
-  });
-
-  const creemProductId = CREEM_PRODUCT_MAP[Number(offer.credit)];
+  // 从产品数据中获取 Creem 产品 ID
+  const creemProductId = offer.creemProductId;
 
   if (!creemProductId) {
-    console.error("No Creem product ID found for credit:", {
+    console.error("No Creem product ID found for product:", {
+      id: offer.id,
+      title: offer.title,
       credit: offer.credit,
-      creditType: typeof offer.credit,
-      availableCredits: Object.keys(CREEM_PRODUCT_MAP)
     });
     return (
       <Button variant="outline" className="w-full" disabled>
@@ -58,7 +43,7 @@ export function CreemBillingButton({
     );
   }
 
-  const userOffer = offer.amount === 1990;
+  const userOffer = offer.isPopular === true;
 
   const handleCheckout = async () => {
     if (!user) {
@@ -73,12 +58,12 @@ export function CreemBillingButton({
     setIsLoading(true);
 
     try {
-      console.log('开始创建Creem订单，请求数据:', {
+      console.log('🛒 开始创建Creem订单，请求数据:', {
         productId: offer.id,
         amount: offer.amount,
         creemProductId,
         pathname: pathname,
-        url: url(pathname).href
+        url: url("/app").href
       });
 
       // 调用API创建订单和Creem checkout
@@ -97,26 +82,26 @@ export function CreemBillingButton({
         }),
       });
 
-      console.log('API响应状态:', response.status);
+      console.log('📡 API响应状态:', response.status);
 
       const data = await response.json();
-      console.log('API响应数据:', data);
+      console.log('📦 API响应数据:', data);
 
       if (!response.ok) {
-        console.error('API错误响应:', data);
+        console.error('❌ API错误响应:', data);
         throw new Error(data.error || "Failed to create checkout");
       }
 
       // 跳转到Creem支付页面
       if (data.url) {
-        console.log('准备跳转到Creem:', data.url);
+        console.log('✅ 准备跳转到Creem:', data.url);
         window.location.href = data.url;
       } else {
-        console.error('响应中没有URL字段:', data);
+        console.error('❌ 响应中没有URL字段，完整响应:', data);
         throw new Error("No checkout URL returned");
       }
     } catch (error) {
-      console.error("Checkout error:", error);
+      console.error("💥 Checkout error:", error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to create checkout",
