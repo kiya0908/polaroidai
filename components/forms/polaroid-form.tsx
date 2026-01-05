@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -14,38 +15,42 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
-
-// 表单验证Schema
-const polaroidFormSchema = z.object({
-  input_type: z.enum(['text', 'image']),
-  input_content: z.string().min(1, "请输入描述内容").max(500, "描述内容不能超过500字符").optional(),
-  input_image_url: z.string().url("请输入有效的图片URL").optional(),
-  style_type: z.string().default('classic_polaroid'),
-  is_private: z.boolean().default(false),
-  locale: z.string().default('zh'),
-});
-
-type PolaroidFormData = z.infer<typeof polaroidFormSchema>;
+import Link from "next/link";
 
 interface PolaroidFormProps {
-  onSubmit: (data: PolaroidFormData) => Promise<void>;
+  onSubmit: (data: any) => Promise<void>;
   isLoading?: boolean;
   userCredit?: number;
 }
 
-const STYLE_OPTIONS = [
-  { value: 'classic_polaroid', label: '经典宝丽来', description: '经典白边框，温暖色调' },
-  { value: 'vintage_sepia', label: '复古棕褐', description: '怀旧棕褐色调，浓郁复古感' },
-  { value: 'dreamy_soft', label: '梦幻柔和', description: '柔和光线，梦幻氛围' },
-  { value: 'high_contrast', label: '高对比度', description: '强烈对比，鲜明视觉' },
-];
-
-const CREDIT_COSTS = {
-  text: 5,
-  image: 8,
-};
-
 export function PolaroidForm({ onSubmit, isLoading = false, userCredit = 0 }: PolaroidFormProps) {
+  const t = useTranslations("PolaroidForm");
+
+  // 动态创建验证 schema，使用多语言错误消息
+  const polaroidFormSchema = useMemo(() => z.object({
+    input_type: z.enum(['text', 'image']),
+    input_content: z.string().min(1, t("validation.contentRequired")).max(500, t("validation.contentTooLong")).optional(),
+    input_image_url: z.string().url(t("validation.invalidUrl")).optional(),
+    style_type: z.string().default('classic_polaroid'),
+    is_private: z.boolean().default(false),
+    locale: z.string().default('zh'),
+  }), [t]);
+
+  type PolaroidFormData = z.infer<typeof polaroidFormSchema>;
+
+  // 动态风格选项
+  const STYLE_OPTIONS = useMemo(() => [
+    { value: 'classic_polaroid', label: t("style.classic_polaroid.label"), description: t("style.classic_polaroid.description") },
+    { value: 'vintage_sepia', label: t("style.vintage_sepia.label"), description: t("style.vintage_sepia.description") },
+    { value: 'dreamy_soft', label: t("style.dreamy_soft.label"), description: t("style.dreamy_soft.description") },
+    { value: 'high_contrast', label: t("style.high_contrast.label"), description: t("style.high_contrast.description") },
+  ], [t]);
+
+  const CREDIT_COSTS = {
+    text: 5,
+    image: 8,
+  };
+
   const [inputType, setInputType] = useState<'text' | 'image'>('text');
 
   const form = useForm<PolaroidFormData>({
@@ -60,9 +65,9 @@ export function PolaroidForm({ onSubmit, isLoading = false, userCredit = 0 }: Po
 
   const handleSubmit = async (data: PolaroidFormData) => {
     const requiredCredit = CREDIT_COSTS[data.input_type];
-    
+
     if (userCredit < requiredCredit) {
-      toast.error(`积分不足！需要 ${requiredCredit} 积分，当前只有 ${userCredit} 积分`);
+      toast.error(t("errors.insufficientCredits", { required: requiredCredit, current: userCredit }));
       return;
     }
 
@@ -70,7 +75,7 @@ export function PolaroidForm({ onSubmit, isLoading = false, userCredit = 0 }: Po
       await onSubmit(data);
     } catch (error) {
       console.error('Form submission error:', error);
-      toast.error('提交失败，请重试');
+      toast.error(t("errors.submitFailed"));
     }
   };
 
@@ -93,17 +98,17 @@ export function PolaroidForm({ onSubmit, isLoading = false, userCredit = 0 }: Po
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-polaroid-brown">
           <Sparkles className="w-5 h-5 text-polaroid-orange" />
-          创建宝丽来照片
+          {t("title")}
         </CardTitle>
         <CardDescription>
-          选择输入方式并配置生成参数
+          {t("description")}
         </CardDescription>
         <div className="flex items-center gap-4">
           <Badge variant="secondary" className="bg-polaroid-cream text-polaroid-brown">
-            当前积分: {userCredit}
+            {t("credits.current")}: {userCredit}
           </Badge>
           <Badge variant="outline" className="border-polaroid-orange text-polaroid-orange">
-            需要: {currentCreditCost} 积分
+            {t("credits.required")}: {currentCreditCost} {t("inputType.credits")}
           </Badge>
         </div>
       </CardHeader>
@@ -117,7 +122,7 @@ export function PolaroidForm({ onSubmit, isLoading = false, userCredit = 0 }: Po
               name="input_type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>输入类型</FormLabel>
+                  <FormLabel>{t("inputType.label")}</FormLabel>
                   <FormControl>
                     <div className="grid grid-cols-2 gap-4">
                       <Button
@@ -126,7 +131,7 @@ export function PolaroidForm({ onSubmit, isLoading = false, userCredit = 0 }: Po
                         className={inputType === 'text' ? 'bg-polaroid-orange hover:bg-polaroid-orange/90' : ''}
                         onClick={() => handleInputTypeChange('text')}
                       >
-                        文字生成 ({CREDIT_COSTS.text}积分)
+                        {t("inputType.text")} ({CREDIT_COSTS.text}{t("inputType.credits")})
                       </Button>
                       <Button
                         type="button"
@@ -134,7 +139,7 @@ export function PolaroidForm({ onSubmit, isLoading = false, userCredit = 0 }: Po
                         className={inputType === 'image' ? 'bg-polaroid-orange hover:bg-polaroid-orange/90' : ''}
                         onClick={() => handleInputTypeChange('image')}
                       >
-                        图片转换 ({CREDIT_COSTS.image}积分)
+                        {t("inputType.image")} ({CREDIT_COSTS.image}{t("inputType.credits")})
                       </Button>
                     </div>
                   </FormControl>
@@ -150,17 +155,17 @@ export function PolaroidForm({ onSubmit, isLoading = false, userCredit = 0 }: Po
                 name="input_content"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>描述内容</FormLabel>
+                    <FormLabel>{t("inputContent.label")}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="描述你想要生成的宝丽来照片，例如：一只可爱的橘猫坐在窗台上，阳光透过窗户洒在它身上..."
+                        placeholder={t("inputContent.placeholder")}
                         className="min-h-[120px] resize-none"
                         maxLength={500}
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      最多500字符 ({field.value?.length || 0}/500)
+                      {t("inputContent.description")} ({field.value?.length || 0}/500)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -175,15 +180,15 @@ export function PolaroidForm({ onSubmit, isLoading = false, userCredit = 0 }: Po
                 name="input_image_url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>图片URL</FormLabel>
+                    <FormLabel>{t("imageUrl.label")}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="https://example.com/image.jpg"
+                        placeholder={t("imageUrl.placeholder")}
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      输入要转换的图片URL地址
+                      {t("imageUrl.description")}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -197,11 +202,11 @@ export function PolaroidForm({ onSubmit, isLoading = false, userCredit = 0 }: Po
               name="style_type"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>宝丽来风格</FormLabel>
+                  <FormLabel>{t("style.label")}</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="选择宝丽来风格" />
+                        <SelectValue placeholder={t("style.placeholder")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -229,9 +234,9 @@ export function PolaroidForm({ onSubmit, isLoading = false, userCredit = 0 }: Po
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">私有生成</FormLabel>
+                    <FormLabel className="text-base">{t("privacy.label")}</FormLabel>
                     <FormDescription>
-                      开启后，生成的图片不会在公开画廊中显示
+                      {t("privacy.description")}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -255,12 +260,12 @@ export function PolaroidForm({ onSubmit, isLoading = false, userCredit = 0 }: Po
                 {isLoading ? (
                   <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    生成中...
+                    {t("submit.generating")}
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-5 h-5 mr-2" />
-                    生成宝丽来照片
+                    {t("submit.button")}
                   </>
                 )}
               </Button>
@@ -269,10 +274,12 @@ export function PolaroidForm({ onSubmit, isLoading = false, userCredit = 0 }: Po
             {!canSubmit && !isLoading && (
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">
-                  积分不足，需要 {currentCreditCost} 积分
+                  {t("errors.notEnoughCredits", { credits: currentCreditCost })}
                 </p>
-                <Button variant="link" className="text-polaroid-orange">
-                  去充值
+                <Button variant="link" className="text-polaroid-orange" asChild>
+                  <Link href="/app/order">
+                    {t("actions.recharge")}
+                  </Link>
                 </Button>
               </div>
             )}

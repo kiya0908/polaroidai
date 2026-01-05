@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useAuth } from "@clerk/nextjs";
 import {
   Camera,
   History,
   CreditCard,
-  Settings,
   BarChart3,
-  Download,
   Sparkles,
   ChevronLeft,
   ChevronRight,
@@ -19,15 +19,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { isGuestMode } from "@/lib/mvp-config";
-import { getGuestCredits } from "@/lib/guest-auth";
 
 interface SidebarItem {
   href: string;
-  label: string;
+  labelKey: string;
+  descriptionKey: string;
   iconName: string;
   badge?: string;
-  description?: string;
 }
 
 const getSidebarIcon = (iconName: string) => {
@@ -36,71 +34,49 @@ const getSidebarIcon = (iconName: string) => {
       return <Camera className="w-5 h-5" />;
     case "History":
       return <History className="w-5 h-5" />;
-    case "Download":
-      return <Download className="w-5 h-5" />;
     case "BarChart3":
       return <BarChart3 className="w-5 h-5" />;
     case "CreditCard":
       return <CreditCard className="w-5 h-5" />;
-    case "Settings":
-      return <Settings className="w-5 h-5" />;
     default:
       return <Camera className="w-5 h-5" />;
   }
 };
 
-// 获取侧边栏项目（根据MVP模式过滤）
-const getSidebarItems = (isMVP: boolean): SidebarItem[] => {
+// 获取侧边栏项目
+const getSidebarItems = (): SidebarItem[] => {
   const items: SidebarItem[] = [
     {
       href: "/app/generate",
-      label: "生成宝丽来",
+      labelKey: "items.generate.label",
+      descriptionKey: "items.generate.description",
       iconName: "Camera",
-      description: "创建新的宝丽来照片",
     },
     {
       href: "/app/history",
-      label: "历史记录",
+      labelKey: "items.history.label",
+      descriptionKey: "items.history.description",
       iconName: "History",
-      description: "查看生成历史",
-    },
-    {
-      href: "/app/downloads",
-      label: "下载管理",
-      iconName: "Download",
-      description: "管理下载的图片",
     },
     {
       href: "/app/charts",
-      label: "数据统计",
+      labelKey: "items.charts.label",
+      descriptionKey: "items.charts.description",
       iconName: "BarChart3",
-      description: "查看使用统计",
     },
   ];
   return items;
 };
 
-const getAccountItems = (isMVP: boolean): SidebarItem[] => {
-  const items: SidebarItem[] = [];
-
-  // MVP模式下隐藏积分充值
-  if (!isMVP) {
-    items.push({
+const getAccountItems = (): SidebarItem[] => {
+  return [
+    {
       href: "/app/order",
-      label: "积分充值",
+      labelKey: "items.order.label",
+      descriptionKey: "items.order.description",
       iconName: "CreditCard",
-      description: "购买更多积分",
-    });
-  }
-
-  items.push({
-    href: "/app/settings",
-    label: "账户设置",
-    iconName: "Settings",
-    description: "管理账户信息",
-  });
-
-  return items;
+    },
+  ];
 };
 
 interface DashboardSidebarProps {
@@ -110,22 +86,33 @@ interface DashboardSidebarProps {
 
 export function DashboardSidebar({ className, links }: DashboardSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [credits, setCredits] = useState(0);
   const pathname = usePathname();
-  const isMVP = isGuestMode();
-
-  // 从localStorage获取积分
-  const [guestCredits, setGuestCredits] = useState(0);
+  const t = useTranslations("Sidebar");
+  const { getToken } = useAuth();
+  
+  // 从 API 获取用户积分
   useEffect(() => {
-    setGuestCredits(getGuestCredits());
-    const interval = setInterval(() => {
-      setGuestCredits(getGuestCredits());
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    const fetchCredits = async () => {
+      try {
+        const token = await getToken();
+        const res = await fetch("/api/account", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setCredits(data.credit || 0);
+        }
+      } catch (error) {
+        console.error("Failed to fetch credits:", error);
+      }
+    };
+    fetchCredits();
+  }, [getToken]);
 
-  // 根据MVP模式获取侧边栏项目
-  const sidebarItems = getSidebarItems(isMVP);
-  const accountItems = getAccountItems(isMVP);
+  // 获取侧边栏项目
+  const sidebarItems = getSidebarItems();
+  const accountItems = getAccountItems();
 
   const SidebarLink = ({ item }: { item: SidebarItem }) => {
     const isActive = pathname === item.href;
@@ -152,21 +139,19 @@ export function DashboardSidebar({ className, links }: DashboardSidebarProps) {
           <>
             <div className="flex-1">
               <div className="flex items-center justify-between">
-                <span>{item.label}</span>
+                <span>{t(item.labelKey)}</span>
                 {item.badge && (
                   <Badge variant="secondary" className="ml-2">
                     {item.badge}
                   </Badge>
                 )}
               </div>
-              {item.description && (
-                <p className={cn(
-                  "text-xs mt-0.5",
-                  isActive ? "text-white/80" : "text-gray-500"
-                )}>
-                  {item.description}
-                </p>
-              )}
+              <p className={cn(
+                "text-xs mt-0.5",
+                isActive ? "text-white/80" : "text-gray-500"
+              )}>
+                {t(item.descriptionKey)}
+              </p>
             </div>
           </>
         )}
@@ -189,7 +174,7 @@ export function DashboardSidebar({ className, links }: DashboardSidebarProps) {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-lg font-bold text-polaroid-brown">
-                宝丽来AI
+                {t("brand")}
               </span>
             </div>
           )}
@@ -219,7 +204,7 @@ export function DashboardSidebar({ className, links }: DashboardSidebarProps) {
             <div className="text-center">
               <Sparkles className="w-5 h-5 text-polaroid-orange mx-auto" />
               <div className="text-xs font-bold text-polaroid-brown mt-1">
-                {guestCredits}
+                {credits}
               </div>
             </div>
           ) : (
@@ -227,27 +212,19 @@ export function DashboardSidebar({ className, links }: DashboardSidebarProps) {
               <div className="flex items-center justify-center gap-1 mb-1">
                 <Sparkles className="w-4 h-4 text-polaroid-orange" />
                 <span className="text-sm font-medium text-polaroid-brown">
-                  当前积分
+                  {t("credits.title")}
                 </span>
               </div>
               <div className="text-2xl font-bold text-polaroid-brown">
-                {guestCredits}
+                {credits}
               </div>
-              {/* MVP模式下隐藏充值按钮 */}
-              {!isMVP && (
-                <Button
-                  size="sm"
-                  className="w-full mt-2 bg-polaroid-orange hover:bg-polaroid-orange/90 text-white"
-                  asChild
-                >
-                  <Link href="/app/order">充值</Link>
-                </Button>
-              )}
-              {isMVP && (
-                <p className="text-xs text-muted-foreground mt-2">
-                  测试模式积分
-                </p>
-              )}
+              <Button
+                size="sm"
+                className="w-full mt-2 bg-polaroid-orange hover:bg-polaroid-orange/90 text-white"
+                asChild
+              >
+                <Link href="/app/order">{t("credits.recharge")}</Link>
+              </Button>
             </div>
           )}
         </div>
@@ -259,7 +236,7 @@ export function DashboardSidebar({ className, links }: DashboardSidebarProps) {
         <div>
           {!isCollapsed && (
             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-              主要功能
+              {t("sections.main")}
             </h3>
           )}
           <div className="space-y-1">
@@ -275,7 +252,7 @@ export function DashboardSidebar({ className, links }: DashboardSidebarProps) {
         <div>
           {!isCollapsed && (
             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-              账户管理
+              {t("sections.account")}
             </h3>
           )}
           <div className="space-y-1">
@@ -290,8 +267,8 @@ export function DashboardSidebar({ className, links }: DashboardSidebarProps) {
       {!isCollapsed && (
         <div className="p-4 border-t border-gray-200">
           <div className="text-xs text-gray-500 text-center">
-            <p>宝丽来AI生成器</p>
-            <p className="mt-1">v1.0.0</p>
+            <p>{t("footer.title")}</p>
+            <p className="mt-1">{t("footer.version")}</p>
           </div>
         </div>
       )}

@@ -38,11 +38,8 @@ export async function GET(req: NextRequest) {
     };
     if (phase) {
       whereConditions.phase = phase;
-    } else {
-      whereConditions.phase = {
-        not: OrderPhase.Pending,
-      };
     }
+    // 当 phase 为空时（用户选择"all"），不添加 phase 过滤条件，显示所有状态的订单
 
     const [data, total] = await Promise.all([
       prisma.chargeOrder.findMany({

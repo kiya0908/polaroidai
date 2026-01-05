@@ -146,9 +146,8 @@ export function useUnifiedCredits() {
       });
 
       if (res.ok) {
-        // 刷新积分缓存
+        // 刷新积分缓存（统一使用 userCredits）
         queryClient.invalidateQueries({ queryKey: ["userCredits"] });
-        queryClient.invalidateQueries({ queryKey: ["queryUserPoints"] });
         return true;
       }
       return false;
@@ -176,7 +175,6 @@ export function useUnifiedCredits() {
       queryClient.invalidateQueries({ queryKey: ["guestCredits"] });
     } else {
       queryClient.invalidateQueries({ queryKey: ["userCredits"] });
-      queryClient.invalidateQueries({ queryKey: ["queryUserPoints"] });
     }
   };
 

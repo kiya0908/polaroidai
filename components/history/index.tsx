@@ -15,39 +15,94 @@ import { toast } from "sonner";
 import Link from "next/link";
 import Loading from "@/components/loading";
 import BlurFade from "@/components/magicui/blur-fade";
-import PlaygroundLoading from "@/components/playground/loading";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
-import { LoraConfig, ModelName, Ratio } from "@/config/constants";
-import { FluxSelectDto } from "@/db/type";
-import { cn, createRatio } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
-import { FluxTaskStatus } from "../playground";
 import { Button } from "../ui/button";
 import Container from "./container";
-import { DownloadAction } from "./download-action";
 import LoadMoreLoading from "./loading";
 
-const useQueryMineFluxMutation = (config?: {
-  explore?: boolean;
-  onSuccess: (result: any) => void;
+// 数据类型定义
+interface PolaroidHistoryItem {
+  id: string;
+  input_type: 'text' | 'image';
+  input_content: string | null;
+  input_image_url: string | null;
+  output_image_url: string | null;
+  thumbnail_url: string | null;
+  style_type: string;
+  task_status: 'completed' | 'processing' | 'failed';
+  is_private: boolean;
+  credit_cost: number;
+  created_at: string;
+}
+
+interface PolaroidHistoryResponse {
+  records: PolaroidHistoryItem[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
+}
+
+// 组件内部使用的格式
+interface DisplayItem {
+  id: string;
+  inputPrompt: string;
+  imageUrl: string | null;
+  taskStatus: 'Processing' | 'Completed' | 'Failed';
+  styleType: string;
+  creditCost: number;
+  createdAt: string;
+}
+
+// 数据适配函数：将 API 返回的数据转换为组件需要的格式
+const adaptPolaroidData = (record: PolaroidHistoryItem): DisplayItem => {
+  let status: 'Processing' | 'Completed' | 'Failed';
+  if (record.task_status === 'processing') status = 'Processing';
+  else if (record.task_status === 'completed') status = 'Completed';
+  else status = 'Failed';
+
+  return {
+    id: record.id,
+    inputPrompt: record.is_private && record.input_type === 'text'
+      ? '(Private content)'
+      : (record.input_content || record.input_image_url || ''),
+    imageUrl: record.thumbnail_url || record.output_image_url,
+    taskStatus: status,
+    styleType: record.style_type,
+    creditCost: record.credit_cost,
+    createdAt: record.created_at,
+  };
+};
+
+const useQueryHistoryMutation = (config?: {
+  onSuccess: (result: PolaroidHistoryResponse) => void;
 }) => {
   const { getToken } = useAuth();
 
   return useMutation({
     mutationFn: async (values: any) => {
-      const path = config?.explore ? "/api/explore" : "/api/mine-flux";
-      const res = await fetch(`${path}?${qs.stringify(values)}`, {
+      const res = await fetch(`/api/polaroid-history?${qs.stringify(values)}`, {
         headers: { Authorization: `Bearer ${await getToken()}` },
       });
 
-      if (!res.ok && res.status >= 500) {
-        throw new Error("Network response error");
+      if (!res.ok) {
+        throw new Error(`API error: ${res.status}`);
       }
 
-      return res.json();
+      const result = await res.json();
+      return result as PolaroidHistoryResponse;
     },
     onSuccess: async (result) => {
       config?.onSuccess(result);
+    },
+    onError: (error) => {
+      console.error("Failed to fetch history:", error);
+      toast.error("Failed to load history");
     },
   });
 };
@@ -59,40 +114,48 @@ const breakpointColumnsObj = {
   640: 1,
 };
 
-export default function History({ locale, explore }: { locale: string, explore?: boolean }) {
+export default function History({ locale }: { locale: string }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [init, setInit] = useState(false);
   const t = useTranslations("History");
   const id = useId();
   const [pageParams, setPageParams] = useState({
     page: 1,
-    pageSize: 12,
+    limit: 12,
   });
   const [hasMore, setHasMore] = useState(true);
-  const [dataSource, setDataSource] = useState<FluxSelectDto[]>([]);
-  const useQueryMineFlux = useQueryMineFluxMutation({
-    explore,
+  const [dataSource, setDataSource] = useState<DisplayItem[]>([]);
+  const useQueryHistory = useQueryHistoryMutation({
     onSuccess(result) {
-      const { page, pageSize, total, data } = result.data ?? {};
-      setDataSource(page === 1 ? data : [...dataSource, ...data]);
-      setPageParams({ page, pageSize });
-      setHasMore(page * pageSize < total);
+      // 转换数据格式
+      const adaptedData = result.records.map(adaptPolaroidData);
+
+      setDataSource(
+        result.pagination.page === 1
+          ? adaptedData
+          : [...dataSource, ...adaptedData]
+      );
+      setPageParams({
+        page: result.pagination.page,
+        limit: result.pagination.limit,
+      });
+      setHasMore(result.pagination.hasNext);
       setInit(true);
     },
   });
 
   useEffect(() => {
-    useQueryMineFlux.mutateAsync({
+    useQueryHistory.mutate({
       page: pageParams.page,
-      pageSize: pageParams.pageSize,
+      limit: pageParams.limit,
     });
   }, []);
 
   const loadMore = () => {
     console.log("load more");
-    useQueryMineFlux.mutateAsync({
+    useQueryHistory.mutate({
       page: pageParams.page + 1,
-      pageSize: pageParams.pageSize,
+      limit: pageParams.limit,
     });
   };
 
@@ -104,12 +167,7 @@ export default function History({ locale, explore }: { locale: string, explore?:
   const debounceLoadMore = debounce(loadMore, 500);
 
   return (
-    <Container className={
-      cn({
-        "h-[calc(100vh_-_76px)]": !explore,
-        "min-h-screen": explore,
-      })
-    }>
+    <Container className="h-[calc(100vh_-_76px)]">
       <div
         className="no-scrollbar h-full overflow-y-auto overflow-x-hidden"
         id={id}
@@ -122,11 +180,7 @@ export default function History({ locale, explore }: { locale: string, explore?:
           hasMore={hasMore}
           loader={
             init ? (
-              <div
-                className={cn("flex h-16 w-full items-center justify-center", {
-                  "h-96": !init,
-                })}
-              >
+              <div className="flex h-16 w-full items-center justify-center">
                 <LoadMoreLoading />
               </div>
             ) : (
@@ -136,7 +190,6 @@ export default function History({ locale, explore }: { locale: string, explore?:
             )
           }
           className="pb-10"
-          // onScroll={handleScroll}
           scrollableTarget={id}
         >
           {dataSource.length > 0 ? (
@@ -150,73 +203,66 @@ export default function History({ locale, explore }: { locale: string, explore?:
                   key={item.id}
                   className="border-stroke-light bg-surface-300 hover:border-stroke-strong mb-4 flex break-inside-avoid flex-col space-y-4 overflow-hidden rounded-xl border relative"
                 >
-                  {item.taskStatus === FluxTaskStatus.Processing ? (
-                    <div
-                      className={`bg-pattern flx w-full items-center justify-center rounded-xl ${createRatio(item.aspectRatio as Ratio)} pointer-events-none`}
-                    >
-                      <PlaygroundLoading />
+                  {item.taskStatus === 'Processing' ? (
+                    <div className="bg-pattern flx w-full items-center justify-center rounded-xl aspect-square pointer-events-none">
+                      <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-polaroid-orange mx-auto"></div>
+                        <p className="text-sm text-gray-500 mt-2">Processing...</p>
+                      </div>
                     </div>
-                  ) : (
+                  ) : item.imageUrl ? (
                     <BlurFade
-                      key={item?.imageUrl!}
-                      delay={0.25 + (idx % pageParams.pageSize) * 0.05}
+                      key={item.imageUrl}
+                      delay={0.25 + (idx % pageParams.limit) * 0.05}
                       inView
                     >
                       <img
-                        src={item.imageUrl!}
-                        alt={item.inputPrompt!}
-                        title={item.inputPrompt!}
-                        className={`w-full rounded-xl object-cover ${createRatio(item.aspectRatio as Ratio)} pointer-events-none`}
+                        src={item.imageUrl}
+                        alt={item.inputPrompt}
+                        title={item.inputPrompt}
+                        className="w-full rounded-xl object-cover aspect-square pointer-events-none"
                       />
                     </BlurFade>
+                  ) : (
+                    <div className="w-full rounded-xl bg-gray-100 aspect-square flex items-center justify-center">
+                      <p className="text-gray-400">No image available</p>
+                    </div>
                   )}
-                  <Link
-                    className="absolute right-1 top-1 !m-0"
-                    target="_blank"
-                    href={`https://pinterest.com/pin/create/button/?url=https://pinterest.com/pin/create/button/?description=${encodeURIComponent(item.inputPrompt!)}&url=${encodeURIComponent(item.imageUrl!)}`}
-                  >
-                    <span className="[&>svg]:h-7 [&>svg]:w-7 [&>svg]:fill-[#e60023]">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512">
-                        <path d="M496 256c0 137-111 248-248 248-25.6 0-50.2-3.9-73.4-11.1 10.1-16.5 25.2-43.5 30.8-65 3-11.6 15.4-59 15.4-59 8.1 15.4 31.7 28.5 56.8 28.5 74.8 0 128.7-68.8 128.7-154.3 0-81.9-66.9-143.2-152.9-143.2-107 0-163.9 71.8-163.9 150.1 0 36.4 19.4 81.7 50.3 96.1 4.7 2.2 7.2 1.2 8.3-3.3 .8-3.4 5-20.3 6.9-28.1 .6-2.5 .3-4.7-1.7-7.1-10.1-12.5-18.3-35.3-18.3-56.6 0-54.7 41.4-107.6 112-107.6 60.9 0 103.6 41.5 103.6 100.9 0 67.1-33.9 113.6-78 113.6-24.3 0-42.6-20.1-36.7-44.8 7-29.5 20.5-61.3 20.5-82.6 0-19-10.2-34.9-31.4-34.9-24.9 0-44.9 25.7-44.9 60.2 0 22 7.4 36.8 7.4 36.8s-24.5 103.8-29 123.2c-5 21.4-3 51.6-.9 71.2C65.4 450.9 0 361.1 0 256 0 119 111 8 248 8s248 111 248 248z"></path>
-                      </svg>
-                    </span>
-                  </Link>
-                  {
-                    !explore && (
-                      <>
-                        <div className="text-content-light inline-block px-4 py-2 text-sm">
-                          <p className="line-clamp-4 italic md:line-clamp-6 lg:line-clamp-[8]">
-                            {item.inputPrompt}
-                          </p>
-                        </div>
-                        <div className="flex flex-row flex-wrap space-x-1 px-2">
-                          {ModelName[item.model] && (
-                            <div className="bg-surface-alpha-strong text-content-base inline-flex items-center rounded-md border border-transparent px-1.5 py-0.5 font-mono text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-                              {ModelName[item.model]}
-                            </div>
-                          )}
-                          {item.loraName && LoraConfig[item.loraName]?.styleName && (
-                            <div className="bg-surface-alpha-strong text-content-base inline-flex items-center rounded-md border border-transparent px-1.5 py-0.5 font-mono text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-                              {LoraConfig[item.loraName]?.styleName}
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex flex-row justify-between space-x-2 p-4 pt-0">
-                          <button
-                            className="focus-ring text-content-strong border-stroke-strong hover:border-stroke-stronger data-[state=open]:bg-surface-alpha-light inline-flex h-8 items-center justify-center whitespace-nowrap rounded-lg border bg-transparent px-2.5 text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50"
-                            onClick={() => copyPrompt(item.inputPrompt!)}
-                          >
-                            <Copy className="icon-xs me-1" />
-                            {t("action.copy")}
-                          </button>
-                          <DownloadAction
-                            disabled={item.taskStatus === FluxTaskStatus.Processing}
-                            id={item.id}
-                          />
-                        </div>
-                      </>
-                    )
-                  }
+
+                  <div className="text-content-light inline-block px-4 py-2 text-sm">
+                    <p className="line-clamp-4 italic">
+                      {item.inputPrompt}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-row flex-wrap space-x-1 px-2">
+                    <div className="bg-surface-alpha-strong text-content-base inline-flex items-center rounded-md border border-transparent px-1.5 py-0.5 font-mono text-xs font-semibold">
+                      {item.styleType}
+                    </div>
+                    <div className="bg-surface-alpha-strong text-content-base inline-flex items-center rounded-md border border-transparent px-1.5 py-0.5 font-mono text-xs font-semibold">
+                      {item.creditCost} credits
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row justify-between space-x-2 p-4 pt-0">
+                    <button
+                      className="focus-ring text-content-strong border-stroke-strong hover:border-stroke-stronger data-[state=open]:bg-surface-alpha-light inline-flex h-8 items-center justify-center whitespace-nowrap rounded-lg border bg-transparent px-2.5 text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50"
+                      onClick={() => copyPrompt(item.inputPrompt)}
+                      disabled={item.taskStatus === 'Processing'}
+                    >
+                      <Copy className="icon-xs me-1" size={14} />
+                      {t("action.copy")}
+                    </button>
+                    {item.imageUrl && item.taskStatus !== 'Processing' && (
+                      <a
+                        href={item.imageUrl}
+                        download={`polaroid-${item.id}.jpg`}
+                        className="focus-ring text-content-strong border-stroke-strong hover:border-stroke-stronger inline-flex h-8 items-center justify-center whitespace-nowrap rounded-lg border bg-transparent px-2.5 text-sm font-medium transition-colors"
+                      >
+                        Download
+                      </a>
+                    )}
+                  </div>
                 </div>
               ))}
             </Masonry>
@@ -230,14 +276,15 @@ export default function History({ locale, explore }: { locale: string, explore?:
                 <EmptyPlaceholder.Description>
                   {t("empty.description")}
                 </EmptyPlaceholder.Description>
-                <Button variant="outline">{t("action.generate")}</Button>
+                <Button variant="outline" asChild>
+                  <Link href="/app/generate">{t("action.generate")}</Link>
+                </Button>
               </EmptyPlaceholder>
             </div>
           ) : (
             <div className="hidden"></div>
           )}
         </InfiniteScroll>
-        {/* <ScrollBar className="hidden" /> */}
       </div>
     </Container>
   );

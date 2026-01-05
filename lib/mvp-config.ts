@@ -8,12 +8,12 @@
  */
 
 export const MVP_CONFIG = {
-  // Enable MVP test mode
-  enabled: process.env.NEXT_PUBLIC_MVP_TEST_MODE === 'true',
+  // Enable MVP test mode - SET TO FALSE FOR PRODUCTION
+  enabled: false, // process.env.NEXT_PUBLIC_MVP_TEST_MODE === 'true',
 
-  // Guest mode configuration
+  // Guest mode configuration - DISABLED FOR PRODUCTION
   guest: {
-    enabled: process.env.NEXT_PUBLIC_ENABLE_CLERK_AUTH !== 'true',
+    enabled: false, // process.env.NEXT_PUBLIC_ENABLE_CLERK_AUTH !== 'true',
     initialCredits: parseInt(process.env.NEXT_PUBLIC_GUEST_INITIAL_CREDITS || '100', 10),
     // Guest user will be stored in localStorage with this prefix
     storagePrefix: 'polaroid_guest_',
@@ -69,4 +69,18 @@ export function isFeatureEnabled(feature: keyof typeof MVP_CONFIG.features): boo
  */
 export function getGuestInitialCredits(): number {
   return MVP_CONFIG.guest.initialCredits;
+}
+
+/**
+ * Get credits cost per text generation
+ */
+export function getCreditsPerGeneration(): number {
+  return MVP_CONFIG.credits.textGeneration;
+}
+
+/**
+ * Get credits cost per image conversion
+ */
+export function getCreditsPerImageConversion(): number {
+  return MVP_CONFIG.credits.imageConversion;
 }

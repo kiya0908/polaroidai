@@ -45,6 +45,7 @@ interface BillingInfoProps extends React.HTMLAttributes<HTMLFormElement> {
 }
 
 const OrderBadge = {
+  [OrderPhase.Pending]: "outline",
   [OrderPhase.Paid]: "default",
   [OrderPhase.Canceled]: "Secondary",
   [OrderPhase.Failed]: "destructive",

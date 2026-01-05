@@ -510,6 +510,107 @@
       "error": "兑换礼品码失败。"
     }
   },
+  "GeneratePage": {
+    "title": "生成宝丽来照片",
+    "subtitle": {
+      "guest": "游客模式 - 使用本地积分",
+      "user": "登录用户 - 使用账户积分"
+    },
+    "credits": "当前积分",
+    "result": {
+      "title": "生成结果",
+      "description": "你的宝丽来照片已生成完成",
+      "alt": "生成的宝丽来照片"
+    },
+    "buttons": {
+      "download": "下载图片",
+      "continue": "继续生成"
+    },
+    "toast": {
+      "insufficientCredits": "积分不足，请充值后再试",
+      "generateSuccess": "宝丽来照片生成成功！",
+      "generateFailed": "生成失败，请重试",
+      "downloadSuccess": "下载成功！",
+      "downloadFailed": "下载失败，请重试"
+    },
+    "errors": {
+      "generationFailed": "生成失败"
+    }
+  },
+  "GiftCodePage": {
+    "featureLocked": {
+      "title": "功能暂未开放",
+      "description": "礼品码兑换功能在测试模式下暂不可用",
+      "info": "当前为游客测试模式，礼品码兑换功能将在正式版本中开放。",
+      "continueInfo": "您可以继续使用免费积分体验宝丽来生成功能。",
+      "action": "去生成照片"
+    }
+  },
+  "PolaroidForm": {
+    "title": "创建宝丽来照片",
+    "description": "选择输入方式并配置生成参数",
+    "credits": {
+      "current": "当前积分",
+      "required": "需要"
+    },
+    "inputType": {
+      "label": "输入类型",
+      "text": "文字生成",
+      "image": "图片转换",
+      "credits": "积分"
+    },
+    "inputContent": {
+      "label": "描述内容",
+      "placeholder": "描述你想要生成的宝丽来照片，例如：一只可爱的橘猫坐在窗台上，阳光透过窗户洒在它身上...",
+      "description": "最多500字符"
+    },
+    "imageUrl": {
+      "label": "图片URL",
+      "placeholder": "https://example.com/image.jpg",
+      "description": "输入要转换的图片URL地址"
+    },
+    "style": {
+      "label": "宝丽来风格",
+      "placeholder": "选择宝丽来风格",
+      "classic_polaroid": {
+        "label": "经典宝丽来",
+        "description": "经典白边框，温暖色调"
+      },
+      "vintage_sepia": {
+        "label": "复古棕褐",
+        "description": "怀旧棕褐色调，浓郁复古感"
+      },
+      "dreamy_soft": {
+        "label": "梦幻柔和",
+        "description": "柔和光线，梦幻氛围"
+      },
+      "high_contrast": {
+        "label": "高对比度",
+        "description": "强烈对比，鲜明视觉"
+      }
+    },
+    "privacy": {
+      "label": "私有生成",
+      "description": "开启后，生成的图片不会在公开画廊中显示"
+    },
+    "submit": {
+      "generating": "生成中...",
+      "button": "生成宝丽来照片"
+    },
+    "validation": {
+      "contentRequired": "请输入描述内容",
+      "contentTooLong": "描述内容不能超过500字符",
+      "invalidUrl": "请输入有效的图片URL"
+    },
+    "errors": {
+      "insufficientCredits": "积分不足！需要 {required} 积分，当前只有 {current} 积分",
+      "submitFailed": "提交失败，请重试",
+      "notEnoughCredits": "积分不足，需要 {credits} 积分"
+    },
+    "actions": {
+      "recharge": "去充值"
+    }
+  },
   "History": {
     "title": "我的宝丽来收藏",
     "description": "查看您的复古宝丽来照片收藏。",
@@ -679,5 +780,122 @@
   "BlogPage": {
     "title": "博客",
     "description": "我们的最新新闻和更新"
+  },
+  "Dashboard": {
+    "welcome": {
+      "title": "欢迎使用宝丽来AI生成器",
+      "description": "将你的创意转化为复古宝丽来风格的照片，体验AI技术带来的无限可能"
+    },
+    "stats": {
+      "totalGenerated": "已生成照片",
+      "totalDownloads": "总下载次数",
+      "creditsUsed": "已使用积分",
+      "creditsRemaining": "剩余积分",
+      "monthlyNew": "本月新增 {count} 张",
+      "downloadRate": "下载率 {rate}%",
+      "averageCredits": "平均每张 {credits} 积分",
+      "estimatedPhotos": "可生成约 {count} 张照片"
+    },
+    "quickActions": {
+      "title": "快速操作",
+      "generate": {
+        "title": "生成宝丽来",
+        "description": "创建新的宝丽来风格照片"
+      },
+      "history": {
+        "title": "查看历史",
+        "description": "浏览你的生成历史"
+      },
+      "credits": {
+        "title": "积分充值",
+        "description": "购买更多积分"
+      },
+      "startUsing": "开始使用"
+    },
+    "recentGeneration": {
+      "title": "最近生成",
+      "viewAll": "查看全部",
+      "empty": "还没有生成任何宝丽来照片",
+      "startCreating": "开始创作"
+    }
+  },
+  "Sidebar": {
+    "brand": "宝丽来AI",
+    "credits": {
+      "title": "当前积分",
+      "recharge": "充值",
+      "testMode": "测试模式积分"
+    },
+    "sections": {
+      "main": "主要功能",
+      "account": "账户管理"
+    },
+    "items": {
+      "generate": {
+        "label": "生成宝丽来",
+        "description": "创建新的宝丽来照片"
+      },
+      "history": {
+        "label": "历史记录",
+        "description": "查看生成历史"
+      },
+      "downloads": {
+        "label": "下载管理",
+        "description": "管理下载的图片"
+      },
+      "charts": {
+        "label": "数据统计",
+        "description": "查看使用统计"
+      },
+      "order": {
+        "label": "积分充值",
+        "description": "购买更多积分"
+      },
+      "settings": {
+        "label": "账户设置",
+        "description": "管理账户信息"
+      }
+    },
+    "footer": {
+      "title": "宝丽来AI生成器",
+      "version": "v1.0.0"
+    }
+  },
+  "Charts": {
+    "title": "数据统计",
+    "description": "查看你的宝丽来生成统计数据",
+    "overview": {
+      "title": "数据概览",
+      "totalGenerated": "总生成数",
+      "creditsUsed": "已用积分",
+      "creditsRemaining": "剩余积分",
+      "avgPerDay": "日均生成"
+    },
+    "generationTrend": {
+      "title": "生成趋势",
+      "description": "最近 7 天的生成情况",
+      "count": "生成数量",
+      "noData": "暂无生成数据"
+    },
+    "generationType": {
+      "title": "生成类型分布",
+      "description": "按生成类型统计",
+      "text": "文字生成",
+      "image": "图片转换",
+      "multi": "多图合成"
+    },
+    "creditsUsage": {
+      "title": "积分使用情况",
+      "description": "积分消耗占比",
+      "used": "已使用",
+      "remaining": "剩余"
+    },
+    "recentActivity": {
+      "title": "最近活动",
+      "description": "最近 5 次生成记录",
+      "noActivity": "暂无生成记录",
+      "startCreating": "开始创作",
+      "creditsUsed": "{credits} 积分"
+    }
   }
 }

@@ -1,92 +1,97 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useUnifiedAuth, useUnifiedCredits } from "@/lib/auth-adapter";
+import { useTranslations } from "next-intl";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { PolaroidForm } from "@/components/forms/polaroid-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Camera, Loader2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { isGuestMode, MVP_CONFIG } from "@/lib/mvp-config";
-import { recordGeneration } from "@/lib/guest-auth";
+
+// 积分消耗配置
+const CREDITS_CONFIG = {
+  textGeneration: 5,
+  imageConversion: 8,
+};
 
 export default function GeneratePage() {
-  const { user, credits, isLoaded, isGuest } = useUnifiedAuth();
-  const { deductCredits, refreshCredits } = useUnifiedCredits();
-  const isMVP = isGuestMode();
+  const t = useTranslations("GeneratePage");
+  const { getToken } = useAuth();
+  const { isLoaded, isSignedIn } = useUser();
+  const [credits, setCredits] = useState(0);
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
-  const [localCredits, setLocalCredits] = useState(credits);
 
-  // 同步积分状态
+  // 获取用户积分
+  const fetchCredits = async () => {
+    try {
+      const token = await getToken();
+      const res = await fetch("/api/account", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setCredits(data.credit || 0);
+      }
+    } catch (error) {
+      console.error("Failed to fetch credits:", error);
+    }
+  };
+
   useEffect(() => {
-    setLocalCredits(credits);
-  }, [credits]);
+    if (isSignedIn) {
+      fetchCredits();
+    }
+  }, [isSignedIn]);
 
   const handleGenerate = async (formData: any) => {
     setIsGenerating(true);
 
     try {
       const creditCost = formData.input_type === 'text'
-        ? MVP_CONFIG.credits.textGeneration
-        : MVP_CONFIG.credits.imageConversion;
+        ? CREDITS_CONFIG.textGeneration
+        : CREDITS_CONFIG.imageConversion;
 
-      // 扣除积分
-      const deductSuccess = await deductCredits(creditCost);
-      if (!deductSuccess) {
-        toast.error("积分不足，请充值后再试");
+      // 检查积分是否足够
+      if (credits < creditCost) {
+        toast.error(t("toast.insufficientCredits"));
         return;
       }
 
-      // 更新本地积分显示
-      setLocalCredits(prev => prev - creditCost);
+      const token = await getToken();
 
       // 调用生成API
       const response = await fetch('/api/polaroid-generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          ...formData,
-          userId: user?.id,
-          isGuest: isGuest,
-        }),
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
-        throw new Error('生成失败');
+        throw new Error(t("errors.generationFailed"));
       }
 
       const result = await response.json();
 
       if (result.imageUrl) {
         setGeneratedImage(result.imageUrl);
-        toast.success("宝丽来照片生成成功！");
-
-        // MVP模式下记录到localStorage
-        if (isMVP) {
-          recordGeneration({
-            id: result.id || Date.now().toString(),
-            prompt: formData.input_content || formData.input_image_url || '',
-            imageUrl: result.imageUrl,
-            type: formData.input_type,
-            creditsUsed: creditCost,
-            createdAt: Date.now(),
-          });
-        }
+        toast.success(t("toast.generateSuccess"));
       }
 
       // 刷新积分
-      refreshCredits();
+      fetchCredits();
 
     } catch (error) {
       console.error('Generation error:', error);
-      toast.error("生成失败，请重试");
-      // 刷新积分（可能需要回滚）
-      refreshCredits();
+      toast.error(t("toast.generateFailed"));
+      // 刷新积分
+      fetchCredits();
     } finally {
       setIsGenerating(false);
     }
@@ -106,9 +111,9 @@ export default function GeneratePage() {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-      toast.success("下载成功！");
+      toast.success(t("toast.downloadSuccess"));
     } catch (error) {
-      toast.error("下载失败，请重试");
+      toast.error(t("toast.downloadFailed"));
     }
   };
 
@@ -126,14 +131,14 @@ export default function GeneratePage() {
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold text-polaroid-brown flex items-center justify-center gap-2">
           <Camera className="w-8 h-8 text-polaroid-orange" />
-          生成宝丽来照片
+          {t("title")}
         </h1>
         <p className="text-muted-foreground">
-          {isGuest ? "游客模式 - 使用本地积分" : "登录用户 - 使用账户积分"}
+          {t("subtitle.user")}
         </p>
         <Badge variant="outline" className="border-polaroid-orange text-polaroid-orange">
           <Sparkles className="w-3 h-3 mr-1" />
-          当前积分: {localCredits}
+          {t("credits")}: {credits}
         </Badge>
       </div>
 
@@ -141,7 +146,7 @@ export default function GeneratePage() {
       <PolaroidForm
         onSubmit={handleGenerate}
         isLoading={isGenerating}
-        userCredit={localCredits}
+        userCredit={credits}
       />
 
       {/* 生成结果展示 */}
@@ -150,17 +155,17 @@ export default function GeneratePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-polaroid-brown">
               <Sparkles className="w-5 h-5 text-polaroid-orange" />
-              生成结果
+              {t("result.title")}
             </CardTitle>
             <CardDescription>
-              你的宝丽来照片已生成完成
+              {t("result.description")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="relative aspect-square max-w-md mx-auto rounded-lg overflow-hidden shadow-lg">
               <img
                 src={generatedImage}
-                alt="Generated Polaroid"
+                alt={t("result.alt")}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -170,13 +175,13 @@ export default function GeneratePage() {
                 className="bg-polaroid-orange hover:bg-polaroid-orange/90"
               >
                 <Download className="w-4 h-4 mr-2" />
-                下载图片
+                {t("buttons.download")}
               </Button>
               <Button
                 variant="outline"
                 onClick={() => setGeneratedImage(null)}
               >
-                继续生成
+                {t("buttons.continue")}
               </Button>
             </div>
           </CardContent>

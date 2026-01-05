@@ -510,6 +510,107 @@
       "error": "Failed to redeem gift code."
     }
   },
+  "GeneratePage": {
+    "title": "Generate Polaroid Photo",
+    "subtitle": {
+      "guest": "Guest Mode - Using local credits",
+      "user": "Logged In User - Using account credits"
+    },
+    "credits": "Current Credits",
+    "result": {
+      "title": "Generation Result",
+      "description": "Your Polaroid photo has been generated successfully",
+      "alt": "Generated Polaroid photo"
+    },
+    "buttons": {
+      "download": "Download Image",
+      "continue": "Continue Generating"
+    },
+    "toast": {
+      "insufficientCredits": "Insufficient credits, please top up and try again",
+      "generateSuccess": "Polaroid photo generated successfully!",
+      "generateFailed": "Generation failed, please try again",
+      "downloadSuccess": "Download successful!",
+      "downloadFailed": "Download failed, please try again"
+    },
+    "errors": {
+      "generationFailed": "Generation failed"
+    }
+  },
+  "GiftCodePage": {
+    "featureLocked": {
+      "title": "Feature Not Available",
+      "description": "Gift code redemption is not available in test mode",
+      "info": "You are currently in guest test mode. Gift code redemption will be available in the official version.",
+      "continueInfo": "You can continue to use free credits to experience the Polaroid generation feature.",
+      "action": "Generate Photos"
+    }
+  },
+  "PolaroidForm": {
+    "title": "Create Polaroid Photo",
+    "description": "Choose input method and configure generation parameters",
+    "credits": {
+      "current": "Current Credits",
+      "required": "Required"
+    },
+    "inputType": {
+      "label": "Input Type",
+      "text": "Text Generation",
+      "image": "Image Conversion",
+      "credits": "credits"
+    },
+    "inputContent": {
+      "label": "Description",
+      "placeholder": "Describe the Polaroid photo you want to generate, e.g., A cute orange cat sitting on a windowsill, sunlight streaming through the window...",
+      "description": "Maximum 500 characters"
+    },
+    "imageUrl": {
+      "label": "Image URL",
+      "placeholder": "https://example.com/image.jpg",
+      "description": "Enter the URL of the image to convert"
+    },
+    "style": {
+      "label": "Polaroid Style",
+      "placeholder": "Select Polaroid style",
+      "classic_polaroid": {
+        "label": "Classic Polaroid",
+        "description": "Classic white border, warm tones"
+      },
+      "vintage_sepia": {
+        "label": "Vintage Sepia",
+        "description": "Nostalgic sepia tones, rich vintage feel"
+      },
+      "dreamy_soft": {
+        "label": "Dreamy Soft",
+        "description": "Soft lighting, dreamy atmosphere"
+      },
+      "high_contrast": {
+        "label": "High Contrast",
+        "description": "Strong contrast, vivid visuals"
+      }
+    },
+    "privacy": {
+      "label": "Private Generation",
+      "description": "When enabled, generated images will not be displayed in the public gallery"
+    },
+    "submit": {
+      "generating": "Generating...",
+      "button": "Generate Polaroid Photo"
+    },
+    "validation": {
+      "contentRequired": "Please enter description content",
+      "contentTooLong": "Description cannot exceed 500 characters",
+      "invalidUrl": "Please enter a valid image URL"
+    },
+    "errors": {
+      "insufficientCredits": "Insufficient credits! Need {required} credits, only have {current} credits",
+      "submitFailed": "Submission failed, please try again",
+      "notEnoughCredits": "Insufficient credits, need {credits} credits"
+    },
+    "actions": {
+      "recharge": "Top Up"
+    }
+  },
   "History": {
     "title": "My Polaroid Collection",
     "description": "View your vintage Polaroid photo collection.",
@@ -679,5 +780,122 @@
   "BlogPage": {
     "title": "Blog",
     "description": "The latest news and updates from Our"
+  },
+  "Dashboard": {
+    "welcome": {
+      "title": "Welcome to Polaroid AI Generator",
+      "description": "Transform your creativity into vintage Polaroid-style photos, experience the endless possibilities of AI technology"
+    },
+    "stats": {
+      "totalGenerated": "Photos Generated",
+      "totalDownloads": "Total Downloads",
+      "creditsUsed": "Credits Used",
+      "creditsRemaining": "Credits Remaining",
+      "monthlyNew": "{count} new this month",
+      "downloadRate": "Download rate {rate}%",
+      "averageCredits": "Average {credits} credits per photo",
+      "estimatedPhotos": "Can generate ~{count} photos"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "generate": {
+        "title": "Generate Polaroid",
+        "description": "Create new Polaroid-style photos"
+      },
+      "history": {
+        "title": "View History",
+        "description": "Browse your generation history"
+      },
+      "credits": {
+        "title": "Buy Credits",
+        "description": "Purchase more credits"
+      },
+      "startUsing": "Start Using"
+    },
+    "recentGeneration": {
+      "title": "Recent Generations",
+      "viewAll": "View All",
+      "empty": "No Polaroid photos generated yet",
+      "startCreating": "Start Creating"
+    }
+  },
+  "Sidebar": {
+    "brand": "Polaroid AI",
+    "credits": {
+      "title": "Current Credits",
+      "recharge": "Recharge",
+      "testMode": "Test Mode Credits"
+    },
+    "sections": {
+      "main": "Main Features",
+      "account": "Account"
+    },
+    "items": {
+      "generate": {
+        "label": "Generate Polaroid",
+        "description": "Create new Polaroid photos"
+      },
+      "history": {
+        "label": "History",
+        "description": "View generation history"
+      },
+      "downloads": {
+        "label": "Downloads",
+        "description": "Manage downloaded images"
+      },
+      "charts": {
+        "label": "Statistics",
+        "description": "View usage statistics"
+      },
+      "order": {
+        "label": "Buy Credits",
+        "description": "Purchase more credits"
+      },
+      "settings": {
+        "label": "Settings",
+        "description": "Manage account settings"
+      }
+    },
+    "footer": {
+      "title": "Polaroid AI Generator",
+      "version": "v1.0.0"
+    }
+  },
+  "Charts": {
+    "title": "Statistics",
+    "description": "View your Polaroid generation statistics",
+    "overview": {
+      "title": "Overview",
+      "totalGenerated": "Total Generated",
+      "creditsUsed": "Credits Used",
+      "creditsRemaining": "Credits Remaining",
+      "avgPerDay": "Daily Average"
+    },
+    "generationTrend": {
+      "title": "Generation Trend",
+      "description": "Last 7 days generation activity",
+      "count": "Count",
+      "noData": "No generation data yet"
+    },
+    "generationType": {
+      "title": "Generation Types",
+      "description": "Distribution by type",
+      "text": "Text Generation",
+      "image": "Image Conversion",
+      "multi": "Multi-Image"
+    },
+    "creditsUsage": {
+      "title": "Credits Usage",
+      "description": "Credits consumption breakdown",
+      "used": "Used",
+      "remaining": "Remaining"
+    },
+    "recentActivity": {
+      "title": "Recent Activity",
+      "description": "Last 5 generations",
+      "noActivity": "No generation records yet",
+      "startCreating": "Start Creating",
+      "creditsUsed": "{credits} credits"
+    }
   }
 }

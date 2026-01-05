@@ -43,6 +43,7 @@ export default async function SettingsPage({ params: { locale } }: PageProps) {
   }
 
   const t = await getTranslations({ namespace: "GiftCode" });
+  const tPage = await getTranslations({ namespace: "GiftCodePage" });
 
   // MVP模式下显示功能禁用提示
   if (isMVP && !MVP_CONFIG.features.giftCode) {
@@ -55,23 +56,23 @@ export default async function SettingsPage({ params: { locale } }: PageProps) {
               <Lock className="w-8 h-8 text-gray-400" />
             </div>
             <CardTitle className="text-polaroid-brown">
-              功能暂未开放
+              {tPage("featureLocked.title")}
             </CardTitle>
             <CardDescription>
-              礼品码兑换功能在测试模式下暂不可用
+              {tPage("featureLocked.description")}
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center space-y-4">
             <p className="text-sm text-muted-foreground">
-              当前为游客测试模式，礼品码兑换功能将在正式版本中开放。
+              {tPage("featureLocked.info")}
               <br />
-              您可以继续使用免费积分体验宝丽来生成功能。
+              {tPage("featureLocked.continueInfo")}
             </p>
             <div className="flex justify-center gap-4">
               <Button asChild className="bg-polaroid-orange hover:bg-polaroid-orange/90">
                 <Link href="/app/generate">
                   <Gift className="w-4 h-4 mr-2" />
-                  去生成照片
+                  {tPage("featureLocked.action")}
                 </Link>
               </Button>
             </div>

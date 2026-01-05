@@ -101,11 +101,15 @@ export function createAPIMiddleware(
         context.user = user;
         context.userId = userId;
 
-        // 权限检查
+        // 权限检查 - requireOwner 现在只是确保用户已认证
+        // 资源所有权验证应该在具体的业务逻辑中通过 userId 过滤数据来实现
         if (config.requireOwner) {
-          if (env.APP_ENV !== "production" && !user.publicMetadata.siteOwner) {
-            throw new AuthorizationError();
-          }
+          // 在生产环境中，所有已认证的用户都可以访问自己的资源
+          // 资源所有权通过 userId 过滤在查询中实现
+          // 注释掉的代码是旧的开发环境访问限制逻辑
+          // if (env.APP_ENV !== "production" && !user.publicMetadata.siteOwner) {
+          //   throw new AuthorizationError();
+          // }
         }
       }
 
