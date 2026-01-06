@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { get } from "@vercel/edge-config";
 import createMiddleware from "next-intl/middleware";
 
 import { kvKeys } from "@/config/kv";
@@ -49,8 +48,11 @@ export default clerkMiddleware(async (auth, req) => {
     // 使用 process.env 而不是 env 对象，避免 Edge Runtime 兼容性问题
     const isDev = process.env.NODE_ENV === "development" || process.env.VERCEL_ENV === "development";
 
+    // 动态导入 Edge Config，避免模块加载问题
     if (process.env.EDGE_CONFIG && !isDev) {
       try {
+        // 使用动态导入确保 Edge Runtime 兼容性
+        const { get } = await import("@vercel/edge-config");
         const blockedIPs = await get<string[]>("blocked_ips");
         const ip = getIP(req);
         console.log("ip-->", ip);
