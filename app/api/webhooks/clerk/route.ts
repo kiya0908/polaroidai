@@ -1,5 +1,8 @@
 import { headers } from "next/headers";
 
+// 强制动态渲染，避免在构建时预渲染
+export const dynamic = 'force-dynamic';
+
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { Webhook } from "svix";
 

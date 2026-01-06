@@ -1,6 +1,9 @@
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
+// 强制动态渲染，避免在构建时预渲染
+export const dynamic = 'force-dynamic';
+
 import { z } from "zod";
 
 import { prisma } from "@/db/prisma";

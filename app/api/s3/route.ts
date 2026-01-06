@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { currentUser } from "@clerk/nextjs/server";
 
+// 强制动态渲染，避免在构建时预渲染
+export const dynamic = 'force-dynamic';
+
 import { MediaDto, MediaDtoSchema, MediaHashids } from "@/db/dto/media.dto";
 import { prisma } from "@/db/prisma";
 import { ratelimit } from "@/lib/redis";

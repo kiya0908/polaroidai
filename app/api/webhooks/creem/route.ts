@@ -1,5 +1,8 @@
 import { Webhook } from "@creem_io/nextjs";
 
+// 强制动态渲染，避免在构建时预渲染
+export const dynamic = 'force-dynamic';
+
 import { ChargeOrderHashids } from "@/db/dto/charge-order.dto";
 import { prisma } from "@/db/prisma";
 import { getUserCredit } from "@/db/queries/account";

@@ -1,6 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
+
+// 强制动态渲染，避免在构建时预渲染
+export const dynamic = 'force-dynamic';
 import { createCreem } from "creem_io";
 import { z } from "zod";
 
