@@ -18,19 +18,34 @@ interface RootPageProps {
   params: { locale: string, slug: string };
 }
 
+// Avoid build-time DB access; always render dynamically at request time.
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "default-no-store";
+
 export async function generateStaticParams() {
-  const polaroids = await prisma.polaroidai_PolaroidGeneration.findMany({
-    where: {
-      isPrivate: false,
-      taskStatus: 'completed',
-    },
-    select: {
-      id: true
-    }
-  });
-  return polaroids.map((polaroid) => ({
-    slug: PolaroidHashids.encode(polaroid.id)
-  }))
+  // Skip pre-generation when the database is unavailable to keep builds green.
+  if (!process.env.DATABASE_URL) {
+    return [];
+  }
+
+  try {
+    const polaroids = await prisma.polaroidai_PolaroidGeneration.findMany({
+      where: {
+        isPrivate: false,
+        taskStatus: 'completed',
+      },
+      select: {
+        id: true,
+      },
+    });
+    return polaroids.map((polaroid) => ({
+      slug: PolaroidHashids.encode(polaroid.id),
+    }));
+  } catch (error) {
+    console.warn("generateStaticParams: skip due to DB error", error);
+    return [];
+  }
 }
 
 export async function generateMetadata({
