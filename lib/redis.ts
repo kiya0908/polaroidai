@@ -14,6 +14,7 @@ type NoopRedis = {
   del: (...args: unknown[]) => Promise<void>;
   scriptLoad: (...args: unknown[]) => Promise<string>;
   eval: (...args: unknown[]) => Promise<unknown>;
+  evalsha: (...args: unknown[]) => Promise<unknown>;
   multi: () => any;
   sadd: (...args: unknown[]) => Promise<number>;
   srem: (...args: unknown[]) => Promise<number>;
@@ -29,6 +30,7 @@ const createNoopRedis = (): NoopRedis => ({
   async del() {},
   async scriptLoad() { return "mock-script"; },
   async eval() { return null; },
+  async evalsha() { return [1, Date.now() + 10000]; }, // Mock response for ratelimit
   multi() { return { exec: async () => [], watch: async () => {}, unwatch: async () => {} }; },
   async sadd() { return 1; },
   async srem() { return 1; },
@@ -57,9 +59,32 @@ export const ratelimit = hasUpstashCreds
       async limit() {
         return {
           success: true,
-          pending: 0,
+          pending: Promise.resolve(),
           limit: 1000,
-          reset: new Date(),
+          reset: Date.now() + 10000,
+          remaining: 1000,
         } as const;
       },
     };
+
+// Factory function to create custom ratelimiter with fallback
+export function createRatelimit(requests: number, window: `${number} s` | `${number} m` | `${number} h`) {
+  if (!hasUpstashCreds) {
+    return {
+      async limit() {
+        return {
+          success: true,
+          pending: Promise.resolve(),
+          limit: requests,
+          reset: Date.now() + 10000,
+          remaining: requests,
+        } as const;
+      },
+    };
+  }
+  return new Ratelimit({
+    redis: redis as Redis,
+    limiter: Ratelimit.slidingWindow(requests, window),
+    analytics: true,
+  });
+}

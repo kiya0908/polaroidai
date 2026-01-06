@@ -1,14 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { Ratelimit } from "@upstash/ratelimit";
 import { z } from "zod";
 
 import { FluxHashids } from "@/db/dto/polaroid.dto";
 import { prisma } from "@/db/prisma";
 import { FluxTaskStatus } from "@/db/type";
 import { getErrorMessage } from "@/lib/handle-error";
-import { redis } from "@/lib/redis";
+import { ratelimit } from "@/lib/redis";
 
 const searchParamsSchema = z.object({
   fluxId: z.string(),
@@ -20,11 +19,6 @@ const getMime = (filename: string) =>
     .toLowerCase();
 
 export async function GET(req: NextRequest) {
-  const ratelimit = new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(5, "5 s"),
-    analytics: true,
-  });
   const { success } = await ratelimit.limit(
     "download:image" + `_${req.ip ?? ""}`,
   );
