@@ -4,12 +4,13 @@ import { ogImageSchema } from "@/lib/validations/og"
 
 export const runtime = "edge"
 
+// 使用外部字体 URL，避免将大文件打包进 Edge Function
 const interRegular = fetch(
-  new URL("../../../assets/fonts/Inter-Regular.ttf", import.meta.url)
+  "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjp-Ek-_EeA.woff2"
 ).then((res) => res.arrayBuffer())
 
 const interBold = fetch(
-  new URL("../../../assets/fonts/CalSans-SemiBold.ttf", import.meta.url)
+  "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hjp-Ek-_EeA.woff2"
 ).then((res) => res.arrayBuffer())
 
 
@@ -30,7 +31,7 @@ export async function GET(req: Request) {
 
     const fontSize = heading.length > 80 ? "60px" : "80px"
 
-    const githubName = "mickasmt";
+    const githubName = "kiya0908";
 
     return new ImageResponse(
       (
@@ -47,15 +48,15 @@ export async function GET(req: Request) {
           <div
             tw="text-5xl"
             style={{
-              fontFamily: "Cal Sans",
-              fontWeight: "normal",
+              fontFamily: "Inter",
+              fontWeight: "400",
               position: "relative",
               background: "linear-gradient(90deg, #6366f1, #a855f7 80%)",
               backgroundClip: 'text',
               color: 'transparent'
             }}
           >
-            SaaS Starter
+            PolaroidAI
           </div>
 
           <div tw="flex flex-col flex-1 py-16">
@@ -70,8 +71,8 @@ export async function GET(req: Request) {
             <div
               tw="flex leading-[1.15] text-[80px] font-bold"
               style={{
-                fontFamily: "Cal Sans",
-                fontWeight: "bold",
+                fontFamily: "Inter",
+                fontWeight: "700",
                 marginLeft: "-3px",
                 fontSize,
               }}
@@ -98,11 +99,11 @@ export async function GET(req: Request) {
               <div tw="flex flex-col" style={{ marginLeft: "15px" }}>
                 <div
                   tw="text-[22px]"
-                  style={{ fontFamily: "Cal Sans" }}
+                  style={{ fontFamily: "Inter" }}
                 >
                   {githubName}
                 </div>
-                <div>Open Source Designer</div>
+                <div>AI Image Generator</div>
               </div>
             </div>
 
@@ -126,7 +127,7 @@ export async function GET(req: Request) {
                   stroke-linejoin="round"
                 />
               </svg>
-              <div tw="flex ml-2">github.com/mickasmt/next-saas-stripe-starter</div>
+              <div tw="flex ml-2">github.com/kiya0908/polaroidai</div>
             </div>
           </div>
         </div>
@@ -142,7 +143,7 @@ export async function GET(req: Request) {
             style: "normal",
           },
           {
-            name: "Cal Sans",
+            name: "Inter",
             data: fontBold,
             weight: 700,
             style: "normal",
