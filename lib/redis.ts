@@ -1,10 +1,9 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
-import { env } from "@/env.mjs";
-
+// 直接使用 process.env 而不是 env.mjs，避免 Edge Runtime 兼容性问题
 const hasUpstashCreds = Boolean(
-  env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN,
+  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN,
 );
 
 // In dev or when env is missing, fall back to a no-op Redis to avoid crashes
@@ -25,13 +24,13 @@ type NoopRedis = {
 };
 
 const createNoopRedis = (): NoopRedis => ({
-  async set() {},
+  async set() { },
   async get() { return null; },
-  async del() {},
+  async del() { },
   async scriptLoad() { return "mock-script"; },
   async eval() { return null; },
   async evalsha() { return [1, Date.now() + 10000]; }, // Mock response for ratelimit
-  multi() { return { exec: async () => [], watch: async () => {}, unwatch: async () => {} }; },
+  multi() { return { exec: async () => [], watch: async () => { }, unwatch: async () => { } }; },
   async sadd() { return 1; },
   async srem() { return 1; },
   async sismember() { return false; },
@@ -42,30 +41,30 @@ const createNoopRedis = (): NoopRedis => ({
 
 export const redis: Redis | NoopRedis = hasUpstashCreds
   ? new Redis({
-      url: env.UPSTASH_REDIS_REST_URL!,
-      token: env.UPSTASH_REDIS_REST_TOKEN!,
-    })
+    url: process.env.UPSTASH_REDIS_REST_URL!,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+  })
   : createNoopRedis();
 
 // Create a ratelimiter when credentials exist; otherwise, a permissive mock
 export const ratelimit = hasUpstashCreds
   ? new Ratelimit({
-      redis: redis as Redis,
-      limiter: Ratelimit.slidingWindow(30, "10 s"),
-      analytics: true,
-    })
+    redis: redis as Redis,
+    limiter: Ratelimit.slidingWindow(30, "10 s"),
+    analytics: true,
+  })
   : {
-      // Minimal compatible shape
-      async limit() {
-        return {
-          success: true,
-          pending: Promise.resolve(),
-          limit: 1000,
-          reset: Date.now() + 10000,
-          remaining: 1000,
-        } as const;
-      },
-    };
+    // Minimal compatible shape
+    async limit() {
+      return {
+        success: true,
+        pending: Promise.resolve(),
+        limit: 1000,
+        reset: Date.now() + 10000,
+        remaining: 1000,
+      } as const;
+    },
+  };
 
 // Factory function to create custom ratelimiter with fallback
 export function createRatelimit(requests: number, window: `${number} s` | `${number} m` | `${number} h`) {
