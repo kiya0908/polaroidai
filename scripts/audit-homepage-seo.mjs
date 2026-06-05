@@ -7,6 +7,7 @@ const zhMessages = JSON.parse(read("messages/zh.json"));
 const homepageRoute = read("app/[locale]/(marketing)/page.tsx");
 const mvpRoute = read("app/[locale]/(marketing)/mvp-simple/page.tsx");
 const homepageComponent = read("app/[locale]/(marketing)/mvp-simple.tsx");
+const pricingRoute = read("app/[locale]/(marketing)/pricing/page.tsx");
 
 const expected = {
   title: "Polaroid AI Photo Generator - Create Vintage Photos with AI",
@@ -226,6 +227,24 @@ assert.ok(
 assert.ok(
   fs.existsSync("components/seo/homepage-structured-data.tsx"),
   "Homepage structured data component is missing",
+);
+assert.match(
+  homepageRoute,
+  /<PricingCard locale=\{locale\} \/>/,
+  "Homepage must mount the shared pricing section",
+);
+assert.match(
+  pricingRoute,
+  /<PricingCard locale=\{locale\} \/>/,
+  "Pricing page must mount the same shared pricing section",
+);
+assert.ok(
+  !homepageRoute.includes("<PricingCards"),
+  "Homepage must not duplicate the pricing cards implementation",
+);
+assert.ok(
+  !homepageRoute.includes("<PricingFaq"),
+  "Homepage must not duplicate the pricing FAQ with outdated claims",
 );
 
 console.log(
