@@ -1,70 +1,76 @@
 "use client";
 
-import { Suspense } from "react";
+import { Camera, Quote, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
-import dynamic from "next/dynamic";
-
-// 动态导入Tweet组件，禁用SSR以避免hydration错误
-const Tweet = dynamic(() => import("react-tweet").then((mod) => ({ default: mod.Tweet })), {
-  ssr: false,
-  loading: () => <TweetSkeleton />,
-});
 
 import { HeaderSection } from "@/components/shared/header-section";
 import { cn } from "@/lib/utils";
 
-// 示例推文ID - 这些是实际存在的Twitter ID，用于展示社区反馈
-const EXAMPLE_TWEET_IDS = [
-  "1969813979636900078",
-  "1969820383487590795",
-  "1969681790685122877",
+const EXAMPLE_REVIEWS = [
+  {
+    name: "Maya R.",
+    handle: "@mayacreates",
+    text: "The Polaroid look is surprisingly close to the old instant photos in my family albums. Warm, soft, and ready to post.",
+    tag: "Portrait",
+  },
+  {
+    name: "Jonas K.",
+    handle: "@jonask",
+    text: "I used it for travel photos and the vintage border made every shot feel like a printed keepsake instead of another phone image.",
+    tag: "Travel",
+  },
+  {
+    name: "Ari S.",
+    handle: "@arisnaps",
+    text: "Fast enough for prompt testing, and the credit cost is clear before generating. That makes it easy to experiment without guessing.",
+    tag: "Creative",
+  },
 ];
 
-// Tweet组件的加载状态
-function TweetSkeleton() {
+function ReviewCard({
+  review,
+  index,
+}: {
+  review: (typeof EXAMPLE_REVIEWS)[number];
+  index: number;
+}) {
   return (
-    <div className="animate-pulse">
-      <div className="w-full rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-        <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-full bg-gray-300 dark:bg-gray-600"></div>
-          <div className="space-y-2">
-            <div className="h-4 w-20 rounded bg-gray-300 dark:bg-gray-600"></div>
-            <div className="h-3 w-16 rounded bg-gray-300 dark:bg-gray-600"></div>
+    <article
+      className={cn(
+        "portrait-card flex h-full min-h-[250px] flex-col p-6",
+        "transition duration-200 hover:-translate-y-1",
+      )}
+      style={{ animationDelay: `${index * 100}ms` }}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#d6883f]/12 text-[#08304c]">
+            <Camera className="h-5 w-5" aria-hidden="true" />
+          </div>
+          <div>
+            <p className="font-heading font-medium leading-none text-[#08304c]">{review.name}</p>
+            <p className="mt-1 text-sm text-[#08304c]/60">
+              {review.handle}
+            </p>
           </div>
         </div>
-        <div className="mt-3 space-y-2">
-          <div className="h-4 w-full rounded bg-gray-300 dark:bg-gray-600"></div>
-          <div className="h-4 w-3/4 rounded bg-gray-300 dark:bg-gray-600"></div>
-        </div>
+        <Quote
+          className="h-5 w-5 shrink-0 text-[#08304c]/25"
+          aria-hidden="true"
+        />
       </div>
-    </div>
-  );
-}
 
-// 错误状态组件（暂时未使用）
-function TweetError({ tweetId }: { tweetId: string }) {
-  return (
-    <div className="w-full rounded-lg border border-red-200 bg-red-50 p-4 text-center dark:border-red-800 dark:bg-red-900/10">
-      <p className="text-sm text-red-600 dark:text-red-400">
-        无法加载推文 {tweetId}
+      <p className="mt-6 flex-1 text-pretty text-sm leading-6 text-[#08304c]/60">
+        {review.text}
       </p>
-      <p className="mt-1 text-xs text-red-500 dark:text-red-500">
-        推文可能已被删除或设为私有
-      </p>
-    </div>
-  );
-}
 
-// 单个Tweet容器组件
-function TweetContainer({ tweetId }: { tweetId: string }) {
-  return (
-    <div className="w-full">
-      <Suspense fallback={<TweetSkeleton />}>
-        <div className="tweet-container w-full">
-          <Tweet id={tweetId} />
-        </div>
-      </Suspense>
-    </div>
+      <div className="mt-6 flex items-center justify-between border-t border-[#08304c]/10 pt-4">
+        <span className="text-xs font-medium uppercase tracking-wide text-[#08304c]/50">
+          {review.tag}
+        </span>
+        <Sparkles className="h-4 w-4 text-[#d6883f]" aria-hidden="true" />
+      </div>
+    </article>
   );
 }
 
@@ -72,9 +78,8 @@ export default function Examples() {
   const t = useTranslations("IndexPage");
 
   return (
-    <section className="py-16 sm:py-20">
+    <section className="py-16 sm:py-28">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* 标题部分 */}
         <div className="mx-auto max-w-3xl text-center">
           <HeaderSection
             title={t("examples.title")}
@@ -82,46 +87,15 @@ export default function Examples() {
           />
         </div>
 
-        {/* Twitter推文网格容器 */}
-        <div className="mx-auto mt-12 w-full max-w-6xl px-4 sm:mt-16 sm:px-6">
-          <div
-            className={cn(
-              "grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-3"
-            )}
-          >
-            {EXAMPLE_TWEET_IDS.map((tweetId, index) => (
-              <div
-                key={tweetId}
-                className={cn(
-                  "transform transition-all duration-300 ease-in-out",
-                  // 增强悬停效果
-                  "hover:scale-[1.02] hover:shadow-lg",
-                  // 渐入动画
-                  "animate-in fade-in-50 slide-in-from-bottom-2",
-                  // 网格项优化
-                  "w-full"
-                )}
-                style={{
-                  // 为每个推文添加不同的延迟，调整为100ms间隔
-                  animationDelay: `${index * 100}ms`,
-                }}
-              >
-                <TweetContainer tweetId={tweetId} />
-              </div>
-            ))}
-          </div>
-
-          {/* 底部说明文本 */}
-          <div className="mt-8 text-center sm:mt-12">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              {t("examples.subtitle")}
-            </p>
-            <div className="mt-3 flex items-center justify-center space-x-2 text-xs text-gray-500 dark:text-gray-500">
-              <span className="text-blue-500">🐦</span>
-              <span>{t("examples.communityFeedback")}</span>
-            </div>
-          </div>
+        <div className="mx-auto mt-12 grid w-full max-w-6xl grid-cols-1 gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
+          {EXAMPLE_REVIEWS.map((review, index) => (
+            <ReviewCard key={review.handle} review={review} index={index} />
+          ))}
         </div>
+
+        <p className="mx-auto mt-8 max-w-2xl text-center text-sm text-[#08304c]/60 sm:mt-12">
+          {t("examples.communityFeedback")}
+        </p>
       </div>
     </section>
   );

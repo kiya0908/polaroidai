@@ -1,27 +1,37 @@
-import { NextResponse, type NextRequest } from "next/server";
-
-// 强制动态渲染，避免在构建时预渲染
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import { z } from "zod";
 
 import { PolaroidHashids } from "@/db/dto/polaroid.dto";
 import { prisma } from "@/db/prisma";
-import { 
-  createAPIMiddleware, 
-  BusinessError, 
-  paginatedResponse,
-  successResponse,
+import {
+  BusinessError,
+  COMMON_SCHEMAS,
   RATE_LIMITS,
-  COMMON_SCHEMAS 
+  createAPIMiddleware,
+  successResponse,
 } from "@/lib/api-middleware";
 
-// 查询参数验证Schema
 const HistoryQuerySchema = COMMON_SCHEMAS.pagination.extend({
-  type: z.enum(['text', 'image', 'all']).default('all'),
-  status: z.enum(['completed', 'processing', 'failed', 'all']).default('all'),
-  sort: z.enum(['newest', 'oldest']).default('newest'),
+  type: z.enum(["text", "image", "all"]).default("all"),
+  status: z.enum(["completed", "processing", "failed", "all"]).default("all"),
+  sort: z.enum(["newest", "oldest"]).default("newest"),
 });
+
+function toDbStatus(status: "completed" | "processing" | "failed" | "all") {
+  if (status === "completed") return "succeeded";
+  if (status === "processing") {
+    return { in: ["pending", "queued", "generating", "processing"] };
+  }
+  if (status === "failed") return "failed";
+  return undefined;
+}
+
+function toClientStatus(status: string) {
+  if (status === "succeeded") return "completed";
+  if (status === "failed") return "failed";
+  return "processing";
+}
 
 export const GET = createAPIMiddleware(
   {
@@ -32,37 +42,24 @@ export const GET = createAPIMiddleware(
       query: HistoryQuerySchema,
     },
   },
-  async (req, { userId, validatedData }) => {
-    const {
-      page,
-      limit,
-      type,
-      status,
-      sort,
-    } = validatedData.query;
+  async (_req, { userId, validatedData }) => {
+    const { page, limit, type, status, sort } = validatedData.query;
+    const where: any = { userId };
 
-    // 构建查询条件
-    const where: any = {
-      userId,
-    };
-
-    if (type !== 'all') {
-      where.input_type = type;
+    if (type !== "all") {
+      where.inputType = type;
     }
 
-    if (status !== 'all') {
-      where.task_status = status;
+    const dbStatus = toDbStatus(status);
+    if (dbStatus) {
+      where.taskStatus = dbStatus;
     }
 
-    // 计算分页
     const skip = (page - 1) * limit;
-
-    // 排序条件
     const orderBy = {
-      created_at: sort === 'newest' ? 'desc' : 'asc' as const,
+      createdAt: sort === "newest" ? ("desc" as const) : ("asc" as const),
     };
 
-    // 查询历史记录
     const [records, total] = await Promise.all([
       prisma.polaroidai_PolaroidGeneration.findMany({
         where,
@@ -71,37 +68,44 @@ export const GET = createAPIMiddleware(
         take: limit,
         select: {
           id: true,
-          input_type: true,
-          input_content: true,
-          input_image_url: true,
-          output_image_url: true,
-          thumbnail_url: true,
-          style_type: true,
-          task_status: true,
-          is_private: true,
-          credit_cost: true,
-          processing_time: true,
-          download_num: true,
-          views_num: true,
-          created_at: true,
-          updated_at: true,
+          inputType: true,
+          inputContent: true,
+          inputImageUrl: true,
+          outputImageUrl: true,
+          thumbnailUrl: true,
+          styleType: true,
+          taskStatus: true,
+          isPrivate: true,
+          creditCost: true,
+          processingTime: true,
+          downloadNum: true,
+          viewsNum: true,
+          createdAt: true,
+          updatedAt: true,
         },
       }),
       prisma.polaroidai_PolaroidGeneration.count({ where }),
     ]);
 
-    // 处理返回数据
-    const processedRecords = records.map(record => ({
-      ...record,
+    const processedRecords = records.map((record) => ({
       id: PolaroidHashids.encode(record.id),
-      // 隐藏私有内容的详细信息（如果需要）
-      input_content: record.is_private ? null : record.input_content,
+      input_type: record.inputType,
+      input_content: record.isPrivate ? null : record.inputContent,
+      input_image_url: record.inputImageUrl,
+      output_image_url: record.outputImageUrl,
+      thumbnail_url: record.thumbnailUrl,
+      style_type: record.styleType,
+      task_status: toClientStatus(record.taskStatus),
+      is_private: record.isPrivate,
+      credit_cost: record.creditCost,
+      processing_time: record.processingTime,
+      download_num: record.downloadNum,
+      views_num: record.viewsNum,
+      created_at: record.createdAt.toISOString(),
+      updated_at: record.updatedAt.toISOString(),
     }));
 
-    // 计算分页信息
     const totalPages = Math.ceil(total / limit);
-    const hasNext = page < totalPages;
-    const hasPrev = page > 1;
 
     return successResponse({
       records: processedRecords,
@@ -110,8 +114,8 @@ export const GET = createAPIMiddleware(
         limit,
         total,
         totalPages,
-        hasNext,
-        hasPrev,
+        hasNext: page < totalPages,
+        hasPrev: page > 1,
       },
       filters: {
         type,
@@ -119,10 +123,9 @@ export const GET = createAPIMiddleware(
         sort,
       },
     });
-  }
+  },
 );
 
-// 删除历史记录
 export const DELETE = createAPIMiddleware(
   {
     requireAuth: true,
@@ -132,24 +135,23 @@ export const DELETE = createAPIMiddleware(
       body: COMMON_SCHEMAS.ids,
     },
   },
-  async (req, { userId, validatedData }) => {
+  async (_req, { userId, validatedData }) => {
     const { ids } = validatedData.body;
-
-    // 解码ID
-    const decodedIds = ids.map(id => {
-      const decoded = PolaroidHashids.decode(id);
-      return decoded.length > 0 ? decoded[0] : null;
-    }).filter(Boolean);
+    const decodedIds = ids
+      .map((id) => {
+        const decoded = PolaroidHashids.decode(id);
+        return decoded.length > 0 ? Number(decoded[0]) : null;
+      })
+      .filter((id): id is number => Boolean(id));
 
     if (decodedIds.length === 0) {
       throw new BusinessError("No valid ids provided");
     }
 
-    // 删除记录（只能删除自己的记录）
     const deleteResult = await prisma.polaroidai_PolaroidGeneration.deleteMany({
       where: {
         id: { in: decodedIds },
-        userId, // 确保只能删除自己的记录
+        userId,
       },
     });
 
@@ -157,5 +159,5 @@ export const DELETE = createAPIMiddleware(
       deleted: deleteResult.count,
       message: `Successfully deleted ${deleteResult.count} records`,
     });
-  }
+  },
 );

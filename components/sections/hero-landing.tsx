@@ -128,7 +128,7 @@ export default async function HeroLanding() {
                 buttonVariants({ size: "lg" }),
                 "group relative items-center justify-center gap-2 overflow-hidden rounded-full bg-[#FF8C42] px-8 py-3 text-white shadow-lg transition-all duration-300 ease-out hover:bg-[#FF8C42]/90 hover:shadow-xl",
               )}
-              href="/app/generate"
+              href="/mvp-simple"
             >
               <span className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-40" />
               <Camera className="mr-2 size-5" />

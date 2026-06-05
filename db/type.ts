@@ -16,6 +16,7 @@ export enum PaymentChannelType {
   Alipay = "Alipay",
   WeChat = "WeChat",
   Stripe = "Stripe",
+  Creem = "Creem",
   GiftCode = "GiftCode",
   InviteCode = "InviteCode",
   ActivityCredit = "Event Gift",
@@ -47,7 +48,7 @@ export type ChargeProductSelectDto = Omit<ChargeProductDto, "id"> & {
   id: string;
 };
 
-export type ChargeOrderDto = Prisma.ChargeOrderGetPayload<any>;
+export type ChargeOrderDto = Prisma.polaroidai_ChargeOrderGetPayload<any>;
 
 export type GiftCodeDto = Prisma.polaroidai_GiftCodeGetPayload<any>;
 
@@ -64,3 +65,9 @@ export type GiftCodeSelectDto = Omit<GiftCodeDto, "id"> & { id: string };
 export type PolaroidDto = Prisma.polaroidai_PolaroidGenerationGetPayload<any>;
 export type PolaroidSchema = Prisma.polaroidai_PolaroidGenerationCreateInput;
 export type PolaroidSelectDto = Omit<PolaroidDto, "id"> & { id: string };
+export type FluxSelectDto = PolaroidSelectDto & {
+  imageUrl?: string | null;
+  inputPrompt?: string | null;
+  aspectRatio?: string | null;
+  model?: string | null;
+};

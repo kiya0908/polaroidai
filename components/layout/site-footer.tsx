@@ -15,15 +15,16 @@ export async function SiteFooter({ className }: React.HTMLAttributes<HTMLElement
   return (
     <footer
       className={cn(
-        "container border-t",
-        "w-full p-6 pb-4 md:py-12",
+        "container",
+        "w-full px-4 pb-24 pt-10 md:pb-8 md:pt-16",
         className,
       )}
     >
-      <div className="flex max-w-7xl flex-col items-center justify-end gap-4 text-sm md:flex-row">
+      <div className="portrait-card mx-auto flex max-w-7xl flex-col gap-8 px-6 py-8 text-sm md:px-8">
+      <div className="flex flex-col items-center justify-end gap-4 md:flex-row">
         <Link
           href="/terms-of-use"
-          className="underline-offset-4 hover:underline"
+          className="text-[#08304c]/70 underline-offset-4 hover:text-[#08304c] hover:underline"
           prefetch={false}
           title={t("footer.term")}
         >
@@ -31,7 +32,7 @@ export async function SiteFooter({ className }: React.HTMLAttributes<HTMLElement
         </Link>
         <Link
           href="/privacy-policy"
-          className="underline-offset-4 hover:underline"
+          className="text-[#08304c]/70 underline-offset-4 hover:text-[#08304c] hover:underline"
           prefetch={false}
           title={t("footer.privacy")}
         >
@@ -39,7 +40,7 @@ export async function SiteFooter({ className }: React.HTMLAttributes<HTMLElement
         </Link>
         <Link
           href="mailto:support@polaroidai.pro"
-          className="underline-offset-4 hover:underline"
+          className="text-[#08304c]/70 underline-offset-4 hover:text-[#08304c] hover:underline"
           prefetch={false}
           title={t("footer.contact")}
         >
@@ -47,7 +48,7 @@ export async function SiteFooter({ className }: React.HTMLAttributes<HTMLElement
         </Link>
         <ModeToggle />
       </div>
-      <div className="mt-4 flex max-w-7xl flex-col items-center justify-between gap-4 text-sm md:flex-row">
+      <div className="flex flex-col items-center justify-between gap-4 border-t border-[#08304c]/10 pt-6 md:flex-row">
         <div className="flex items-center gap-2">
           <Image
             src="/android-chrome-192x192.png"
@@ -56,13 +57,13 @@ export async function SiteFooter({ className }: React.HTMLAttributes<HTMLElement
             height={24}
             className="rounded"
           />
-          <span className="font-medium">PolaroidAI.Art Inc.</span>
+          <span className="font-heading text-[#08304c]">PolaroidAI.Art Inc.</span>
         </div>
         <div className="flex flex-col items-center gap-4 md:flex-row">
           <Link
             href="https://heic-to-pdf.pro/"
             title="HEIC to PDF Converter"
-            className="underline-offset-4 hover:underline"
+            className="text-[#08304c]/70 underline-offset-4 hover:text-[#08304c] hover:underline"
             prefetch={false}
             target="_blank"
           >
@@ -71,10 +72,11 @@ export async function SiteFooter({ className }: React.HTMLAttributes<HTMLElement
           
         </div>
       </div>
-      <div className="mt-4 flex max-w-7xl flex-col items-center justify-center gap-4 text-sm md:flex-row">
-        <p className="text-muted-foreground">
+      <div className="flex flex-col items-center justify-center gap-4 border-t border-[#08304c]/10 pt-6 text-sm md:flex-row">
+        <p className="text-[#08304c]/60">
           &copy; 2025 polariodaipro.Art. All rights reserved.
         </p>
+      </div>
       </div>
     </footer>
   );

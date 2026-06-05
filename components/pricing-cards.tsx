@@ -47,22 +47,22 @@ const PricingCard = ({
   return (
     <div
       className={cn(
-        "relative flex flex-col overflow-hidden rounded-3xl border shadow-sm",
-        offer.isPopular ? "-m-0.5 border-2 border-purple-400" : "",
+        "portrait-card relative flex flex-col overflow-hidden",
+        offer.isPopular ? "-m-0.5 ring-2 ring-[#d6883f]" : "",
       )}
       key={offer.title}
     >
-      <div className="min-h-[150px] items-start space-y-4 bg-muted/50 p-6">
-        <p className="flex font-urban text-sm font-bold uppercase tracking-wider text-muted-foreground">
+      <div className="min-h-[150px] items-start space-y-4 bg-[#f7f7f7] p-6">
+        <p className="flex font-satoshi text-sm font-bold uppercase tracking-wider text-[#08304c]/55">
           {offer.title}
         </p>
 
         <div className="flex flex-row">
           <div className="flex items-end">
-            <div className="flex text-left text-3xl font-semibold leading-6">
+            <div className="flex text-left font-heading text-3xl font-medium leading-6 text-[#08304c]">
               {offer.originalAmount && offer.originalAmount > 0 ? (
                 <>
-                  <span className="mr-2 text-base text-muted-foreground/80 line-through">
+                  <span className="mr-2 text-base text-[#08304c]/45 line-through">
                     {formatPrice(offer.originalAmount, "$")}
                   </span>
                   <span>{formatPrice(offer.amount, "$")}</span>
@@ -71,14 +71,14 @@ const PricingCard = ({
                 `${formatPrice(offer.amount, "$")}`
               )}
             </div>
-            <div className="-mb-1 ml-2 text-left text-sm font-medium text-muted-foreground">
+            <div className="-mb-1 ml-2 text-left text-sm font-medium text-[#08304c]/60">
               <div>
                 {offer.credit} {t("worth")}
               </div>
             </div>
           </div>
         </div>
-        <div className="text-left text-sm text-muted-foreground">
+        <div className="text-left text-sm text-[#08304c]/60">
           <div>{t("description")}</div>
         </div>
       </div>
@@ -88,7 +88,7 @@ const PricingCard = ({
           {offer.message &&
             offer.message.split(",")?.map((feature) => (
               <li className="flex items-start gap-x-3" key={feature}>
-                <Icons.check className="size-5 shrink-0 text-purple-500" />
+                <Icons.check className="size-5 shrink-0 text-[#d6883f]" />
                 <p>{feature}</p>
               </li>
             ))}
@@ -113,7 +113,10 @@ const PricingCard = ({
             <SignInButton mode="modal" forceRedirectUrl={url(pathname).href}>
               <Button
                 variant={offer.isPopular ? "default" : "outline"}
-                className="w-full"
+                className={cn(
+                  "w-full",
+                  offer.isPopular ? "portrait-action" : "portrait-outline-action",
+                )}
                 // onClick={() => setShowSignInModal(true)}
               >
                 {t("action.signin")}
@@ -132,20 +135,20 @@ export function FreeCard() {
   return (
     <div
       className={cn(
-        "relative col-span-3 flex flex-col overflow-hidden rounded-3xl border shadow-sm lg:col-span-3",
+        "portrait-card relative col-span-3 flex flex-col overflow-hidden lg:col-span-3",
       )}
     >
-      <div className="min-h-[150px] items-start space-y-4 bg-muted/50 p-6">
-        <p className="flex font-urban text-sm font-bold uppercase tracking-wider text-muted-foreground">
+      <div className="min-h-[150px] items-start space-y-4 bg-[#f7f7f7] p-6">
+        <p className="flex font-satoshi text-sm font-bold uppercase tracking-wider text-[#08304c]/55">
           Free
         </p>
 
         <div className="flex flex-row">
           <div className="flex items-end">
-            <div className="flex text-left text-3xl font-semibold leading-6">
+            <div className="flex text-left font-heading text-3xl font-medium leading-6 text-[#08304c]">
               {`${formatPrice(0, "$")}`}
             </div>
-            <div className="-mb-1 ml-2 text-left text-sm font-medium text-muted-foreground">
+            <div className="-mb-1 ml-2 text-left text-sm font-medium text-[#08304c]/60">
               <div>5 {t("worth")}</div>
             </div>
           </div>
@@ -157,7 +160,7 @@ export function FreeCard() {
           {["Limited models", "Max 5/month Flux.1 Schnell Images"]?.map(
             (feature) => (
               <li className="flex items-start gap-x-3" key={feature}>
-                <Icons.check className="size-5 shrink-0 text-purple-500" />
+                <Icons.check className="size-5 shrink-0 text-[#d6883f]" />
                 <p>{feature}</p>
               </li>
             ),
@@ -165,7 +168,7 @@ export function FreeCard() {
 
           {["Private Generations", "Commercial License"].map((feature) => (
             <li
-              className="flex items-start text-muted-foreground"
+              className="flex items-start text-[#08304c]/45"
               key={feature}
             >
               <Icons.close className="mr-3 size-5 shrink-0" />
@@ -174,7 +177,7 @@ export function FreeCard() {
           ))}
         </ul>
         <SignBox>
-          <Button>Try Out</Button>
+          <Button className="portrait-action">Try Out</Button>
         </SignBox>
       </div>
     </div>
@@ -211,7 +214,7 @@ export function PricingCards({
         reward();
       }, 1000);
     } else if (searchParams.get("success") === "false") {
-      console.log("支付失败");
+      console.log("鏀粯澶辫触");
     }
   }, [searchParams]);
 
@@ -220,13 +223,13 @@ export function PricingCards({
       <section className="flex flex-col items-center text-center">
         <HeaderSection label={t("label")} title={t("title")} />
         <div className="mt-4">
-          <p className="mb-7 inline-flex items-center justify-between rounded-xl bg-blue-100 px-2 py-2 pe-4 text-sm text-blue-700 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800 md:rounded-full md:px-1 md:py-1">
+          <p className="portrait-pill mb-7 inline-flex items-center justify-between px-4 py-2 text-sm">
             <span className="text-sm font-medium">
               {t("tip.title")}&nbsp;(
               {t("tip.subtitle")}&nbsp;
               <a
                 href="mailto:support@polaroidai.pro"
-                className="font-semibold text-blue-700 underline decoration-blue-500 dark:text-white dark:decoration-white"
+                className="font-semibold text-[#08304c] underline decoration-[#d6883f]"
               >
                 {t("tip.contact")}
               </a>
@@ -264,7 +267,7 @@ export function PricingCards({
           <div 
             className="flex gap-5 bg-inherit py-5 md:grid md:justify-center"
             style={{ 
-              // 动态设置grid列数：最多3列，超过3个产品时使用滚动
+              // 鍔ㄦ€佽缃甮rid鍒楁暟锛氭渶澶?鍒楋紝瓒呰繃3涓骇鍝佹椂浣跨敤婊氬姩
               gridTemplateColumns: `repeat(${Math.min(chargeProduct?.length || 3, 3)}, minmax(280px, 1fr))`,
             }}
           >
@@ -276,11 +279,11 @@ export function PricingCards({
           </div>
         </div>
 
-        <p className="mt-3 text-balance text-center text-base text-muted-foreground">
+        <p className="mt-3 text-balance text-center text-base text-[#08304c]/60">
           {t("contact.title")}
           <br />
           <a
-            className="font-medium text-primary hover:underline"
+            className="font-medium text-[#08304c] hover:underline"
             href="mailto:support@polaroidai.pro"
           >
             support@polaroidai.pro
@@ -312,7 +315,7 @@ export function PricingCardDialog({
   const t = useTranslations("PricingPage");
   const { isSm, isMobile } = useMediaQuery();
   
-  // 移动端只显示最受欢迎的产品，如果没有则显示第一个
+  // 绉诲姩绔彧鏄剧ず鏈€鍙楁杩庣殑浜у搧锛屽鏋滄病鏈夊垯鏄剧ず绗竴涓?
   const product = useMemo(() => {
     if (isSm || isMobile) {
       const popularProduct = chargeProduct?.find(p => p.isPopular);
@@ -324,7 +327,7 @@ export function PricingCardDialog({
     return chargeProduct ?? ([] as ChargeProductSelectDto[]);
   }, [isSm, isMobile, chargeProduct]);
 
-  // 动态计算grid列数
+  // 鍔ㄦ€佽绠梘rid鍒楁暟
   const gridCols = Math.min(product?.length || 1, 3);
 
   return (

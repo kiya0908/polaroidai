@@ -1,7 +1,5 @@
 import { Webhook } from "@creem_io/nextjs";
-
-// 强制动态渲染，避免在构建时预渲染
-export const dynamic = 'force-dynamic';
+import { Prisma } from "@prisma/client";
 
 import { ChargeOrderHashids } from "@/db/dto/charge-order.dto";
 import { prisma } from "@/db/prisma";
@@ -11,106 +9,127 @@ import { env } from "@/env.mjs";
 import { logsnag } from "@/lib/log-snag";
 import { formatPrice } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 export const POST = Webhook({
-  webhookSecret: env.CREEM_WEBHOOK_SECRET || "temp_secret",
+  webhookSecret: env.CREEM_WEBHOOK_SECRET ?? "",
   onCheckoutCompleted: async ({ customer, product, metadata }) => {
-    console.log("🎉 Creem checkout completed:", {
-      customer: customer.email,
-      product: product.name,
-      metadata,
-    });
-
     try {
-      // 从 metadata 中获取订单信息
-      const metaOrderId = metadata?.orderId as string;
-      const userId = metadata?.userId as string;
-      const metaChargeProductId = metadata?.chargeProductId as string;
+      const metaOrderId = metadata?.orderId as string | undefined;
+      const metadataUserId = metadata?.userId as string | undefined;
+      const metaChargeProductId = metadata?.chargeProductId as
+        | string
+        | undefined;
+      const metadataCredit = metadata?.credit as string | number | undefined;
 
-      if (!metaOrderId || !userId || !metaChargeProductId) {
-        console.error("❌ Missing required metadata:", metadata);
+      if (!metaOrderId || !metadataUserId || !metaChargeProductId) {
         throw new Error("Missing required metadata");
       }
 
-      // 解码订单 ID
-      const [orderId] = ChargeOrderHashids.decode(metaOrderId);
-      if (!orderId) {
-        console.error("❌ Invalid order ID:", metaOrderId);
+      const [decodedOrderId] = ChargeOrderHashids.decode(metaOrderId);
+      if (!decodedOrderId) {
         throw new Error("Invalid order ID");
       }
 
-      // 查询订单和产品信息
+      const orderId = decodedOrderId as number;
       const order = await prisma.polaroidai_ChargeOrder.findUnique({
-        where: { id: orderId as number },
+        where: { id: orderId },
       });
 
       if (!order) {
-        console.error("❌ Order not found:", orderId);
         throw new Error("Order not found");
       }
 
-      // 如果订单已经是Paid状态，说明已经处理过了（幂等性检查）
-      if (order.phase === OrderPhase.Paid) {
-        console.log("✅ Order already paid, skipping:", orderId);
-        return; // 返回成功，避免Creem重复发送webhook
+      if (order.userId !== metadataUserId) {
+        throw new Error("Webhook user does not match order user");
       }
 
-      // 如果订单不是Pending状态，说明状态异常
-      if (order.phase !== OrderPhase.Pending) {
-        console.error("❌ Order not in pending state:", order);
-        throw new Error("Order not in pending state");
+      if (
+        typeof metadataCredit !== "undefined" &&
+        Number(metadataCredit) !== order.credit
+      ) {
+        throw new Error("Webhook credit does not match order credit");
       }
 
-      // 获取用户积分信息
-      const account = await getUserCredit(userId);
+      if (
+        typeof product.price === "number" &&
+        product.price !== order.amount
+      ) {
+        throw new Error("Webhook product price does not match order amount");
+      }
 
-      // 使用事务更新订单状态和充值积分
-      await prisma.$transaction(async (tx) => {
-        const addCredit = order.credit;
+      if (product.currency && product.currency !== order.currency) {
+        throw new Error("Webhook product currency does not match order currency");
+      }
 
-        // 更新订单状态为已支付
-        await tx.polaroidai_ChargeOrder.update({
-          where: { id: order.id },
+      const account = await getUserCredit(order.userId);
+      const completedAt = new Date();
+      const result = JSON.parse(
+        JSON.stringify({
+          customer,
+          product,
+          metadata,
+          completedAt: completedAt.toISOString(),
+        }),
+      ) as Prisma.InputJsonValue;
+
+      const payment = await prisma.$transaction(async (tx) => {
+        const paidOrder = await tx.polaroidai_ChargeOrder.updateMany({
+          where: {
+            id: order.id,
+            phase: OrderPhase.Pending,
+          },
           data: {
             phase: OrderPhase.Paid,
-            paymentAt: new Date(),
-            result: {
-              customer,
-              product,
-              metadata,
-              completedAt: new Date(),
-            } as any,
+            paymentAt: completedAt,
+            result,
           },
         });
 
-        // 充值积分
-        await tx.polaroidai_UserCredit.update({
+        if (paidOrder.count === 0) {
+          const currentOrder = await tx.polaroidai_ChargeOrder.findUnique({
+            where: { id: order.id },
+          });
+          if (currentOrder?.phase === OrderPhase.Paid) {
+            return { processed: false as const, order: currentOrder };
+          }
+
+          throw new Error("Order not in pending state");
+        }
+
+        const updatedAccount = await tx.polaroidai_UserCredit.update({
           where: { id: account.id },
           data: {
             credit: {
-              increment: addCredit,
+              increment: order.credit,
             },
           },
         });
 
-        // 记录积分交易
         await tx.polaroidai_UserCreditTransaction.create({
           data: {
-            userId: userId,
-            credit: addCredit,
-            balance: account.credit + addCredit,
+            userId: order.userId,
+            credit: order.credit,
+            balance: updatedAccount.credit,
             type: "Charge",
           },
         });
+
+        return { processed: true as const, order };
       });
 
-      // 发送通知到 LogSnag
+      if (!payment.processed) {
+        console.log("Creem order already paid, skipping:", order.id);
+        return;
+      }
+
       const price = formatPrice(order.amount);
       await logsnag.track({
         channel: "payments",
         event: "Successful Payment (Creem)",
-        user_id: userId,
-        description: `用户购买积分：${order.credit}积分 - ${price}`,
-        icon: "💰",
+        user_id: order.userId,
+        description: `User purchased credits: ${order.credit} credits - ${price}`,
+        icon: "$",
         tags: {
           provider: "creem",
           credit: order.credit.toString(),
@@ -118,10 +137,9 @@ export const POST = Webhook({
         },
       });
 
-      console.log("✅ Creem payment processed successfully");
+      console.log("Creem payment processed successfully:", order.id);
     } catch (error) {
-      console.error("❌ Error processing Creem webhook:", error);
-      // 抛出错误，让Creem知道处理失败，会重试webhook
+      console.error("Error processing Creem webhook:", error);
       throw error;
     }
   },

@@ -1,16 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
-
-// 强制动态渲染，避免在构建时预渲染
-export const dynamic = 'force-dynamic';
 import { z } from "zod";
 
 import { FluxHashids } from "@/db/dto/polaroid.dto";
 import { prisma } from "@/db/prisma";
-import { FluxTaskStatus } from "@/db/type";
+import { GENERATION_STATUS } from "@/lib/constants/generation";
 import { getErrorMessage } from "@/lib/handle-error";
 import { ratelimit } from "@/lib/redis";
+
+export const dynamic = "force-dynamic";
 
 const searchParamsSchema = z.object({
   fluxId: z.string(),
@@ -26,15 +25,14 @@ export async function GET(req: NextRequest) {
     "download:image" + `_${req.ip ?? ""}`,
   );
   if (!success) {
-    return new Response("Too Many Requests", {
-      status: 429,
-    });
+    return new Response("Too Many Requests", { status: 429 });
   }
 
   const { userId } = auth();
   if (!userId) {
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
   }
+
   const user = await currentUser();
   if (!user) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
@@ -42,62 +40,56 @@ export async function GET(req: NextRequest) {
 
   try {
     const url = new URL(req.url);
-    const values = searchParamsSchema.parse(
+    const { fluxId } = searchParamsSchema.parse(
       Object.fromEntries(url.searchParams),
     );
-    const { fluxId } = values;
     const [id] = FluxHashids.decode(fluxId);
     if (!id) {
-      return new Response("not found", {
-        status: 404,
-      });
+      return new Response("not found", { status: 404 });
     }
-    const fluxData = await prisma.fluxData.findUnique({
+
+    const generation = await prisma.polaroidai_PolaroidGeneration.findFirst({
       where: {
         id: id as number,
+        userId,
       },
     });
 
-    if (!fluxData || !fluxData?.id) {
-      return new Response("not found", {
-        status: 404,
-      });
+    if (!generation?.id || !generation.outputImageUrl) {
+      return new Response("not found", { status: 404 });
     }
-    if (fluxData.taskStatus !== FluxTaskStatus.Succeeded) {
-      return new Response("flux status error", {
-        status: 400,
-      });
+
+    if (generation.taskStatus !== GENERATION_STATUS.SUCCEEDED) {
+      return new Response("generation status error", { status: 400 });
     }
+
     await prisma.$transaction(async (tx) => {
-      await tx.fluxData.update({
-        where: {
-          id: fluxData.id,
-        },
+      await tx.polaroidai_PolaroidGeneration.update({
+        where: { id: generation.id },
         data: {
           downloadNum: {
             increment: 1,
           },
         },
       });
-      await tx.fluxDownloads.create({
+      await tx.polaroidai_PolaroidDownloads.create({
         data: {
-          fluxId: fluxData.id,
+          polaroidId: generation.id,
           userId: user.id,
         },
       });
     });
 
-    // headers.set('Content-Type', 'image/*');// 默认动作是下载
-    // headers.set("content-Type", "text/plain"); // 默认动作是浏览器展示
-    const blob = await fetch(fluxData.imageUrl!).then((response) =>
+    const blob = await fetch(generation.outputImageUrl).then((response) =>
       response.blob(),
     );
-    console.log("blob.type-->", blob.type);
     const headers = new Headers();
-    headers.set("Content-Type", blob.type); // 设置为文件的MIME类型
+    headers.set("Content-Type", blob.type);
     headers.set(
       "Content-Disposition",
-      `attachment; filename="${encodeURIComponent(fluxId + `.${getMime(fluxData.imageUrl!)}`)}"`,
+      `attachment; filename="${encodeURIComponent(
+        fluxId + `.${getMime(generation.outputImageUrl)}`,
+      )}"`,
     );
     return new NextResponse(blob, { status: 200, statusText: "OK", headers });
   } catch (error) {

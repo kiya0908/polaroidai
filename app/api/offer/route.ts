@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
 
-// 强制动态渲染，避免在构建时预渲染
+// 寮哄埗鍔ㄦ€佹覆鏌擄紝閬垮厤鍦ㄦ瀯寤烘椂棰勬覆鏌?
 export const dynamic = 'force-dynamic';
 import { Prisma } from "@prisma/client";
 import { Ratelimit } from "@upstash/ratelimit";
@@ -33,7 +33,7 @@ export async function GET() {
     targetDate.getTime() + 30 * 24 * 60 * 60 * 1000,
   );
   // Step 1: Get the IDs of claimed orders for the user
-  const claimedOrderIds = await prisma.claimedActivityOrder.findMany({
+  const claimedOrderIds = await prisma.polaroidai_ClaimedActivityOrder.findMany({
     where: {
       activityCode,
       userId,
@@ -44,7 +44,7 @@ export async function GET() {
   });
   const claimedIds = claimedOrderIds.map((row) => row.id);
 
-  const charOrders = await prisma.chargeOrder.findMany({
+  const charOrders = await prisma.polaroidai_ChargeOrder.findMany({
     where: {
       phase: OrderPhase.Paid,
       userId,
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
       targetDate.getTime() + 30 * 24 * 60 * 60 * 1000,
     );
     // Step 1: Get the IDs of claimed orders for the user
-    const claimedOrderIds = await prisma.claimedActivityOrder.findMany({
+    const claimedOrderIds = await prisma.polaroidai_ClaimedActivityOrder.findMany({
       where: {
         activityCode,
         userId,
@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
       },
     });
     const claimedChargeOrderIdIds = claimedOrderIds.map((row) => row.chargeOrderId);
-    const charOrders = await prisma.chargeOrder.findMany({
+    const charOrders = await prisma.polaroidai_ChargeOrder.findMany({
       where: {
         phase: OrderPhase.Paid,
         userId,
@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
           chargeOrderId: order.id,
         };
       });
-      await tx.chargeOrder.create({
+      await tx.polaroidai_ChargeOrder.create({
         data: {
           userId,
           userInfo: {
@@ -156,7 +156,7 @@ export async function POST(req: NextRequest) {
           phase: OrderPhase.Paid,
         },
       });
-      const newUserCredit = await tx.userCredit.update({
+      const newUserCredit = await tx.polaroidai_UserCredit.update({
         where: {
           id: account.id,
         },
@@ -166,7 +166,7 @@ export async function POST(req: NextRequest) {
           },
         },
       });
-      const transaction = await tx.userCreditTransaction.create({
+      const transaction = await tx.polaroidai_UserCreditTransaction.create({
         data: {
           userId: userId,
           credit: totalCredit,
@@ -174,7 +174,7 @@ export async function POST(req: NextRequest) {
           type: "EventCharge",
         },
       });
-      await tx.claimedActivityOrder.createMany({
+      await tx.polaroidai_ClaimedActivityOrder.createMany({
         data: claimedOrders.map((item) => ({
           ...item,
           transactionId: transaction.id,

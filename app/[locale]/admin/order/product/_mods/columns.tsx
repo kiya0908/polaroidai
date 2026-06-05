@@ -5,10 +5,10 @@ import { useTransition } from "react";
 import { Button, Popconfirm, Space, type TableColumnsType } from "antd";
 
 import { type ChargeProductSelectDto } from "@/db/type";
+import { formatPrice } from "@/lib/utils";
 
 import { deleteAction } from "../_lib/actions";
 import { UpdateDialog } from "./update-dialog";
-import { formatPrice } from "@/lib/utils";
 
 const DeleteAction = (props: { id: string }) => {
   const [isDeletePending, startDeleteTransition] = useTransition();
@@ -21,7 +21,7 @@ const DeleteAction = (props: { id: string }) => {
 
   return (
     <Popconfirm
-      title="Do you want to delete these item?"
+      title="Do you want to delete this item?"
       description="After deletion, it will not be recoverable"
       onConfirm={confirm}
       onCancel={() => {}}
@@ -47,22 +47,31 @@ export function getColumns(): TableColumnsType<ChargeProductSelectDto> {
       dataIndex: "id",
     },
     {
-      title: "充值金额",
+      title: "Amount",
       dataIndex: "amount",
       render: (price) => formatPrice(price, "$"),
     },
     {
-      title: "原价",
+      title: "Original Amount",
       dataIndex: "originalAmount",
       render: (price) => formatPrice(price, "$"),
     },
     {
-      title: "赠送积分",
+      title: "Credits",
       dataIndex: "credit",
     },
     {
-      title: "币种",
+      title: "Currency",
       dataIndex: "currency",
+    },
+    {
+      title: "Creem Product ID",
+      dataIndex: "creemProductId",
+      render: (value) => value || "-",
+    },
+    {
+      title: "State",
+      dataIndex: "state",
     },
     {
       title: "Created At",

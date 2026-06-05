@@ -52,11 +52,17 @@ export function PricingFaq() {
         subtitle={t("faq.subtitle")}
       />
 
-      <Accordion type="single" collapsible className="my-12 w-full">
+      <Accordion type="single" collapsible className="my-12 w-full space-y-4">
         {pricingFaqData.map((faqItem) => (
-          <AccordionItem key={faqItem.id} value={faqItem.id}>
-            <AccordionTrigger>{t(`faq.${faqItem.question}`)}</AccordionTrigger>
-            <AccordionContent className="text-sm text-muted-foreground sm:text-[15px]">
+          <AccordionItem
+            key={faqItem.id}
+            value={faqItem.id}
+            className="portrait-card overflow-hidden px-6"
+          >
+            <AccordionTrigger className="text-left font-heading text-lg font-medium text-[#08304c]">
+              {t(`faq.${faqItem.question}`)}
+            </AccordionTrigger>
+            <AccordionContent className="pb-6 text-sm leading-7 text-[#08304c]/60 sm:text-[15px]">
               {t(`faq.${faqItem.answer}`)}
             </AccordionContent>
           </AccordionItem>

@@ -6,11 +6,13 @@ import { GiftCodeHashids } from "@/db/dto/giftcode.dto";
 import { prisma } from "@/db/prisma";
 import { getErrorMessage } from "@/lib/handle-error";
 
+import { assertSiteOwner } from "../../../_lib/auth";
 import type { CreateSchema, UpdateSchema } from "./validations";
 
 export async function createAction(input: CreateSchema) {
   noStore();
   try {
+    await assertSiteOwner();
     const { code, creditAmount } = input;
 
     await Promise.all([
@@ -39,6 +41,7 @@ export async function createAction(input: CreateSchema) {
 export async function updateAction(input: UpdateSchema & { id: string }) {
   noStore();
   try {
+    await assertSiteOwner();
     const [id] = GiftCodeHashids.decode(input.id);
     const { code, creditAmount } = input;
     await prisma.polaroidai_GiftCode.update({
@@ -68,6 +71,7 @@ export async function updateAction(input: UpdateSchema & { id: string }) {
 
 export async function deleteAction(input: { id: string }) {
   try {
+    await assertSiteOwner();
     const [id] = GiftCodeHashids.decode(input.id);
     await prisma.polaroidai_GiftCode.delete({
       where: {

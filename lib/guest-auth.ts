@@ -5,8 +5,7 @@
  * Guest users are identified by a UUID stored in localStorage.
  */
 
-import { v4 as uuidv4 } from 'uuid';
-import { MVP_CONFIG, getGuestInitialCredits } from './mvp-config';
+import { getGuestInitialCredits, MVP_CONFIG } from "./mvp-config";
 
 export interface GuestUser {
   id: string;
@@ -23,11 +22,19 @@ const STORAGE_KEY = `${MVP_CONFIG.guest.storagePrefix}user`;
 const CREDITS_KEY = `${MVP_CONFIG.guest.storagePrefix}credits`;
 const HISTORY_KEY = `${MVP_CONFIG.guest.storagePrefix}history`;
 
+function createGuestId(): string {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return `guest_${crypto.randomUUID()}`;
+  }
+
+  return `guest_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+}
+
 /**
  * Initialize or get existing guest user
  */
 export function getOrCreateGuestUser(): GuestUser {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     // Server-side: return default guest user
     return createDefaultGuestUser();
   }
@@ -39,15 +46,15 @@ export function getOrCreateGuestUser(): GuestUser {
       const user = JSON.parse(stored) as GuestUser;
       return user;
     } catch (error) {
-      console.error('Failed to parse guest user:', error);
+      console.error("Failed to parse guest user:", error);
     }
   }
 
   // Create new guest user
   const newUser: GuestUser = {
-    id: `guest_${uuidv4()}`,
+    id: createGuestId(),
     email: null,
-    fullName: 'Guest User',
+    fullName: "Guest User",
     imageUrl: null,
     createdAt: Date.now(),
     credits: getGuestInitialCredits(),
@@ -66,9 +73,9 @@ export function getOrCreateGuestUser(): GuestUser {
  */
 function createDefaultGuestUser(): GuestUser {
   return {
-    id: 'guest_default',
+    id: "guest_default",
     email: null,
-    fullName: 'Guest User',
+    fullName: "Guest User",
     imageUrl: null,
     createdAt: Date.now(),
     credits: getGuestInitialCredits(),
@@ -81,7 +88,7 @@ function createDefaultGuestUser(): GuestUser {
  * Get guest user credits
  */
 export function getGuestCredits(): number {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return getGuestInitialCredits();
   }
 
@@ -97,7 +104,7 @@ export function getGuestCredits(): number {
  * Update guest user credits
  */
 export function updateGuestCredits(newCredits: number): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
   localStorage.setItem(CREDITS_KEY, String(newCredits));
 
@@ -135,20 +142,20 @@ export function recordGeneration(generation: {
   id: string;
   prompt: string;
   imageUrl: string;
-  type: 'text' | 'image' | 'multi';
+  type: "text" | "image" | "multi";
   creditsUsed: number;
   createdAt: number;
 }): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
   const stored = localStorage.getItem(HISTORY_KEY);
-  let history: typeof generation[] = [];
+  let history: (typeof generation)[] = [];
 
   if (stored) {
     try {
       history = JSON.parse(stored);
     } catch (error) {
-      console.error('Failed to parse history:', error);
+      console.error("Failed to parse history:", error);
     }
   }
 
@@ -176,11 +183,11 @@ export function getGenerationHistory(): Array<{
   id: string;
   prompt: string;
   imageUrl: string;
-  type: 'text' | 'image' | 'multi';
+  type: "text" | "image" | "multi";
   creditsUsed: number;
   createdAt: number;
 }> {
-  if (typeof window === 'undefined') return [];
+  if (typeof window === "undefined") return [];
 
   const stored = localStorage.getItem(HISTORY_KEY);
   if (!stored) return [];
@@ -188,7 +195,7 @@ export function getGenerationHistory(): Array<{
   try {
     return JSON.parse(stored);
   } catch (error) {
-    console.error('Failed to parse history:', error);
+    console.error("Failed to parse history:", error);
     return [];
   }
 }
@@ -197,7 +204,7 @@ export function getGenerationHistory(): Array<{
  * Clear all guest data (for testing)
  */
 export function clearGuestData(): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
   localStorage.removeItem(STORAGE_KEY);
   localStorage.removeItem(CREDITS_KEY);
@@ -226,7 +233,7 @@ export function checkRateLimit(): { allowed: boolean; message?: string } {
   if (timeSinceLastGen < oneHour && user.generationCount % 10 === 0) {
     return {
       allowed: false,
-      message: 'Rate limit reached. Please wait before generating more images.',
+      message: "Rate limit reached. Please wait before generating more images.",
     };
   }
 
@@ -241,7 +248,7 @@ const TOAST_SHOWN_KEY = `${MVP_CONFIG.guest.storagePrefix}toast_shown`;
 const GENERATION_TOAST_THRESHOLD = 5;
 
 export function shouldShowGenerationToast(): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === "undefined") return false;
 
   // Check if toast has already been shown
   const hasShown = sessionStorage.getItem(TOAST_SHOWN_KEY);
@@ -251,7 +258,7 @@ export function shouldShowGenerationToast(): boolean {
 
   // Show toast exactly at 5th generation
   if (user.generationCount === GENERATION_TOAST_THRESHOLD) {
-    sessionStorage.setItem(TOAST_SHOWN_KEY, 'true');
+    sessionStorage.setItem(TOAST_SHOWN_KEY, "true");
     return true;
   }
 
@@ -262,7 +269,7 @@ export function shouldShowGenerationToast(): boolean {
  * Get current generation count
  */
 export function getGenerationCount(): number {
-  if (typeof window === 'undefined') return 0;
+  if (typeof window === "undefined") return 0;
 
   const user = getOrCreateGuestUser();
   return user.generationCount;

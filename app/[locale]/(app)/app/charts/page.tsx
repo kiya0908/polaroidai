@@ -326,7 +326,7 @@ export default function ChartsPage() {
                 <Camera className="w-12 h-12 mb-4 text-gray-300" />
                 <p>{t("recentActivity.noActivity")}</p>
                 <Button asChild className="mt-4 bg-polaroid-orange hover:bg-polaroid-orange/90">
-                  <Link href="/app/generate">{t("recentActivity.startCreating")}</Link>
+                  <Link href="/mvp-simple">{t("recentActivity.startCreating")}</Link>
                 </Button>
               </div>
             )}

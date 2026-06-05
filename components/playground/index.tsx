@@ -49,18 +49,8 @@ const useCreateTaskMutation = (config?: {
   const { getToken } = useAuth();
 
   return useMutation({
-    mutationFn: async (values: any) => {
-      const res = await fetch("/api/generate", {
-        body: JSON.stringify(values),
-        method: "POST",
-        headers: { Authorization: `Bearer ${await getToken()}` },
-      });
-
-      if (!res.ok && res.status >= 500) {
-        throw new Error("Network response error");
-      }
-
-      return res.json();
+    mutationFn: async (values: any): Promise<any> => {
+      throw new Error("Legacy playground generation is disabled. Please use the MVP generator page.");
     },
     onSuccess: async (result) => {
       config?.onSuccess(result);
@@ -312,7 +302,7 @@ export default function Playground({
                         </div>
                         <div className="flex flex-row flex-wrap space-x-1 px-4">
                           <div className="bg-surface-alpha-strong text-content-base inline-flex items-center rounded-md border border-transparent px-1.5 py-0.5 font-mono text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-                            {ModelName[fluxData?.model]}
+                            {fluxData?.model ? ModelName[fluxData.model as keyof typeof ModelName] : ""}
                           </div>
                         </div>
                         <div className="flex flex-row justify-between space-x-2 p-4">

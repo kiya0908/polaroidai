@@ -10,5 +10,5 @@ export default function MVPSimpleRoute({ params: { locale } }: Props) {
   // Enable static rendering
   unstable_setRequestLocale(locale);
 
-  return <MVPSimplePage locale={locale} />;
+  return <MVPSimplePage locale={locale} showSeoContent={false} />;
 }

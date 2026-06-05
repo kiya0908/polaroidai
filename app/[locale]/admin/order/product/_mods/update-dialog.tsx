@@ -53,10 +53,11 @@ export function UpdateDialog(props: { detail: ChargeProductSelectDto }) {
     formField.form.setFieldsValue({
       ...detail,
       currency: detail?.currency as Currency,
+      creemProductId: detail?.creemProductId || undefined,
       tag: (detail?.tag || []) as string[],
       message: detail?.message || "",
       locale: detail?.locale as Locale,
-      state: (detail?.state || "enable") as "enable" | "disabled",
+      state: (detail?.state || "active") as "active" | "archived",
     });
   }, [detail, open]);
 
@@ -119,16 +120,19 @@ export function UpdateDialog(props: { detail: ChargeProductSelectDto }) {
               ]}
             />
           </FormItem>
+          <FormItem {...inputField} label="Creem Product ID" name="creemProductId">
+            <Input className="!w-full" placeholder="prod_..." />
+          </FormItem>
           <FormItem {...inputField} label="State" name="state">
             <Select
               options={[
                 {
                   label: "启用",
-                  value: "enable",
+                  value: "active",
                 },
                 {
                   label: "禁用",
-                  value: "disabled",
+                  value: "archived",
                 },
               ]}
             />

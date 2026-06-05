@@ -8,17 +8,20 @@ import { ChargeProductHashids } from "@/db/dto/charge-product.dto";
 import { prisma } from "@/db/prisma";
 import { getErrorMessage } from "@/lib/handle-error";
 
+import { assertSiteOwner } from "../../../_lib/auth";
 import type { CreateSchema, UpdateSchema } from "./validations";
 
 export async function createAction(input: CreateSchema) {
   noStore();
   try {
+    await assertSiteOwner();
     const {
       title,
       locale,
       credit,
       amount,
       currency,
+      creemProductId,
       tag = [],
       originalAmount,
       message = "",
@@ -34,6 +37,7 @@ export async function createAction(input: CreateSchema) {
           amount,
           currency,
           originalAmount,
+          creemProductId: creemProductId || null,
           tag,
           message,
           state,
@@ -58,6 +62,7 @@ export async function createAction(input: CreateSchema) {
 export async function updateAction(input: UpdateSchema & { id: string }) {
   noStore();
   try {
+    await assertSiteOwner();
     const [id] = ChargeProductHashids.decode(input.id);
     const {
       title,
@@ -65,12 +70,13 @@ export async function updateAction(input: UpdateSchema & { id: string }) {
       credit,
       amount,
       currency,
+      creemProductId,
       originalAmount,
       tag,
       message,
       state,
     } = input;
-    await prisma.chargeProduct.update({
+    await prisma.polaroidai_ChargeProduct.update({
       where: {
         id: id as number,
       },
@@ -80,6 +86,7 @@ export async function updateAction(input: UpdateSchema & { id: string }) {
         credit,
         amount,
         currency,
+        creemProductId: creemProductId || null,
         originalAmount,
         tag,
         message,
@@ -104,8 +111,9 @@ export async function updateAction(input: UpdateSchema & { id: string }) {
 
 export async function deleteAction(input: { id: string }) {
   try {
+    await assertSiteOwner();
     const [id] = ChargeProductHashids.decode(input.id);
-    await prisma.chargeProduct.delete({
+    await prisma.polaroidai_ChargeProduct.delete({
       where: {
         id: id as number,
       },

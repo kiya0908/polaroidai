@@ -57,7 +57,7 @@ function getFallbackProducts(locale: string = "en") {
         creemProductId: "prod_O2wLG60Wu0otsJyWUokdH",
         isPopular: false,
         sortOrder: 3,
-      }
+      },
     ];
   } else {
     return [
@@ -68,7 +68,8 @@ function getFallbackProducts(locale: string = "en") {
         currency: "USD",
         locale: "en",
         title: "Starter Pack",
-        message: "Perfect for trying out,1000 credits,One-time payment,No subscription",
+        message:
+          "Perfect for trying out,1000 credits,One-time payment,No subscription",
         state: "active",
         tag: ["Recommended for beginners"],
         id: "fallback_en_1",
@@ -83,7 +84,8 @@ function getFallbackProducts(locale: string = "en") {
         currency: "USD",
         locale: "en",
         title: "Popular Pack",
-        message: "Best value for regular users,2500 credits,Save 20%,One-time payment",
+        message:
+          "Best value for regular users,2500 credits,Save 20%,One-time payment",
         state: "active",
         tag: ["Most Popular", "Limited Time Offer"],
         id: "fallback_en_2",
@@ -105,7 +107,7 @@ function getFallbackProducts(locale: string = "en") {
         creemProductId: "prod_O2wLG60Wu0otsJyWUokdH",
         isPopular: false,
         sortOrder: 3,
-      }
+      },
     ];
   }
 }
@@ -125,7 +127,9 @@ export async function getChargeProduct(locale?: string) {
 
     // 如果没有找到指定locale的产品，尝试查询所有激活的产品
     if (data.length === 0) {
-      console.log(`No products found for locale: ${locale}, fetching all active products`);
+      console.log(
+        `No products found for locale: ${locale}, fetching all active products`,
+      );
       data = await prisma.polaroidai_ChargeProduct.findMany({
         where: {
           state: "active",
@@ -138,17 +142,18 @@ export async function getChargeProduct(locale?: string) {
 
     // 如果数据库中没有任何产品数据，使用fallback
     if (data.length === 0) {
-      console.log(`No products found in database, using fallback data for locale: ${locale}`);
+      console.log(
+        `No products found in database, using fallback data for locale: ${locale}`,
+      );
       const fallbackProducts = getFallbackProducts(locale);
       return {
-        data: fallbackProducts.map(product => ({
+        data: fallbackProducts.map((product) => ({
           ...product,
           // 确保tag字段格式正确
           tag: product.tag ? JSON.stringify(product.tag) : null,
         })) as ChargeProductSelectDto[],
       };
     }
-
     return {
       data: (data.map(({ id, ...rest }) => ({
         ...rest,
@@ -156,14 +161,17 @@ export async function getChargeProduct(locale?: string) {
       })) ?? []) as ChargeProductSelectDto[],
     };
   } catch (error) {
-    console.error('Failed to fetch charge products from database, using fallback data:', error);
-    console.log('🔄 Database connection failed, using static fallback data for pricing page');
-
+    if (process.env.NODE_ENV === "production") {
+      console.warn(
+        "Failed to fetch charge products from database, using fallback data:",
+        error,
+      );
+    }
     // 返回fallback静态数据
     const fallbackProducts = getFallbackProducts(locale);
 
     return {
-      data: fallbackProducts.map(product => ({
+      data: fallbackProducts.map((product) => ({
         ...product,
         // 确保tag字段格式正确
         tag: product.tag ? JSON.stringify(product.tag) : null,
@@ -180,17 +188,20 @@ export async function getClaimed(userId: string) {
       targetDate.getTime() + 30 * 24 * 60 * 60 * 1000,
     );
     // Step 1: Get the IDs of claimed orders for the user
-    const claimedOrderIds = await prisma.polaroidai_ClaimedActivityOrder.findMany({
-      where: {
-        activityCode,
-        userId,
-      },
-      select: {
-        id: true,
-        chargeOrderId: true,
-      },
-    });
-    const claimedChargeOrderIdIds = claimedOrderIds.map((row) => row.chargeOrderId);
+    const claimedOrderIds =
+      await prisma.polaroidai_ClaimedActivityOrder.findMany({
+        where: {
+          activityCode,
+          userId,
+        },
+        select: {
+          id: true,
+          chargeOrderId: true,
+        },
+      });
+    const claimedChargeOrderIdIds = claimedOrderIds.map(
+      (row) => row.chargeOrderId,
+    );
     const charOrders = await prisma.polaroidai_ChargeOrder.findMany({
       where: {
         phase: OrderPhase.Paid,
@@ -207,7 +218,10 @@ export async function getClaimed(userId: string) {
     });
     return charOrders.length > 0;
   } catch (error) {
-    console.warn('Failed to check claimed status during build, using fallback false:', error);
+    console.warn(
+      "Failed to check claimed status during build, using fallback false:",
+      error,
+    );
     // 在数据库连接失败时，返回false表示用户没有可领取的活动
     return false;
   }

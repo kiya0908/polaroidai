@@ -42,16 +42,16 @@ export async function GET(req: NextRequest) {
     if (phase) {
       whereConditions.phase = phase;
     }
-    // 当 phase 为空时（用户选择"all"），不添加 phase 过滤条件，显示所有状态的订单
+    // 当 phase 为空时（用户选择 "all"），不添加 phase 过滤条件，显示所有状态的订单
 
     const [data, total] = await Promise.all([
-      prisma.chargeOrder.findMany({
+      prisma.polaroidai_ChargeOrder.findMany({
         where: whereConditions,
         take: pageSize,
         skip: offset,
         orderBy: { createdAt: "desc" },
       }),
-      prisma.chargeOrder.count({ where: whereConditions }),
+      prisma.polaroidai_ChargeOrder.count({ where: whereConditions }),
     ]);
 
     return NextResponse.json({

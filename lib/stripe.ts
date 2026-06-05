@@ -1,5 +1,17 @@
 // 临时Mock - Stripe库未安装时的fallback
 export const stripe = {
+  billingPortal: {
+    sessions: {
+      create: async (params: any) => {
+        console.warn('Stripe is mocked - install stripe package for actual payment processing');
+        return {
+          url: 'https://mock-stripe-portal-url.com',
+          id: 'mock_portal_session_id',
+          ...params
+        };
+      }
+    }
+  },
   checkout: {
     sessions: {
       create: async (params: any) => {
@@ -12,5 +24,10 @@ export const stripe = {
         };
       }
     }
+  },
+  subscriptions: {
+    retrieve: async (_id: string) => ({
+      cancel_at_period_end: false,
+    }),
   }
 };

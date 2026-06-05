@@ -70,7 +70,7 @@ export default async function SettingsPage({ params: { locale } }: PageProps) {
             </p>
             <div className="flex justify-center gap-4">
               <Button asChild className="bg-polaroid-orange hover:bg-polaroid-orange/90">
-                <Link href="/app/generate">
+                <Link href="/mvp-simple">
                   <Gift className="w-4 h-4 mr-2" />
                   {tPage("featureLocked.action")}
                 </Link>

@@ -60,7 +60,7 @@ export interface APIMiddlewareConfig {
   requireOwner?: boolean;
   rateLimit?: {
     requests: number;
-    window: string;
+    window: `${number} s` | `${number} m` | `${number} h`;
     keyPrefix?: string;
   };
   validation?: {
@@ -263,7 +263,7 @@ export const RATE_LIMITS = {
   
   // 一般API：30次/10秒
   general: { requests: 30, window: "10 s", keyPrefix: "api" },
-};
+} as const;
 
 // 常用的验证Schema
 export const COMMON_SCHEMAS = {
@@ -282,4 +282,4 @@ export const COMMON_SCHEMAS = {
   ids: z.object({
     ids: z.array(z.string().min(1)).min(1).max(100),
   }),
-};
+} as const;

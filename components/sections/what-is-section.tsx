@@ -10,22 +10,22 @@ const whatIsFeatures = [
   {
     icon: Camera,
     key: "authentic",
-    color: "bg-orange-500/10 text-orange-600"
+    color: "bg-[#d6883f]/12 text-[#08304c]"
   },
   {
     icon: Sparkles,
     key: "ai",
-    color: "bg-purple-500/10 text-purple-600"
+    color: "bg-[#08304c]/10 text-[#08304c]"
   },
   {
     icon: Heart,
     key: "nostalgia",
-    color: "bg-red-500/10 text-red-600"
+    color: "bg-[#d6883f]/12 text-[#08304c]"
   },
   {
     icon: Clock,
     key: "instant",
-    color: "bg-green-500/10 text-green-600"
+    color: "bg-[#08304c]/10 text-[#08304c]"
   }
 ];
 
@@ -33,7 +33,7 @@ export default function WhatIsSection() {
   const t = useTranslations("IndexPage");
 
   return (
-    <section className="py-20 bg-gradient-to-br from-orange-50/50 to-amber-50/50 dark:from-orange-950/20 dark:to-amber-950/20">
+    <section className="py-20 sm:py-28">
       <MaxWidthWrapper>
         <HeaderSection
           title={t("whatIs.title")}
@@ -41,37 +41,37 @@ export default function WhatIsSection() {
         />
 
         <div className="mt-16 grid gap-8 md:grid-cols-2 lg:gap-12">
-          {/* 左侧：文字介绍 */}
+          {/* 宸︿晶锛氭枃瀛椾粙缁?*/}
           <div className="space-y-6">
             <div className="space-y-4">
-              <Badge variant="secondary" className="bg-[#FF8C42]/10 text-[#FF8C42] border-[#FF8C42]/20">
+              <Badge variant="secondary" className="rounded-full border border-[#d6883f]/20 bg-[#d6883f]/10 px-4 py-1 text-[#08304c]">
                 {t("whatIs.badge")}
               </Badge>
 
-              <h3 className="text-2xl font-bold">
+              <h3 className="font-heading text-3xl font-medium tracking-[-0.03em] text-[#08304c]">
                 {t("whatIs.description.title")}
               </h3>
 
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-lg leading-8 text-[#08304c]/60">
                 {t("whatIs.description.content")}
               </p>
             </div>
 
             <div className="space-y-4">
-              <h4 className="font-semibold text-lg">
+              <h4 className="text-lg font-semibold text-[#08304c]">
                 {t("whatIs.comparison.title")}
               </h4>
 
               <div className="grid gap-3">
                 <div className="flex items-center space-x-3 text-sm">
-                  <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                  <span className="text-muted-foreground line-through">
+                  <div className="h-2 w-2 rounded-full bg-[#08304c]/25"></div>
+                  <span className="text-[#08304c]/50 line-through">
                     {t("whatIs.comparison.traditional")}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3 text-sm">
-                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                  <span className="font-medium">
+                  <div className="h-2 w-2 rounded-full bg-[#d6883f]"></div>
+                  <span className="font-medium text-[#08304c]">
                     {t("whatIs.comparison.ai")}
                   </span>
                 </div>
@@ -79,22 +79,22 @@ export default function WhatIsSection() {
             </div>
           </div>
 
-          {/* 右侧：特色卡片 */}
+          {/* 鍙充晶锛氱壒鑹插崱鐗?*/}
           <div className="grid gap-4 sm:grid-cols-2">
             {whatIsFeatures.map((feature) => {
               const Icon = feature.icon;
               return (
-                <Card key={feature.key} className="border-2 border-dashed border-muted-foreground/20 hover:border-[#FF8C42]/30 transition-colors">
+                <Card key={feature.key} className="portrait-card transition-transform duration-300 hover:-translate-y-1">
                   <CardContent className="p-6">
-                    <div className={`inline-flex p-3 rounded-xl ${feature.color} mb-4`}>
+                    <div className={`mb-4 inline-flex rounded-2xl p-3 ${feature.color}`}>
                       <Icon className="w-6 h-6" />
                     </div>
 
-                    <h5 className="font-semibold mb-2">
+                    <h5 className="mb-2 font-heading text-lg font-medium text-[#08304c]">
                       {t(`whatIs.features.${feature.key}.title`)}
                     </h5>
 
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm leading-6 text-[#08304c]/60">
                       {t(`whatIs.features.${feature.key}.description`)}
                     </p>
                   </CardContent>

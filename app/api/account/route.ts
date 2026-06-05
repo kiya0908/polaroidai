@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 
 // 强制动态渲染，避免在构建时预渲染
 export const dynamic = 'force-dynamic';
@@ -12,8 +12,8 @@ import { redis } from "@/lib/redis";
 
 export async function GET(req: NextRequest) {
   console.time("stat");
-  const user = await currentUser();
-  if (!user) {
+  const { userId } = auth();
+  if (!userId) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
   // console.timeLog("stat");
@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
   //   });
   // }
 
-  const accountInfo = await getUserCredit(user.id);
+  const accountInfo = await getUserCredit(userId);
   console.timeEnd("stat");
 
   return NextResponse.json({

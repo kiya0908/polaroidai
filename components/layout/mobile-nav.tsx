@@ -36,7 +36,7 @@ const mobileNavItems: MobileNavItem[] = [
     iconName: "Home",
   },
   {
-    href: "/app/generate",
+    href: "/mvp-simple",
     label: "生成",
     iconName: "Camera",
   },

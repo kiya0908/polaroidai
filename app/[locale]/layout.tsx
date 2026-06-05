@@ -26,7 +26,7 @@ import {
 } from "next-intl/server";
 import { ThemeProvider } from "next-themes";
 
-import { fontHeading, fontSans, fontUrban } from "@/assets/fonts";
+import { fontHeading, fontSans, fontSatoshi, fontUrban } from "@/assets/fonts";
 import { Analytics } from "@/components/analytics";
 import ClaritySnippet from "@/components/ClaritySnippet";
 import { TailwindIndicator } from "@/components/tailwind-indicator";
@@ -120,6 +120,7 @@ export default async function RootLayout({
           className={cn(
             "min-h-screen bg-background font-sans antialiased",
             fontSans.variable,
+            fontSatoshi.variable,
             fontUrban.variable,
             fontHeading.variable,
           )}

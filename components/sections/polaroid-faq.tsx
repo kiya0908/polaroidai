@@ -46,7 +46,7 @@ export default function PolaroidFAQ() {
   const t = useTranslations("IndexPage");
 
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-50/50 to-gray-50/50 dark:from-slate-950/20 dark:to-gray-950/20">
+    <section className="py-20 sm:py-28">
       <MaxWidthWrapper>
         <div className="max-w-4xl mx-auto">
           <HeaderSection
@@ -59,12 +59,12 @@ export default function PolaroidFAQ() {
               <AccordionItem
                 key={faqItem.id}
                 value={faqItem.id}
-                className="bg-white dark:bg-gray-900 rounded-lg border-2 border-dashed border-muted-foreground/20 hover:border-[#FF8C42]/30 transition-colors px-6"
+                className="portrait-card overflow-hidden px-6"
               >
-                <AccordionTrigger className="text-left font-semibold hover:text-[#FF8C42] transition-colors">
+                <AccordionTrigger className="text-left font-heading text-lg font-medium text-[#08304c] transition-colors hover:text-[#08304c]">
                   {t(`faq.${faqItem.question}`)}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm text-muted-foreground sm:text-[15px] pb-6">
+                <AccordionContent className="pb-6 text-sm leading-7 text-[#08304c]/60 sm:text-[15px]">
                   {t(`faq.${faqItem.answer}`)}
                 </AccordionContent>
               </AccordionItem>

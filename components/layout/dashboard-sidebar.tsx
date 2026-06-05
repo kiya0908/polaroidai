@@ -47,7 +47,7 @@ const getSidebarIcon = (iconName: string) => {
 const getSidebarItems = (): SidebarItem[] => {
   const items: SidebarItem[] = [
     {
-      href: "/app/generate",
+      href: "/mvp-simple",
       labelKey: "items.generate.label",
       descriptionKey: "items.generate.description",
       iconName: "Camera",

@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-// 强制动态渲染，避免在构建时预渲染
+// 寮哄埗鍔ㄦ€佹覆鏌擄紝閬垮厤鍦ㄦ瀯寤烘椂棰勬覆鏌?
 export const dynamic = 'force-dynamic';
 
 import { Ratelimit } from "@upstash/ratelimit";
@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
     });
 
     const offset = (page - 1) * pageSize;
-    const data = await prisma.media.findMany({
+    const data = await prisma.polaroidai_media.findMany({
       where: {
         name: name
           ? {
@@ -105,7 +105,7 @@ export async function DELETE(req: NextRequest) {
 
     const { id } = deleteSchema.parse(body);
     const [mediaId] = MediaHashids.decode(id);
-    const data = await prisma.media.findFirst({
+    const data = await prisma.polaroidai_media.findFirst({
       where: {
         id: mediaId as number,
       },
@@ -127,9 +127,9 @@ export async function DELETE(req: NextRequest) {
     try {
       await s3.deleteItemInBucket(data.key);
     } catch (error) {
-      console.log("删除失败-->", error);
+      console.log("鍒犻櫎澶辫触-->", error);
     }
-    await prisma.media.delete({
+    await prisma.polaroidai_media.delete({
       where: {
         id: mediaId as number,
       },

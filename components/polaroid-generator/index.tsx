@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -17,7 +17,7 @@ import { PolaroidImageUpload } from "./image-upload";
 import { PolaroidPreview } from "./preview";
 import { PolaroidStyleSelector } from "./style-selector";
 
-// 表单验证Schema
+// 琛ㄥ崟楠岃瘉Schema
 const polaroidFormSchema = z.object({
   input_type: z.enum(['text', 'image']),
   input_content: z.string().max(500).optional(),
@@ -28,10 +28,10 @@ const polaroidFormSchema = z.object({
 
 type PolaroidFormData = z.infer<typeof polaroidFormSchema>;
 
-// 积分消费规则
+// 绉垎娑堣垂瑙勫垯
 const CREDIT_COSTS = {
-  text: 5,   // 文字生成：5积分
-  image: 8,  // 图片转换：8积分
+  text: 5,   // 鏂囧瓧鐢熸垚锛?绉垎
+  image: 8,  // 鍥剧墖杞崲锛?绉垎
 };
 
 interface PolaroidGeneratorProps {
@@ -54,67 +54,50 @@ function PolaroidGenerator({ userCredit = 0, onCreditUpdate }: PolaroidGenerator
     },
   });
 
-  // 监听tab切换，更新表单数据
+  // 鐩戝惉tab鍒囨崲锛屾洿鏂拌〃鍗曟暟鎹?
   const handleTabChange = (value: string) => {
     const newType = value as 'text' | 'image';
     setActiveTab(newType);
     form.setValue('input_type', newType);
   };
 
-  // 处理图片上传
+  // 澶勭悊鍥剧墖涓婁紶
   const handleImageUpload = (imageUrl: string) => {
     setUploadedImageUrl(imageUrl);
     form.setValue('input_image_url', imageUrl);
   };
 
-  // 提交生成请求
+  // 鎻愪氦鐢熸垚璇锋眰
   const onSubmit = async (data: PolaroidFormData) => {
     const requiredCredit = CREDIT_COSTS[data.input_type];
     
-    // 检查积分
+    // 妫€鏌ョН鍒?
     if (userCredit < requiredCredit) {
-      toast.error(`积分不足！需要 ${requiredCredit} 积分，当前只有 ${userCredit} 积分`);
+      toast.error(`绉垎涓嶈冻锛侀渶瑕?${requiredCredit} 绉垎锛屽綋鍓嶅彧鏈?${userCredit} 绉垎`);
       return;
     }
 
-    // 验证输入
+    // 楠岃瘉杈撳叆
     if (data.input_type === 'text' && !data.input_content?.trim()) {
-      toast.error('请输入文字描述');
+      toast.error('Please enter a text prompt');
       return;
     }
     if (data.input_type === 'image' && !data.input_image_url) {
-      toast.error('请上传图片');
+      toast.error('Please upload an image');
       return;
     }
 
     setIsGenerating(true);
     
     try {
-      const response = await fetch('/api/polaroid-generate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+      throw new Error("Legacy generator is disabled. Please use the MVP generator page.");
 
-      const result = await response.json();
 
-      if (!response.ok) {
-        throw new Error(result.error || '生成失败');
-      }
-
-      setGeneratedResult(result);
-      toast.success('宝丽来图片生成成功！');
       
-      // 更新用户积分
-      if (onCreditUpdate) {
-        onCreditUpdate(userCredit - requiredCredit);
-      }
 
     } catch (error) {
       console.error('Generation error:', error);
-      toast.error(error instanceof Error ? error.message : '生成失败，请重试');
+      toast.error(error instanceof Error ? error.message : '鐢熸垚澶辫触锛岃閲嶈瘯');
     } finally {
       setIsGenerating(false);
     }
@@ -125,35 +108,35 @@ function PolaroidGenerator({ userCredit = 0, onCreditUpdate }: PolaroidGenerator
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
-      {/* 标题区域 */}
+      {/* 鏍囬鍖哄煙 */}
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold text-polaroid-brown flex items-center justify-center gap-2">
           <Sparkles className="w-8 h-8 text-polaroid-orange" />
-          宝丽来AI生成器
+          瀹濅附鏉I鐢熸垚鍣?
         </h1>
         <p className="text-muted-foreground">
-          将文字描述或照片转换为复古宝丽来风格图片
+          灏嗘枃瀛楁弿杩版垨鐓х墖杞崲涓哄鍙ゅ疂涓芥潵椋庢牸鍥剧墖
         </p>
         <div className="flex items-center justify-center gap-4 text-sm">
           <Badge variant="secondary" className="bg-polaroid-cream text-polaroid-brown">
-            当前积分: {userCredit}
+            褰撳墠绉垎: {userCredit}
           </Badge>
           <Badge variant="outline" className="border-polaroid-orange text-polaroid-orange">
-            消耗: {currentCreditCost} 积分
+            娑堣€? {currentCreditCost} 绉垎
           </Badge>
         </div>
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* 输入方式选择 */}
+          {/* 杈撳叆鏂瑰紡閫夋嫨 */}
           <Card className="vintage-gradient retro-shadow">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-polaroid-brown">
-                选择输入方式
+                閫夋嫨杈撳叆鏂瑰紡
               </CardTitle>
               <CardDescription>
-                选择文字描述生成或上传图片转换
+                閫夋嫨鏂囧瓧鎻忚堪鐢熸垚鎴栦笂浼犲浘鐗囪浆鎹?
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -161,11 +144,11 @@ function PolaroidGenerator({ userCredit = 0, onCreditUpdate }: PolaroidGenerator
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="text" className="flex items-center gap-2">
                     <Type className="w-4 h-4" />
-                    文字生成 ({CREDIT_COSTS.text}积分)
+                    鏂囧瓧鐢熸垚 ({CREDIT_COSTS.text}绉垎)
                   </TabsTrigger>
                   <TabsTrigger value="image" className="flex items-center gap-2">
                     <Image className="w-4 h-4" />
-                    图片转换 ({CREDIT_COSTS.image}积分)
+                    鍥剧墖杞崲 ({CREDIT_COSTS.image}绉垎)
                   </TabsTrigger>
                 </TabsList>
 
@@ -175,17 +158,17 @@ function PolaroidGenerator({ userCredit = 0, onCreditUpdate }: PolaroidGenerator
                     name="input_content"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>描述内容</FormLabel>
+                        <FormLabel>鎻忚堪鍐呭</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="描述你想要生成的宝丽来照片，例如：一只可爱的橘猫坐在窗台上，阳光透过窗户洒在它身上..."
+                            placeholder="鎻忚堪浣犳兂瑕佺敓鎴愮殑瀹濅附鏉ョ収鐗囷紝渚嬪锛氫竴鍙彲鐖辩殑姗樼尗鍧愬湪绐楀彴涓婏紝闃冲厜閫忚繃绐楁埛娲掑湪瀹冭韩涓?.."
                             className="min-h-[120px] resize-none"
                             maxLength={500}
                             {...field}
                           />
                         </FormControl>
                         <FormDescription>
-                          最多500字符 ({field.value?.length || 0}/500)
+                          鏈€澶?00瀛楃 ({field.value?.length || 0}/500)
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -195,13 +178,13 @@ function PolaroidGenerator({ userCredit = 0, onCreditUpdate }: PolaroidGenerator
 
                 <TabsContent value="image" className="space-y-4 mt-6">
                   <div className="space-y-4">
-                    <FormLabel>上传图片</FormLabel>
+                    <FormLabel>涓婁紶鍥剧墖</FormLabel>
                     <PolaroidImageUpload
                       onImageUpload={handleImageUpload}
                       uploadedImageUrl={uploadedImageUrl}
                     />
                     <FormDescription>
-                      支持 JPG、PNG 格式，最大 10MB
+                      鏀寔 JPG銆丳NG 鏍煎紡锛屾渶澶?10MB
                     </FormDescription>
                   </div>
                 </TabsContent>
@@ -209,12 +192,12 @@ function PolaroidGenerator({ userCredit = 0, onCreditUpdate }: PolaroidGenerator
             </CardContent>
           </Card>
 
-          {/* 风格选择 */}
+          {/* 椋庢牸閫夋嫨 */}
           <Card className="vintage-gradient retro-shadow">
             <CardHeader>
-              <CardTitle className="text-polaroid-brown">宝丽来风格</CardTitle>
+              <CardTitle className="text-polaroid-brown">Polaroid style</CardTitle>
               <CardDescription>
-                选择你喜欢的宝丽来风格效果
+                閫夋嫨浣犲枩娆㈢殑瀹濅附鏉ラ鏍兼晥鏋?
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -236,7 +219,7 @@ function PolaroidGenerator({ userCredit = 0, onCreditUpdate }: PolaroidGenerator
             </CardContent>
           </Card>
 
-          {/* 生成按钮 */}
+          {/* 鐢熸垚鎸夐挳 */}
           <div className="flex justify-center">
             <Button
               type="submit"
@@ -247,12 +230,12 @@ function PolaroidGenerator({ userCredit = 0, onCreditUpdate }: PolaroidGenerator
               {isGenerating ? (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  生成中...
+                  鐢熸垚涓?..
                 </>
               ) : (
                 <>
                   <Sparkles className="w-5 h-5 mr-2" />
-                  生成宝丽来照片
+                  鐢熸垚瀹濅附鏉ョ収鐗?
                 </>
               )}
             </Button>
@@ -261,35 +244,35 @@ function PolaroidGenerator({ userCredit = 0, onCreditUpdate }: PolaroidGenerator
           {!canGenerate && (
             <div className="text-center">
               <p className="text-sm text-muted-foreground">
-                积分不足，需要 {currentCreditCost} 积分
+                绉垎涓嶈冻锛岄渶瑕?{currentCreditCost} 绉垎
               </p>
               <Button variant="link" className="text-polaroid-orange">
-                去充值
+                鍘诲厖鍊?
               </Button>
             </div>
           )}
         </form>
       </Form>
 
-      {/* 生成结果预览 */}
+      {/* 鐢熸垚缁撴灉棰勮 */}
       {generatedResult && (
         <Card className="vintage-gradient retro-shadow">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-polaroid-brown">
               <Sparkles className="w-5 h-5 text-polaroid-orange" />
-              生成结果
+              鐢熸垚缁撴灉
             </CardTitle>
           </CardHeader>
           <CardContent>
             <PolaroidPreview
               result={generatedResult}
               onDownload={() => {
-                // 处理下载逻辑
-                toast.success('开始下载...');
+                // 澶勭悊涓嬭浇閫昏緫
+                toast.success('寮€濮嬩笅杞?..');
               }}
               onShare={() => {
-                // 处理分享逻辑
-                toast.success('复制分享链接成功！');
+                // 澶勭悊鍒嗕韩閫昏緫
+                toast.success('Share link copied');
               }}
             />
           </CardContent>

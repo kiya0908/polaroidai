@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { currentUser } from "@clerk/nextjs/server";
 
-// 强制动态渲染，避免在构建时预渲染
+// 寮哄埗鍔ㄦ€佹覆鏌擄紝閬垮厤鍦ㄦ瀯寤烘椂棰勬覆鏌?
 export const dynamic = 'force-dynamic';
 
 import { MediaDto, MediaDtoSchema, MediaHashids } from "@/db/dto/media.dto";
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       ext = {},
     } = CreateMediaDtoSchema.parse(data);
 
-    const newMedia = await prisma.media.create({
+    const newMedia = await prisma.polaroidai_media.create({
       data: {
         name,
         key,

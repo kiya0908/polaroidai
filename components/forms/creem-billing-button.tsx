@@ -11,6 +11,7 @@ import { useToast } from "@/components/ui/use-toast";
 import type { ChargeProductSelectDto } from "@/db/type";
 import { url } from "@/lib";
 import { usePathname } from "@/lib/navigation";
+import { cn } from "@/lib/utils";
 
 interface CreemBillingButtonProps {
   offer: ChargeProductSelectDto;
@@ -37,7 +38,7 @@ export function CreemBillingButton({
       credit: offer.credit,
     });
     return (
-      <Button variant="outline" className="w-full" disabled>
+      <Button variant="outline" className="portrait-outline-action w-full" disabled>
         {t("action.unavailable") || "Unavailable"}
       </Button>
     );
@@ -114,7 +115,10 @@ export function CreemBillingButton({
   return (
     <Button
       variant={userOffer ? "default" : "outline"}
-      className="w-full"
+      className={cn(
+        "w-full",
+        userOffer ? "portrait-action" : "portrait-outline-action",
+      )}
       onClick={handleCheckout}
       disabled={isLoading}
     >

@@ -22,7 +22,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    href: "/app/generate",
+    href: "/mvp-simple",
     labelKey: "generate",
     iconName: "Camera",
   },
@@ -56,7 +56,7 @@ export function Navbar() {
   const pathname = usePathname();
   const t = useTranslations("Navbar");
 
-  // Clerk 认证
+  // Clerk 璁よ瘉
   const { isSignedIn, user } = useUser();
 
   const NavLink = ({ item, mobile = false }: { item: NavItem; mobile?: boolean }) => {
@@ -66,10 +66,10 @@ export function Navbar() {
       <Link
         href={item.href}
         className={cn(
-          "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors",
+          "flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors",
           isActive
-            ? "bg-polaroid-orange text-white"
-            : "text-gray-700 hover:text-polaroid-orange hover:bg-polaroid-cream",
+            ? "bg-[#d6883f] text-[#08304c]"
+            : "text-[#08304c]/75 hover:bg-[#d6883f]/10 hover:text-[#08304c]",
           mobile && "w-full justify-start"
         )}
         onClick={() => mobile && setIsOpen(false)}
@@ -86,9 +86,9 @@ export function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
+    <nav className="sticky top-0 z-50 w-full bg-[#f7f7f7]/90 px-3 py-3 backdrop-blur supports-[backdrop-filter]:bg-[#f7f7f7]/75">
+      <div className="container mx-auto max-w-7xl">
+        <div className="portrait-pill flex h-16 items-center justify-between px-4 sm:px-5">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <Image
@@ -96,14 +96,14 @@ export function Navbar() {
               alt={t("brandName")}
               width={32}
               height={32}
-              className="rounded-lg"
+              className="rounded-xl"
             />
-            <span className="text-xl font-bold text-polaroid-brown">
+            <span className="font-heading text-xl text-[#08304c]">
               {t("brandName")}
             </span>
           </Link>
 
-          {/* 桌面端导航 */}
+          {/* 妗岄潰绔鑸?*/}
           <div className="hidden md:flex items-center gap-6">
             {isSignedIn && (
               <div className="flex items-center gap-4">
@@ -113,9 +113,9 @@ export function Navbar() {
               </div>
             )}
 
-            {/* 用户菜单 */}
+            {/* 鐢ㄦ埛鑿滃崟 */}
             <div className="flex items-center gap-4">
-              {/* 语言切换 */}
+              {/* 璇█鍒囨崲 */}
               <LocaleSwitcher />
 
               {isSignedIn ? (
@@ -131,7 +131,7 @@ export function Navbar() {
                   <Button variant="ghost" asChild>
                     <Link href="/sign-in">{t("signIn")}</Link>
                   </Button>
-                  <Button asChild className="bg-polaroid-orange hover:bg-polaroid-orange/90">
+                  <Button asChild className="portrait-action h-10 min-h-10 px-5">
                     <Link href="/sign-up">{t("signUp")}</Link>
                   </Button>
                 </div>
@@ -139,19 +139,19 @@ export function Navbar() {
             </div>
           </div>
 
-          {/* 移动端菜单按钮 */}
+          {/* 绉诲姩绔彍鍗曟寜閽?*/}
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" className="rounded-full text-[#08304c]">
                   <Menu className="w-5 h-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-80">
                 <div className="flex flex-col gap-6 mt-6">
-                  {/* 用户信息 */}
+                  {/* 鐢ㄦ埛淇℃伅 */}
                   {isSignedIn && (
-                    <div className="flex items-center gap-3 p-4 bg-polaroid-cream rounded-lg">
+                    <div className="flex items-center gap-3 rounded-3xl bg-[#d6883f]/10 p-4">
                       <UserButton
                         appearance={{
                           elements: {
@@ -160,14 +160,14 @@ export function Navbar() {
                         }}
                       />
                       <div className="flex-1">
-                        <p className="font-medium text-polaroid-brown">
+                        <p className="font-medium text-[#08304c]">
                           {(user as any)?.firstName || (user as any)?.username || t("user")}
                         </p>
                       </div>
                     </div>
                   )}
 
-                  {/* 导航菜单 */}
+                  {/* 瀵艰埅鑿滃崟 */}
                   {isSignedIn ? (
                     <div className="space-y-2">
                       {navItems.map((item) => (
@@ -179,16 +179,16 @@ export function Navbar() {
                       <Button variant="ghost" asChild className="w-full justify-start">
                         <Link href="/sign-in">{t("signIn")}</Link>
                       </Button>
-                      <Button asChild className="w-full bg-polaroid-orange hover:bg-polaroid-orange/90">
+                      <Button asChild className="portrait-action w-full">
                         <Link href="/sign-up">{t("signUp")}</Link>
                       </Button>
                     </div>
                   )}
 
-                  {/* 语言切换 - 移动端 */}
+                  {/* 璇█鍒囨崲 - 绉诲姩绔?*/}
                   <div className="pt-4 border-t">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-gray-700">{t("language")}</span>
+                      <span className="text-sm font-medium text-[#08304c]/75">{t("language")}</span>
                       <LocaleSwitcher />
                     </div>
                   </div>
@@ -202,10 +202,10 @@ export function Navbar() {
   );
 }
 
-// 导出别名以兼容不同的导入方式
+// 瀵煎嚭鍒悕浠ュ吋瀹逛笉鍚岀殑瀵煎叆鏂瑰紡
 export { Navbar as NavBar };
 
-// Dashboard layout 使用的用户信息组件
+// Dashboard layout 浣跨敤鐨勭敤鎴蜂俊鎭粍浠?
 export function NavbarUserInfo() {
   return (
     <UserButton

@@ -1,7 +1,7 @@
 {
   "MVP": {
     "title": "Polaroid AI Generator",
-    "subtitle": "Enter text description, generate vintage Polaroid-style photos in 10 seconds",
+    "subtitle": "Use the Polaroid photo generator to turn a written scene into a nostalgic instant-style image with warm color, soft light, and a classic white border.",
     "testBanner": {
       "title": "🎉 MVP Test Version",
       "description": "100 free credits for everyone during beta · Official launch coming soon",
@@ -11,19 +11,19 @@
       "title": "Describe Your Desired Photo",
       "placeholder": "e.g., A cute orange cat sitting on a windowsill, warm afternoon sunlight...",
       "freeBadge": "Free Generation · No Registration",
-      "textGenerationCost": "5 Credits per generation",
+      "textGenerationCost": "3 credits per generation",
       "generate": "Generate Polaroid Photo",
       "generating": "AI Generating..."
     },
     "result": {
       "title": "Generation Result",
-      "processing": "Generating, estimated 10-15 seconds...",
+      "processing": "Generating your Polaroid-style image...",
       "altText": "Generated Polaroid photo",
       "download": "Download High-Quality Original",
       "placeholder": "Enter description and click generate button"
     },
     "footer": {
-      "description": "Generate classic Polaroid-style photos using AI technology · Support English & Chinese descriptions · 10-second output"
+      "description": "Describe a scene in English or Chinese, generate it, and download the result you want to keep."
     },
     "tabs": {
       "textGeneration": "Text Generation",
@@ -42,14 +42,19 @@
       "mvpTestCredits": "MVP Test Credits",
       "textGenerationCost": "Text Generation: 5 Credits",
       "imageConversionCost": "Image Conversion: 8 Credits",
-      "rechargeNotice": "Recharge will be available in the official version"
+      "rechargeNotice": "Recharge will be available in the official version",
+      "credits": "credits",
+      "currentCredits": "Current credits",
+      "freeGenerations": "Free generations"
     },
     "errors": {
       "emptyPrompt": "Please enter text description",
       "generateFailed": "Generation failed, please try again",
       "networkError": "Network error, please check your connection",
       "noImagesUploaded": "Please upload at least one image",
-      "emptyCompositionPrompt": "Please enter description text"
+      "emptyCompositionPrompt": "Please enter description text",
+      "insufficientCredits": "Insufficient credits",
+      "freeLimitReached": "You have used your 2 free generations. Please sign in to continue."
     },
     "lowCreditsDialog": {
       "title": "Credits Running Low",
@@ -192,38 +197,38 @@
       "communityFeedback": "Real-time community feedback from social media"
     },
     "features": {
-      "speed": "10-second generation",
+      "speed": "Prompt-based generation",
       "frame": "Classic white border",
       "vintage": "Vintage tones",
       "transparent": "Transparent credit usage",
-      "title": "Features",
+      "title": "Polaroid Photo Generator Features",
       "action": {
         "visit": "Generate"
       },
-      "description": "Polaroid AI Photo Generator transforms your ideas and images into authentic vintage Polaroid photos with classic white borders, retro colors, and film grain texture.",
+      "description": "The tool combines text-to-image creation with an instant-film-inspired visual direction, helping you move from a rough idea to a downloadable image.",
       "item1": {
-        "title": "Text to Polaroid",
-        "description": "Transform any text description into a beautiful vintage Polaroid photo. Simply describe your scene and watch it come to life with authentic retro aesthetics."
+        "title": "Text-to-Image Creation",
+        "description": "Start with words instead of an existing photograph. Describe the subject, location, lighting, mood, and camera angle, then let the generator interpret those details as a new instant-style scene."
       },
       "item2": {
-        "title": "Image to Polaroid",
-        "description": "Upload your existing photos and convert them into stunning Polaroid-style images with classic white borders, vintage colors, and film grain effects."
+        "title": "Focused Polaroid Direction",
+        "description": "The generation prompt is automatically guided toward a clean white instant-photo border, warm vintage color, subtle grain, soft natural light, and a candid photographic feeling."
       },
       "item3": {
-        "title": "Authentic Vintage Style",
-        "description": "Experience true-to-life Polaroid aesthetics with classic white borders, warm vintage tones, film grain texture, and subtle light leaks for maximum authenticity."
+        "title": "Flexible Creative Subjects",
+        "description": "Use the tool for imagined portraits, travel scenes, pets, celebrations, interiors, product concepts, or quiet everyday moments. A specific prompt usually creates a more intentional result."
       },
       "item4": {
-        "title": "Lightning-Fast Generation",
-        "description": "Create your vintage Polaroid photos in seconds. Our AI-powered engine delivers high-quality results quickly, perfect for instant nostalgia and creative projects."
+        "title": "Clear Usage Limits",
+        "description": "Visitors can try two free generations before signing in. Signed-in generation uses three credits when a provider task starts, and failed provider tasks are designed to refund those credits."
       },
       "item5": {
-        "title": "High-Quality Output",
-        "description": "Generate crisp, detailed Polaroid photos at 1080x1080 resolution. Perfect for social media sharing, printing, or adding to your digital photo collection."
+        "title": "Downloadable Results",
+        "description": "When a generation succeeds, review the returned image and use the download action to save it. Check the downloaded file before using it in a larger creative or publishing workflow."
       },
       "item6": {
-        "title": "Easy to Use",
-        "description": "Simple and intuitive interface designed for everyone. Whether you're creating content for social media or preserving memories, our tool makes vintage photo creation effortless."
+        "title": "Simple Prompt Iteration",
+        "description": "You do not need camera settings or editing software to begin. Change one prompt detail at a time, compare the results, and gradually discover the visual direction that best matches your idea."
       }
     },
     "powered": {
@@ -240,98 +245,121 @@
       "action": "Try Now"
     },
     "whatIs": {
-      "title": "What is Polaroid AI Photo Generator?",
-      "subtitle": "Redefining vintage photography with AI technology to recreate the charm of classic instant photos",
-      "badge": "AI x Vintage Aesthetics",
+      "title": "What Is a Polaroid Photo Generator?",
+      "subtitle": "A Polaroid photo generator creates new instant-film-inspired images from written descriptions and gives modern ideas a nostalgic photographic mood.",
+      "badge": "Text to Instant-Style Image",
       "description": {
-        "title": "Perfectly combining modern AI technology with classic Polaroid aesthetics",
-        "content": "The Polaroid AI Photo Generator is an AI tool specifically designed to create authentic vintage Polaroid-style photos. It's not just a filter, but deeply understands the imaging principles of Polaroid cameras, including unique color science, film grain, light leak effects, and classic white borders, providing you with the closest digital experience to a real Polaroid camera."
+        "title": "A creative tool for generating nostalgic scenes from text",
+        "content": "A Polaroid photo generator is a focused text-to-image tool. You describe a subject and setting, and it creates a new image directed toward the visual language people associate with instant photography: a white border, warm or gently faded color, subtle grain, soft light, and a candid composition. Unlike a basic border template, the tool can interpret time of day, emotion, wardrobe, background, and camera angle while building the scene. The result is an AI-generated image inspired by instant-film aesthetics, not a scan from a physical camera."
       },
       "comparison": {
-        "title": "Why choose AI over traditional Polaroid?",
-        "traditional": "Expensive camera equipment + Film costs + Operating complexity",
-        "ai": "One-click generation + Zero trial and error cost + Perfect control + Instant sharing"
+        "title": "Generator or physical instant camera?",
+        "traditional": "A physical instant camera records a real moment on film and requires a camera, film, and a subject in front of the lens.",
+        "ai": "The generator creates an imagined scene from text, making it useful for concepts, mood exploration, and visual storytelling."
       },
       "features": {
         "authentic": {
-          "title": "Authentic Vintage Texture",
-          "description": "Precisely reproduce the color science and film characteristics of Polaroid cameras"
+          "title": "Instant-Film-Inspired Details",
+          "description": "Prompts are guided toward warm color, restrained grain, soft light, and a recognizable white instant-photo border."
         },
         "ai": {
-          "title": "Smart AI Processing",
-          "description": "Deep learning-based image generation that understands the essence of vintage aesthetics"
+          "title": "Text-Based Scene Building",
+          "description": "The AI Polaroid generator uses your written subject, setting, mood, and composition details to create a new image."
         },
         "nostalgia": {
-          "title": "Emotional Resonance",
-          "description": "Evoke beautiful memories and create visual works with warmth"
+          "title": "Nostalgic Visual Mood",
+          "description": "Use familiar colors and candid framing to make imagined portraits, trips, celebrations, and everyday scenes feel more personal."
         },
         "instant": {
-          "title": "Instant Creation",
-          "description": "Get professional-grade vintage photos in 10 seconds, create anytime, anywhere"
+          "title": "Easy Creative Iteration",
+          "description": "Generate a version, adjust a few words, and try again without setting up a physical photo shoot or editing workflow."
         }
       }
     },
     "howItWorks": {
-      "title": "How to Use Polaroid AI?",
-      "subtitle": "Simple 4 steps to easily create professional-grade vintage Polaroid photos",
+      "title": "How to Use the Polaroid Photo Generator",
+      "subtitle": "Follow four practical steps to turn a clear written idea into an instant-style image you can review and download.",
       "steps": {
         "input": {
-          "title": "Input Content",
-          "description": "Describe a scene or upload a photo",
-          "example": "Sunset by the sea, warm atmosphere"
+          "title": "Describe the Scene",
+          "description": "Write the main subject first, then add the setting, mood, lighting, and framing. A useful prompt might describe two friends at a rainy night market, warm shop lights, candid smiles, and a close eye-level composition.",
+          "example": "Friends at a rainy night market, warm candid photo"
         },
         "process": {
-          "title": "AI Smart Processing",
-          "description": "Analyze and apply Polaroid style",
-          "time": "Processing in 10-15 seconds"
+          "title": "Start the Generation",
+          "description": "Submit the prompt and let the tool build a new scene. It adds an instant-film-inspired direction while preserving the important people, objects, atmosphere, and composition in your prompt.",
+          "time": "Processing time varies by provider demand"
         },
         "generate": {
-          "title": "Generate Polaroid",
-          "description": "Create vintage photo with white border",
-          "quality": "1080x1080 HD output"
+          "title": "Review the Result",
+          "description": "Check whether the subject, white border, color mood, and framing match your intention. If the result feels too generic, revise one or two details instead of replacing the entire prompt at once.",
+          "quality": "Review details before downloading"
         },
         "download": {
           "title": "Download & Save",
-          "description": "Get high-quality printable image",
-          "quality": "Print quality"
+          "description": "Use the download button after a successful generation. Keep the prompt with the saved result so you can recreate the direction, compare variations, or continue refining it later.",
+          "quality": "Save the result you want to keep"
         }
       },
       "summary": {
-        "title": "It's that simple!",
-        "description": "No professional photography knowledge required, anyone can create professional-quality vintage Polaroid photos. From text description to beautiful artwork, the entire process takes less than 30 seconds."
+        "title": "Prompt details that improve results",
+        "description": "The Polaroid photo generator works best when a prompt answers five questions: who or what is shown, where the scene takes place, what the light looks like, what emotion the image should carry, and how the camera frames the moment. Replace “a couple on vacation” with “a candid waist-up photo of a couple beside a quiet coastal motel at blue hour, warm window light, relaxed smiles.” Specific visual information gives the generator useful direction without making the prompt unnecessarily long."
       },
       "highlights": {
-        "fast": "10-second generation",
-        "authentic": "Authentic texture",
-        "easy": "Easy to use"
+        "fast": "Clear subject",
+        "authentic": "Defined mood",
+        "easy": "Simple iteration"
+      }
+    },
+    "why": {
+      "title": "Why Use a Polaroid Photo Generator?",
+      "subtitle": "Explore the emotional character of instant photography without needing an existing photograph or a physical shoot.",
+      "intro": "A normal photo filter changes an image you already have. A Polaroid photo generator starts earlier: it helps visualize an idea that may not exist yet. That makes the tool useful for creative direction, story concepts, social posts, memory-inspired art, and quick visual experiments. It does not replace the unique experience of physical instant film; it offers a flexible way to explore a similar visual mood through text.",
+      "items": {
+        "creative": {
+          "title": "Create Scenes That Do Not Exist Yet",
+          "description": "Describe a fictional trip, an imagined portrait, or a memory-inspired moment. The generator can turn that written concept into a visual starting point."
+        },
+        "accessible": {
+          "title": "Explore Without Camera Equipment",
+          "description": "Try instant-style visual ideas without arranging a shoot, purchasing film, or learning editing software. You only need a clear description and a willingness to revise it."
+        },
+        "repeatable": {
+          "title": "Test Multiple Creative Directions",
+          "description": "Change the weather, era, wardrobe, framing, or emotion while keeping the core subject. Controlled prompt changes make comparison easier and help refine a consistent look."
+        },
+        "practical": {
+          "title": "Build Useful Visual References",
+          "description": "Use generated results as mood references, storytelling drafts, social concepts, or personal creative pieces. Always review the final image and usage requirements for your project."
+        }
       }
     },
     "faq": {
-      "title": "Frequently Asked Questions",
-      "subtitle": "All your questions about the Polaroid AI Photo Generator - we have answers ready for you",
+      "title": "Polaroid Photo Generator FAQ",
+      "subtitle": "Straightforward answers about how the Polaroid photo generator works, what it currently supports, and how to get more useful results.",
       "item1": {
-        "question": "How realistic are Polaroid AI generated photos?",
-        "answer": "Our AI model is trained on thousands of real Polaroid photos and can accurately reproduce the color science, film grain, border proportions, and subtle optical effects of Polaroid cameras. The generated photos are visually almost indistinguishable from real Polaroid photos, with a satisfaction rate exceeding 90%."
+        "question": "How does a Polaroid photo generator work?",
+        "answer": "You enter a written description, and the service sends an expanded version of that prompt to an AI image provider. The expanded prompt requests an instant-film-inspired appearance with a clean white border, warm vintage color, subtle grain, soft natural light, and a candid feeling. The provider then returns a newly generated image for you to review."
       },
       "item2": {
-        "question": "How does the credit system work? [MVP Test Version]",
-        "answer": "This is the MVP test version - every user automatically receives 100 free test credits. Text-to-Polaroid generation consumes 5 credits, image conversion consumes 8 credits. After test credits are used up, the official version will support credit purchases. This is our testing phase to validate product features and collect user feedback."
+        "question": "Is the Polaroid photo generator free to try?",
+        "answer": "Visitors can currently start two free text generations before signing in. Signed-in users generate with account credits, and a text generation costs three credits when the provider task starts. Viewing an existing result and requesting its download do not start another generation. Limits and pricing may change, so check the interface before submitting a new request."
       },
       "item3": {
-        "question": "How long does it take to generate a Polaroid photo?",
-        "answer": "Typically, from submitting a request to receiving the finished photo takes only 10-15 seconds. Our AI servers are optimized to maintain stable processing speeds even during peak hours. If there's a queue, the system will display estimated wait time."
+        "question": "How long does the Polaroid photo generator take?",
+        "answer": "Generation time varies with provider availability, queue length, network conditions, and the complexity of the request. After you submit a prompt, the page checks the provider task until an image succeeds, fails, or reaches the waiting limit. Keep the page open while it is checking, and try again later if the provider is temporarily busy."
       },
       "item4": {
-        "question": "What types of images can I upload?",
-        "answer": "We support JPG and PNG formats with a maximum file size of 10MB. For best results, we recommend uploading clear, well-lit photos. The system automatically optimizes image size and quality without manual adjustment needed."
+        "question": "Can I upload a photo to the Polaroid photo generator?",
+        "answer": "Not on the current homepage workflow. The available generator creates images from text descriptions, while image composition is marked as coming soon. Avoid planning a conversion workflow around the upload tab until that capability is available. For now, describe the subject, lighting, setting, and composition you want the AI Polaroid generator to create."
       },
       "item5": {
-        "question": "Can the generated photos be used commercially?",
-        "answer": "You own complete usage rights for all photos generated through Polaroid AI, including commercial use. No copyright concerns - feel free to use them for social media, print materials, marketing content, and any other applications."
+        "question": "What makes a good Polaroid photo generator prompt?",
+        "answer": "A strong prompt names the subject, environment, light, mood, and framing. Add concrete details such as “late afternoon window light,” “candid eye-level portrait,” or “quiet roadside diner in winter.” Avoid stuffing the prompt with conflicting styles. Generate a version, identify the weakest detail, and revise that detail in the next attempt."
       },
       "item6": {
-        "question": "When will the MVP test version end?",
-        "answer": "The MVP test version is expected to last 1-2 months to collect user feedback and optimize product features. After the official launch, various credit packages will be available. Generation records during the test period will be preserved. Thank you for your participation and support!"
+        "question": "Can I download and use images from the Polaroid photo generator?",
+        "answer": "You can request a download link for a successfully generated result. Before publishing or using an image in a commercial project, review the result for unwanted details and confirm that your planned use complies with applicable laws, platform rules, provider terms, and any rights connected to names, brands, characters, or reference material in your prompt."
       },
       "contact": {
         "title": "Have other questions?",

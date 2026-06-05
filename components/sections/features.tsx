@@ -11,32 +11,32 @@ const polaroidFeatures = [
   {
     icon: FileText,
     key: "item1",
-    gradient: "from-orange-500/20 to-amber-500/20"
+    tone: "bg-[#d6883f]/12"
   },
   {
     icon: Upload,
     key: "item2",
-    gradient: "from-blue-500/20 to-indigo-500/20"
+    tone: "bg-[#08304c]/10"
   },
   {
     icon: Frame,
     key: "item3",
-    gradient: "from-purple-500/20 to-pink-500/20"
+    tone: "bg-[#d6883f]/12"
   },
   {
     icon: Zap,
     key: "item4",
-    gradient: "from-green-500/20 to-emerald-500/20"
+    tone: "bg-[#08304c]/10"
   },
   {
     icon: Palette,
     key: "item5",
-    gradient: "from-red-500/20 to-rose-500/20"
+    tone: "bg-[#d6883f]/12"
   },
   {
     icon: Camera,
     key: "item6",
-    gradient: "from-cyan-500/20 to-blue-500/20"
+    tone: "bg-[#08304c]/10"
   }
 ];
 
@@ -44,7 +44,7 @@ export default function Features() {
   const t = useTranslations("IndexPage");
 
   return (
-    <section className="py-20">
+    <section className="py-20 sm:py-28">
       <div className="pb-6 pt-4">
         <MaxWidthWrapper>
           <HeaderSection
@@ -57,34 +57,30 @@ export default function Features() {
               const Icon = feature.icon;
               return (
                 <div
-                  className="group relative overflow-hidden rounded-2xl border bg-background p-6 transition-all duration-300 hover:shadow-lg"
+                  className="portrait-card group relative overflow-hidden p-6 transition-transform duration-300 hover:-translate-y-1"
                   key={feature.key}
                 >
-                  <div
-                    aria-hidden="true"
-                    className={`absolute inset-0 aspect-video -translate-y-1/2 rounded-full border bg-gradient-to-b ${feature.gradient} opacity-25 blur-2xl duration-300 group-hover:-translate-y-1/4`}
-                  />
                   <div className="relative">
-                    <div className="relative flex size-12 rounded-2xl border border-[#FF8C42]/20 bg-[#FF8C42]/5 shadow-sm">
-                      <Icon className="relative m-auto size-6 text-[#FF8C42]" />
+                    <div className={`relative flex size-12 rounded-2xl ${feature.tone}`}>
+                      <Icon className="relative m-auto size-6 text-[#08304c]" />
                     </div>
 
-                    <h3 className="mt-6 font-semibold text-lg">
+                    <h3 className="mt-6 font-heading text-xl font-medium tracking-[-0.02em] text-[#08304c]">
                       {t(`features.${feature.key}.title`)}
                     </h3>
 
-                    <p className="mt-2 pb-6 text-muted-foreground">
+                    <p className="mt-2 pb-6 leading-7 text-[#08304c]/60">
                       {t(`features.${feature.key}.description`)}
                     </p>
 
-                    <div className="-mb-6 flex gap-3 border-t border-muted pt-4">
+                    <div className="-mb-6 flex gap-3 border-t border-[#08304c]/10 pt-4">
                       <Button
                         variant="secondary"
                         size="sm"
-                        className="rounded-xl px-4 bg-[#FF8C42]/10 hover:bg-[#FF8C42]/20 text-[#FF8C42] border-[#FF8C42]/20"
+                        className="rounded-full bg-[#d6883f]/10 px-4 text-[#08304c] hover:bg-[#d6883f]/20"
                       >
                         <Link
-                          href="/app/generate"
+                          href="/mvp-simple"
                           className="flex items-center gap-2"
                         >
                           <span>{t("features.action.visit")}</span>

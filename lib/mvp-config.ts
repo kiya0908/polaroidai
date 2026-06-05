@@ -8,29 +8,33 @@
  */
 
 export const MVP_CONFIG = {
-  // Enable MVP test mode - SET TO FALSE FOR PRODUCTION
-  enabled: false, // process.env.NEXT_PUBLIC_MVP_TEST_MODE === 'true',
+  // Legacy MVP guest-credit mode is disabled. The landing page now uses
+  // a separate 2-free-generations flow plus Clerk-backed credits.
+  enabled: false,
 
-  // Guest mode configuration - DISABLED FOR PRODUCTION
+  // Guest mode configuration for the legacy MVP flow.
   guest: {
-    enabled: false, // process.env.NEXT_PUBLIC_ENABLE_CLERK_AUTH !== 'true',
-    initialCredits: parseInt(process.env.NEXT_PUBLIC_GUEST_INITIAL_CREDITS || '100', 10),
+    enabled: false,
+    initialCredits: parseInt(
+      process.env.NEXT_PUBLIC_GUEST_INITIAL_CREDITS || "100",
+      10,
+    ),
     // Guest user will be stored in localStorage with this prefix
-    storagePrefix: 'polaroid_guest_',
+    storagePrefix: "polaroid_guest_",
   },
 
   // Features to disable in MVP mode
   features: {
-    payment: false,        // Disable payment/charging features
-    giftCode: false,       // Disable gift code redemption
-    orderHistory: false,   // Disable order history
-    socialAuth: false,     // Disable social auth providers
+    payment: false, // Disable payment/charging features
+    giftCode: false, // Disable gift code redemption
+    orderHistory: false, // Disable order history
+    socialAuth: false, // Disable social auth providers
   },
 
   // Credit costs (keep the same for data collection)
   credits: {
-    textGeneration: 5,     // Text to Polaroid
-    imageConversion: 8,    // Image to Polaroid
+    textGeneration: 5, // Text to Polaroid
+    imageConversion: 8, // Image to Polaroid
     multiImageComposition: 8, // Multi-image composition
   },
 
@@ -59,7 +63,9 @@ export function isGuestMode(): boolean {
 /**
  * Check if a feature is enabled in MVP mode
  */
-export function isFeatureEnabled(feature: keyof typeof MVP_CONFIG.features): boolean {
+export function isFeatureEnabled(
+  feature: keyof typeof MVP_CONFIG.features,
+): boolean {
   if (!isMVPMode()) return true; // All features enabled in production
   return MVP_CONFIG.features[feature];
 }

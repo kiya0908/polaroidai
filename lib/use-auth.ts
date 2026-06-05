@@ -13,10 +13,11 @@ import { isGuestMode } from "@/lib/mvp-config";
  */
 export function useAuth() {
   const useGuestAuthMode = isGuestMode();
+  const guestAuth = useGuestUser();
 
   if (useGuestAuthMode) {
     // MVP模式：使用游客认证
-    return useGuestUser();
+    return guestAuth;
   }
 
   // 生产模式：返回空状态

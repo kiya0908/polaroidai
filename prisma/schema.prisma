@@ -61,31 +61,35 @@ model polaroidai_UserPaymentInfo {
 }
 
 model polaroidai_PolaroidGeneration {
-  id               Int      @id @default(autoincrement())
-  userId           String   @map("user_id") @db.VarChar(200)
-  requestId        String   @unique @map("request_id") @db.VarChar
-  inputType        String   @map("input_type") @db.VarChar
-  inputContent     String?  @map("input_content")
-  inputImageUrl    String?  @map("input_image_url") @db.VarChar
-  outputImageUrl   String?  @map("output_image_url") @db.VarChar
-  thumbnailUrl     String?  @map("thumbnail_url") @db.VarChar
-  styleType        String   @default("classic_polaroid") @map("style_type") @db.VarChar(50)
-  taskStatus       String   @map("task_status") @db.VarChar
-  isPrivate        Boolean? @default(false) @map("is_private")
-  downloadNum      Int      @default(0) @map("download_num")
-  viewsNum         Int      @default(0) @map("views_num")
-  creditCost       Int      @map("credit_cost")
-  processingTime   Int?     @map("processing_time")
-  geminiRequestId  String?  @map("gemini_request_id") @db.VarChar
-  geminiResponse   String?  @map("gemini_response")
-  locale           String?  @db.VarChar(64)
-  errorMsg         String?  @map("error_msg")
-  executeStartTime BigInt?  @map("execute_start_time")
-  executeEndTime   BigInt?  @map("execute_end_time")
-  retryCount       Int      @default(0) @map("retry_count")
-  metadata         Json?    @db.Json
-  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  id               Int       @id @default(autoincrement())
+  userId           String?   @map("user_id") @db.VarChar(200)
+  requestId        String    @unique @map("request_id") @db.VarChar
+  inputType        String    @map("input_type") @db.VarChar
+  inputContent     String?   @map("input_content")
+  inputImageUrl    String?   @map("input_image_url") @db.VarChar
+  outputImageUrl   String?   @map("output_image_url") @db.VarChar
+  thumbnailUrl     String?   @map("thumbnail_url") @db.VarChar
+  styleType        String    @default("classic_polaroid") @map("style_type") @db.VarChar(50)
+  taskStatus       String    @map("task_status") @db.VarChar
+  isPrivate        Boolean?  @default(false) @map("is_private")
+  downloadNum      Int       @default(0) @map("download_num")
+  viewsNum         Int       @default(0) @map("views_num")
+  creditCost       Int       @map("credit_cost")
+  processingTime   Int?      @map("processing_time")
+  providerName     String?   @map("provider_name") @db.VarChar(50)
+  providerTaskId   String?   @unique @map("provider_task_id") @db.VarChar(120)
+  refundedAt       DateTime? @map("refunded_at") @db.Timestamp(6)
+  refundBillingId  Int?      @map("refund_billing_id")
+  geminiRequestId  String?   @map("gemini_request_id") @db.VarChar
+  geminiResponse   String?   @map("gemini_response")
+  locale           String?   @db.VarChar(64)
+  errorMsg         String?   @map("error_msg")
+  executeStartTime BigInt?   @map("execute_start_time")
+  executeEndTime   BigInt?   @map("execute_end_time")
+  retryCount       Int       @default(0) @map("retry_count")
+  metadata         Json?     @db.Json
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([userId])
   @@index([taskStatus])
@@ -119,6 +123,32 @@ model polaroidai_PolaroidViews {
   @@map("polaroidai_polaroid_views")
 }
 
+model polaroidai_MvpEvent {
+  id          Int      @id @default(autoincrement())
+  eventType   String   @map("event_type") @db.VarChar(50)
+  anonymousId String?  @map("anonymous_id") @db.VarChar(80)
+  sessionId   String?  @map("session_id") @db.VarChar(80)
+  ipAddress   String?  @map("ip_address") @db.VarChar(45)
+  userAgent   String?  @map("user_agent")
+  pagePath    String?  @map("page_path") @db.VarChar(500)
+  referer     String?  @db.VarChar(1000)
+  country     String?  @db.VarChar(10)
+  deviceType  String?  @map("device_type") @db.VarChar(30)
+  taskId      String?  @map("task_id") @db.VarChar(120)
+  provider    String?  @db.VarChar(50)
+  durationMs  Int?     @map("duration_ms")
+  isBot       Boolean  @default(false) @map("is_bot")
+  metadata    Json?    @db.Json
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+
+  @@index([eventType, createdAt])
+  @@index([taskId])
+  @@index([sessionId])
+  @@index([anonymousId])
+  @@index([provider, createdAt])
+  @@map("polaroidai_mvp_events")
+}
+
 model polaroidai_media {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar
@@ -137,21 +167,21 @@ model polaroidai_media {
 }
 
 model polaroidai_ChargeProduct {
-  id              Int      @id @default(autoincrement())
-  amount          Int
-  originalAmount  Int      @map("original_amount")
-  credit          Int
-  currency        String   @db.VarChar
-  locale          String   @db.VarChar
-  title           String   @db.VarChar
-  tag             Json?    @db.Json
-  message         String?
-  state           String   @db.VarChar
-  creemProductId  String?  @map("creem_product_id") @db.VarChar
-  isPopular       Boolean  @default(false) @map("is_popular")
-  sortOrder       Int      @default(0) @map("sort_order")
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
-  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  id             Int      @id @default(autoincrement())
+  amount         Int
+  originalAmount Int      @map("original_amount")
+  credit         Int
+  currency       String   @db.VarChar
+  locale         String   @db.VarChar
+  title          String   @db.VarChar
+  tag            Json?    @db.Json
+  message        String?
+  state          String   @db.VarChar
+  creemProductId String?  @map("creem_product_id") @db.VarChar
+  isPopular      Boolean  @default(false) @map("is_popular")
+  sortOrder      Int      @default(0) @map("sort_order")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@map("polaroidai_charge_product")
 }

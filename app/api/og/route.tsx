@@ -4,13 +4,13 @@ import { ogImageSchema } from "@/lib/validations/og"
 
 export const runtime = "edge"
 
-// 使用外部字体 URL，避免将大文件打包进 Edge Function
+// 使用本地字体，避免运行时依赖外部字体服务。
 const interRegular = fetch(
-  "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjp-Ek-_EeA.woff2"
+  new URL("../../../assets/fonts/Inter-Regular.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 const interBold = fetch(
-  "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hjp-Ek-_EeA.woff2"
+  new URL("../../../assets/fonts/Inter-Bold.ttf", import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 

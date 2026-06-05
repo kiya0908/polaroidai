@@ -42,13 +42,13 @@ export async function getBySearch(input: GetSchema) {
         : whereConditions;
 
     const [data, total] = await Promise.all([
-      prisma.chargeProduct.findMany({
+      prisma.polaroidai_ChargeProduct.findMany({
         where,
         take: pageSize,
         skip: offset,
         orderBy: column ? { [column]: order ?? "desc" } : { id: "desc" },
       }),
-      prisma.chargeProduct.count({ where }),
+      prisma.polaroidai_ChargeProduct.count({ where }),
     ]);
 
     const pageCount = Math.ceil(total / pageSize);

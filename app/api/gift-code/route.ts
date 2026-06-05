@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
 
-// 强制动态渲染，避免在构建时预渲染
+// 寮哄埗鍔ㄦ€佹覆鏌擄紝閬垮厤鍦ㄦ瀯寤烘椂棰勬覆鏌?
 export const dynamic = 'force-dynamic';
 import { Ratelimit } from "@upstash/ratelimit";
 import { z } from "zod";
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     const account = await getUserCredit(userId);
 
     await prisma.$transaction(async (tx) => {
-      await tx.chargeOrder.create({
+      await tx.polaroidai_ChargeOrder.create({
         data: {
           userId,
           userInfo: {
@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      const newUserCredit = await tx.userCredit.update({
+      const newUserCredit = await tx.polaroidai_UserCredit.update({
         where: {
           id: account.id,
         },
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
           },
         },
       });
-      const transaction = await tx.userCreditTransaction.create({
+      const transaction = await tx.polaroidai_UserCreditTransaction.create({
         data: {
           userId: userId,
           credit: giftCodeData.creditAmount,
@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      await tx.giftCode.update({
+      await tx.polaroidai_GiftCode.update({
         where: {
           id: giftCodeData.id,
         },

@@ -6,7 +6,7 @@ export const searchParamsSchema = z.object({
   pageSize: z.coerce.number().default(10),
   sort: z.string().optional(),
   from: z.string().optional(),
-  state: z.enum(["enable", "disable"]).optional(),
+  state: z.enum(["active", "archived"]).optional(),
   to: z.string().optional(),
   operator: z.enum(["and", "or"]).optional(),
 });
@@ -19,8 +19,9 @@ export const createSchema = z.object({
   credit: z.number().min(0),
   originalAmount: z.number(),
   currency: z.enum(["CNY", "USD"]),
+  creemProductId: z.string().trim().optional(),
   message: z.string().optional(),
-  state: z.enum(["enable", "disabled"]),
+  state: z.enum(["active", "archived"]),
   locale: z.enum(locales),
   tag: z.array(z.string()).optional(),
   title: z.string(),
@@ -34,9 +35,10 @@ export const updateSchema = z.object({
   title: z.string().optional(),
   originalAmount: z.number(),
   currency: z.enum(["CNY", "USD"]).optional(),
+  creemProductId: z.string().trim().optional(),
   locale: z.enum(locales).optional(),
   message: z.string().optional(),
-  state: z.enum(["enable", "disabled"]).optional(),
+  state: z.enum(["active", "archived"]).optional(),
   tag: z.array(z.string()).optional(),
 });
 

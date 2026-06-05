@@ -1,19 +1,8 @@
-import { prisma } from "@/db/prisma";
+import { INITIAL_USER_CREDITS } from "@/lib/constants/billing";
+import { ensureUserCreditInitialized } from "@/lib/credits/ensureUserCreditInitialized";
+
+export { INITIAL_USER_CREDITS };
 
 export async function getUserCredit(userId: string) {
-  let accountInfo = await prisma.polaroidai_UserCredit.findFirst({
-    where: {
-      userId,
-    },
-  });
-  if (!accountInfo?.id) {
-    const data = await prisma.polaroidai_UserCredit.create({
-      data: {
-        userId: userId,
-        credit: 0,
-      },
-    });
-    accountInfo = data;
-  }
-  return accountInfo;
+  return ensureUserCreditInitialized(userId);
 }

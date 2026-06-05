@@ -19,7 +19,7 @@ export const dashboardConfig: DashboardConfig = {
         },
         {
           title: "Generate",
-          href: "/app/generate",
+          href: "/mvp-simple",
           icon: "Eraser"
         },
         {

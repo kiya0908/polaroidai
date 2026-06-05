@@ -17,7 +17,7 @@ export default function MarketingLayout({
   unstable_setRequestLocale(params.locale);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-[#f7f7f7] font-satoshi text-[#08304c]">
       <NavMobile />
       <NavBar />
       <main className="flex-1">{children}</main>

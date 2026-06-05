@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    // 放宽校验：本地开发阶段将大部分变量改为可选，避免启动被阻塞
+    // 本地开发阶段放宽校验，避免缺少非核心变量导致启动失败。
     DATABASE_URL: z.string().optional(),
     RESEND_API_KEY: z.string().optional(),
     HASHID_SALT: z.string().optional(),
@@ -28,16 +28,16 @@ export const env = createEnv({
     CLERK_SECRET_KEY: z.string().optional(),
     LOG_SNAG_TOKEN: z.string().optional(),
     TASK_HEADER_KEY: z.string().optional(),
-    FLUX_HEADER_KEY: z.string().optional(),
-    FLUX_CREATE_URL: z.string().optional(),
     APP_ENV: z
       .enum(["development", "production", "staging"])
       .default("development"),
-    OPEN_AI_API_ENDPOINT: z.string().url().optional(),
-    OPEN_AI_API_KEY: z.string().optional(),
-    FLUX_AI_PROMPT: z.string().optional(),
-    OPEN_AI_MODEL: z.string().optional(),
-    GOOGLE_AI_API_KEY: z.string().optional(),
+    KIE_AI_API_KEY: z.string().optional(),
+    KIE_AI_BASE_URL: z.string().url().default("https://api.kie.ai"),
+    KIE_IMAGE_SIZE: z.string().default("1:1"),
+    KIE_IMAGE_ENABLE_FALLBACK: z.boolean().optional().default(false),
+    KIE_IMAGE_FALLBACK_MODEL: z.string().default("FLUX_MAX"),
+    KIE_IMAGE_UPLOAD_CN: z.boolean().optional().default(false),
+    ADMIN_PASSWORD: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_SITE_URL: z.string().min(1),
@@ -63,7 +63,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_SITE_EMAIL_FROM: process.env.NEXT_PUBLIC_SITE_EMAIL_FROM,
     NEXT_PUBLIC_SITE_LINK_PREVIEW_ENABLED:
-      process.env.NEXT_PUBLIC_SITE_LINK_PREVIEW_ENABLED == "true",
+      process.env.NEXT_PUBLIC_SITE_LINK_PREVIEW_ENABLED === "true",
     LINK_PREVIEW_API_BASE_URL: process.env.LINK_PREVIEW_API_BASE_URL,
     SITE_NOTIFICATION_EMAIL_TO: process.env.SITE_NOTIFICATION_EMAIL_TO,
     WEBHOOK_SECRET: process.env.WEBHOOK_SECRET,
@@ -80,17 +80,18 @@ export const env = createEnv({
     CREEM_API_KEY: process.env.CREEM_API_KEY,
     CREEM_WEBHOOK_SECRET: process.env.CREEM_WEBHOOK_SECRET,
     TASK_HEADER_KEY: process.env.TASK_HEADER_KEY,
-    FLUX_HEADER_KEY: process.env.FLUX_HEADER_KEY,
-    FLUX_CREATE_URL: process.env.FLUX_CREATE_URL,
     APP_ENV: process.env.APP_ENV,
 
     NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID,
     NEXT_PUBLIC_UMAMI_DATA_ID: process.env.NEXT_PUBLIC_UMAMI_DATA_ID,
 
-    OPEN_AI_API_ENDPOINT: process.env.OPEN_AI_API_ENDPOINT,
-    OPEN_AI_API_KEY: process.env.OPEN_AI_API_KEY,
-    FLUX_AI_PROMPT: process.env.FLUX_AI_PROMPT,
-    OPEN_AI_MODEL: process.env.OPEN_AI_MODEL,
-    GOOGLE_AI_API_KEY: process.env.GOOGLE_AI_API_KEY,
+    KIE_AI_API_KEY: process.env.KIE_AI_API_KEY,
+    KIE_AI_BASE_URL: process.env.KIE_AI_BASE_URL,
+    KIE_IMAGE_SIZE: process.env.KIE_IMAGE_SIZE,
+    KIE_IMAGE_ENABLE_FALLBACK:
+      process.env.KIE_IMAGE_ENABLE_FALLBACK === "true",
+    KIE_IMAGE_FALLBACK_MODEL: process.env.KIE_IMAGE_FALLBACK_MODEL,
+    KIE_IMAGE_UPLOAD_CN: process.env.KIE_IMAGE_UPLOAD_CN === "true",
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
   },
 });

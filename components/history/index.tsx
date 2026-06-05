@@ -277,7 +277,7 @@ export default function History({ locale }: { locale: string }) {
                   {t("empty.description")}
                 </EmptyPlaceholder.Description>
                 <Button variant="outline" asChild>
-                  <Link href="/app/generate">{t("action.generate")}</Link>
+                  <Link href="/mvp-simple">{t("action.generate")}</Link>
                 </Button>
               </EmptyPlaceholder>
             </div>

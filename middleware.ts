@@ -20,8 +20,14 @@ export const config = {
 const isProtectedRoute = createRouteMatcher([
   "/:locale/app(.*)",
   "/:locale/admin(.*)",
+  "/admin(.*)",
 ]);
-const isPublicRoute = createRouteMatcher(["/api/webhooks(.*)"]);
+const isPublicRoute = createRouteMatcher([
+  "/api/webhooks(.*)",
+  "/api/generate(.*)",
+  "/api/polaroid-generate(.*)",
+]);
+const isAdminRoute = createRouteMatcher(["/:locale/admin(.*)", "/admin(.*)"]);
 
 const nextIntlMiddleware = createMiddleware({
   defaultLocale,
@@ -29,12 +35,59 @@ const nextIntlMiddleware = createMiddleware({
   localePrefix,
 });
 
-export default clerkMiddleware(async (auth, req) => {
-  try {
-    const { userId, redirectToSignIn } = auth();
+function checkAdminBasicAuth(req: Request) {
+  const password = process.env.ADMIN_PASSWORD;
+  const isProd =
+    process.env.NODE_ENV === "production" || process.env.APP_ENV === "production";
 
+  if (!password) {
+    return isProd
+      ? new NextResponse("Admin is not configured", { status: 503 })
+      : null;
+  }
+
+  const authorization = req.headers.get("authorization");
+  if (!authorization?.startsWith("Basic ")) {
+    return new NextResponse("Authentication required", {
+      status: 401,
+      headers: {
+        "WWW-Authenticate": 'Basic realm="PolaroidAI Admin"',
+      },
+    });
+  }
+
+  try {
+    const decoded = atob(authorization.slice("Basic ".length));
+    const separatorIndex = decoded.indexOf(":");
+    const username = decoded.slice(0, separatorIndex);
+    const providedPassword = decoded.slice(separatorIndex + 1);
+
+    if (username === "admin" && providedPassword === password) {
+      return null;
+    }
+  } catch {
+    // Fall through to 401.
+  }
+
+  return new NextResponse("Authentication required", {
+    status: 401,
+    headers: {
+      "WWW-Authenticate": 'Basic realm="PolaroidAI Admin"',
+    },
+  });
+}
+
+const authMiddleware = clerkMiddleware(async (auth, req) => {
+  try {
     if (isPublicRoute(req)) {
       return;
+    }
+
+    const { userId, redirectToSignIn } = auth();
+
+    if (isAdminRoute(req)) {
+      const authResponse = checkAdminBasicAuth(req);
+      if (authResponse) return authResponse;
     }
     if (isProtectedRoute(req)) {
       if (!userId) {
@@ -106,3 +159,11 @@ export default clerkMiddleware(async (auth, req) => {
     return nextIntlMiddleware(req);
   }
 });
+
+export default function middleware(req: any, event: any) {
+  if (isPublicRoute(req)) {
+    return NextResponse.next();
+  }
+
+  return authMiddleware(req, event);
+}

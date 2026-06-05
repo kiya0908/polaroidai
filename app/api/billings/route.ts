@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
 
-// 强制动态渲染，避免在构建时预渲染
+// 寮哄埗鍔ㄦ€佹覆鏌擄紝閬垮厤鍦ㄦ瀯寤烘椂棰勬覆鏌?
 export const dynamic = 'force-dynamic';
 import { z } from "zod";
 
@@ -42,13 +42,13 @@ export async function GET(req: NextRequest) {
     }
 
     const [data, total] = await Promise.all([
-      prisma.userBilling.findMany({
+      prisma.polaroidai_UserBilling.findMany({
         where: whereConditions,
         take: pageSize,
         skip: offset,
         orderBy: { createdAt: "desc" },
       }),
-      prisma.userBilling.count({ where: whereConditions }),
+      prisma.polaroidai_UserBilling.count({ where: whereConditions }),
     ]);
 
     return NextResponse.json({
@@ -56,9 +56,9 @@ export async function GET(req: NextRequest) {
         total,
         page,
         pageSize,
-        data: data.map(({ id, fluxId, ...rest }) => ({
+        data: data.map(({ id, polaroidId, ...rest }) => ({
           ...rest,
-          fluxId: fluxId ? FluxHashids.encode(fluxId!) : null,
+          polaroidId: polaroidId ? FluxHashids.encode(polaroidId) : null,
           id: UserBillingHashids.encode(id),
         })),
       },

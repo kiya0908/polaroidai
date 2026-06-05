@@ -86,7 +86,7 @@ export default function DashboardPage({ params }: DashboardPageProps) {
       titleKey: "quickActions.generate.title" as const,
       descriptionKey: "quickActions.generate.description" as const,
       iconName: "Camera",
-      href: "/app/generate",
+      href: "/mvp-simple",
       color: "bg-polaroid-orange",
     },
     {
@@ -235,7 +235,7 @@ export default function DashboardPage({ params }: DashboardPageProps) {
               <Camera className="w-12 h-12 mx-auto mb-4 text-gray-400" />
               <p>{t("recentGeneration.empty")}</p>
               <Button asChild className="mt-4 bg-polaroid-orange hover:bg-polaroid-orange/90">
-                <Link href="/app/generate">
+                <Link href="/mvp-simple">
                   <Sparkles className="w-4 h-4 mr-2" />
                   {t("recentGeneration.startCreating")}
                 </Link>
