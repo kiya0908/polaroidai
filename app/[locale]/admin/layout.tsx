@@ -1,14 +1,16 @@
-import { ReactNode, Suspense, useEffect } from "react";
+import { ReactNode, Suspense } from "react";
 import { redirect } from "next/navigation";
 
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 
 import Loading from "@/components/loading";
 import AntdThemeProvider from "@/components/theme/theme-provider";
 
 import Header from "./Header";
 import { Sidebar } from "./Sidebar";
+
+export const dynamic = "force-dynamic";
 
 export default async function AdminLayout({
   children,

@@ -1,6 +1,14 @@
 "use client";
 
-import React, { useEffect, useId, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import Link from "next/link";
 
 import { useAuth } from "@clerk/nextjs";
 import { useMutation } from "@tanstack/react-query";
@@ -12,7 +20,6 @@ import qs from "query-string";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Masonry from "react-masonry-css";
 import { toast } from "sonner";
-import Link from "next/link";
 import Loading from "@/components/loading";
 import BlurFade from "@/components/magicui/blur-fade";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
@@ -125,46 +132,50 @@ export default function History({ locale }: { locale: string }) {
   });
   const [hasMore, setHasMore] = useState(true);
   const [dataSource, setDataSource] = useState<DisplayItem[]>([]);
-  const useQueryHistory = useQueryHistoryMutation({
-    onSuccess(result) {
-      // 转换数据格式
-      const adaptedData = result.records.map(adaptPolaroidData);
+  const handleHistorySuccess = useCallback((result: PolaroidHistoryResponse) => {
+    const adaptedData = result.records.map(adaptPolaroidData);
 
-      setDataSource(
-        result.pagination.page === 1
-          ? adaptedData
-          : [...dataSource, ...adaptedData]
-      );
-      setPageParams({
-        page: result.pagination.page,
-        limit: result.pagination.limit,
-      });
-      setHasMore(result.pagination.hasNext);
-      setInit(true);
-    },
+    setDataSource((currentDataSource) =>
+      result.pagination.page === 1
+        ? adaptedData
+        : [...currentDataSource, ...adaptedData],
+    );
+    setPageParams({
+      page: result.pagination.page,
+      limit: result.pagination.limit,
+    });
+    setHasMore(result.pagination.hasNext);
+    setInit(true);
+  }, []);
+  const { mutate: queryHistory } = useQueryHistoryMutation({
+    onSuccess: handleHistorySuccess,
   });
 
   useEffect(() => {
-    useQueryHistory.mutate({
-      page: pageParams.page,
+    queryHistory({
+      page: 1,
       limit: pageParams.limit,
     });
-  }, []);
+  }, [pageParams.limit, queryHistory]);
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     console.log("load more");
-    useQueryHistory.mutate({
+    queryHistory({
       page: pageParams.page + 1,
       limit: pageParams.limit,
     });
-  };
+  }, [pageParams.limit, pageParams.page, queryHistory]);
 
   const copyPrompt = (prompt: string) => {
     copy(prompt);
     toast.success(t("action.copySuccess"));
   };
 
-  const debounceLoadMore = debounce(loadMore, 500);
+  const debounceLoadMore = useMemo(() => debounce(loadMore, 500), [loadMore]);
+
+  useEffect(() => {
+    return () => debounceLoadMore.cancel();
+  }, [debounceLoadMore]);
 
   return (
     <Container className="h-[calc(100vh_-_76px)]">

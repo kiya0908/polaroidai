@@ -1,5 +1,3 @@
-import { unstable_setRequestLocale } from "next-intl/server";
-
 import { NavMobile } from "@/components/layout/mobile-nav";
 import { NavBar } from "@/components/layout/navbar";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -10,12 +8,12 @@ interface MarketingLayoutProps {
   params: { locale: string };
 }
 
+export const dynamic = "force-dynamic";
+
 export default function MarketingLayout({
   children,
   params,
 }: MarketingLayoutProps) {
-  unstable_setRequestLocale(params.locale);
-
   return (
     <div className="flex min-h-screen flex-col bg-[#f7f7f7] font-satoshi text-[#08304c]">
       <NavMobile />

@@ -1,5 +1,5 @@
 
-import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { getPolaroidById, incrementViewCount } from "@/actions/polaroid-action";
 import { Link } from "@/lib/navigation";
@@ -10,9 +10,7 @@ import { formatDate } from "@/lib/utils"
 import { CopyButton } from "@/components/shared/copy-button";
 import { DownloadAction } from "@/components/history/download-action";
 import { env } from "@/env.mjs";
-import { prisma } from "@/db/prisma";
 import { auth } from "@clerk/nextjs/server";
-import { PolaroidHashids } from "@/db/dto/polaroid.dto";
 
 interface RootPageProps {
   params: { locale: string, slug: string };
@@ -22,31 +20,6 @@ interface RootPageProps {
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "default-no-store";
-
-export async function generateStaticParams() {
-  // Skip pre-generation when the database is unavailable to keep builds green.
-  if (!process.env.DATABASE_URL) {
-    return [];
-  }
-
-  try {
-    const polaroids = await prisma.polaroidai_PolaroidGeneration.findMany({
-      where: {
-        isPrivate: false,
-        taskStatus: 'completed',
-      },
-      select: {
-        id: true,
-      },
-    });
-    return polaroids.map((polaroid) => ({
-      slug: PolaroidHashids.encode(polaroid.id),
-    }));
-  } catch (error) {
-    console.warn("generateStaticParams: skip due to DB error", error);
-    return [];
-  }
-}
 
 export async function generateMetadata({
   params: { locale, slug },
@@ -81,7 +54,6 @@ const breakpointColumnsObj = {
 export default async function PolaroidPage({
   params,
 }: RootPageProps) {
-  unstable_setRequestLocale(params.locale);
   const t = await getTranslations({ namespace: "ExplorePage" });
   const polaroid = await getPolaroidById(params.slug);
   if (!polaroid) {

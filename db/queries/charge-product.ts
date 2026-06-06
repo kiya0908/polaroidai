@@ -113,6 +113,17 @@ function getFallbackProducts(locale: string = "en") {
 }
 
 export async function getChargeProduct(locale?: string) {
+  if (!process.env.DATABASE_URL) {
+    const fallbackProducts = getFallbackProducts(locale);
+
+    return {
+      data: fallbackProducts.map((product) => ({
+        ...product,
+        tag: product.tag ? JSON.stringify(product.tag) : null,
+      })) as ChargeProductSelectDto[],
+    };
+  }
+
   try {
     // 先尝试查询指定locale的产品
     let data = await prisma.polaroidai_ChargeProduct.findMany({
