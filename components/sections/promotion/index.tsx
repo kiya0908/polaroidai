@@ -1,10 +1,13 @@
-import { auth } from "@clerk/nextjs/server";
-
-import { getChargeProduct, getClaimed } from "@/db/queries/charge-product";
+import { getChargeProduct } from "@/db/queries/charge-product";
+import { hasClerkPublishableKey } from "@/lib/clerk-runtime";
 
 import PromotionBanner from "./promotion-banner";
 
 export default async function Promotion({ locale }: { locale: string }) {
+  if (!hasClerkPublishableKey()) {
+    return null;
+  }
+
   const { data: chargeProduct } = await getChargeProduct(locale);
   let claimed = true;
   const targetDate = new Date("2024-08-20T20:20:00+08:00");

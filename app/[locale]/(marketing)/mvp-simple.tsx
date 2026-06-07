@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { hasClerkPublishableKey } from "@/lib/clerk-runtime";
 
 interface GenerationResult {
   id: string;
@@ -35,6 +36,12 @@ interface MVPPageProps {
   locale: string;
   showSeoContent?: boolean;
 }
+
+type MVPAuthState = {
+  getToken: () => Promise<string | null>;
+  isLoaded: boolean;
+  isSignedIn: boolean;
+};
 
 const FREE_GENERATION_LIMIT = 2;
 const CREDITS_PER_GENERATION = 3;
@@ -58,8 +65,57 @@ export default function MVPSimplePage({
   locale,
   showSeoContent = false,
 }: MVPPageProps) {
-  const t = useTranslations("MVP");
+  if (hasClerkPublishableKey()) {
+    return (
+      <MVPSimplePageWithClerk
+        locale={locale}
+        showSeoContent={showSeoContent}
+      />
+    );
+  }
+
+  return (
+    <MVPSimplePageContent
+      locale={locale}
+      showSeoContent={showSeoContent}
+      authState={{
+        getToken: async () => null,
+        isLoaded: true,
+        isSignedIn: false,
+      }}
+    />
+  );
+}
+
+function MVPSimplePageWithClerk({
+  locale,
+  showSeoContent = false,
+}: MVPPageProps) {
   const { getToken, isLoaded, isSignedIn } = useAuth();
+
+  return (
+    <MVPSimplePageContent
+      locale={locale}
+      showSeoContent={showSeoContent}
+      authState={{
+        getToken: async () => {
+          const token = await getToken();
+          return token ?? null;
+        },
+        isLoaded,
+        isSignedIn: isSignedIn ?? false,
+      }}
+    />
+  );
+}
+
+function MVPSimplePageContent({
+  locale,
+  showSeoContent = false,
+  authState,
+}: MVPPageProps & { authState: MVPAuthState }) {
+  const t = useTranslations("MVP");
+  const { getToken, isLoaded, isSignedIn } = authState;
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<GenerationResult | null>(null);

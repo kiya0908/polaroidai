@@ -25,7 +25,8 @@ import {
 import type { ChargeProductSelectDto } from "@/db/type";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { url } from "@/lib";
-import { usePathname } from "@/lib/navigation";
+import { hasClerkPublishableKey } from "@/lib/clerk-runtime";
+import { Link, usePathname } from "@/lib/navigation";
 import { cn, formatPrice } from "@/lib/utils";
 
 interface PricingCardsProps {
@@ -43,6 +44,7 @@ const PricingCard = ({
 }) => {
   const pathname = usePathname();
   const t = useTranslations("PricingPage");
+  const clerkEnabled = hasClerkPublishableKey();
 
   return (
     <div
@@ -104,26 +106,42 @@ const PricingCard = ({
               </li>
             ))} */}
         </ul>
-        <SignedIn>
-          <CreemBillingButton offer={offer} btnText={t("action.buy")} />
-        </SignedIn>
+        {clerkEnabled ? (
+          <>
+            <SignedIn>
+              <CreemBillingButton offer={offer} btnText={t("action.buy")} />
+            </SignedIn>
 
-        <SignedOut>
-          <div className="flex justify-center">
-            <SignInButton mode="modal" forceRedirectUrl={url(pathname).href}>
-              <Button
-                variant={offer.isPopular ? "default" : "outline"}
-                className={cn(
-                  "w-full",
-                  offer.isPopular ? "portrait-action" : "portrait-outline-action",
-                )}
-                // onClick={() => setShowSignInModal(true)}
-              >
-                {t("action.signin")}
-              </Button>
-            </SignInButton>
-          </div>
-        </SignedOut>
+            <SignedOut>
+              <div className="flex justify-center">
+                <SignInButton mode="modal" forceRedirectUrl={url(pathname).href}>
+                  <Button
+                    variant={offer.isPopular ? "default" : "outline"}
+                    className={cn(
+                      "w-full",
+                      offer.isPopular
+                        ? "portrait-action"
+                        : "portrait-outline-action",
+                    )}
+                  >
+                    {t("action.signin")}
+                  </Button>
+                </SignInButton>
+              </div>
+            </SignedOut>
+          </>
+        ) : (
+          <Button
+            asChild
+            variant={offer.isPopular ? "default" : "outline"}
+            className={cn(
+              "w-full",
+              offer.isPopular ? "portrait-action" : "portrait-outline-action",
+            )}
+          >
+            <Link href="/mvp-simple">Try generator</Link>
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -131,6 +149,7 @@ const PricingCard = ({
 
 export function FreeCard() {
   const t = useTranslations("PricingPage");
+  const clerkEnabled = hasClerkPublishableKey();
 
   return (
     <div
@@ -176,9 +195,15 @@ export function FreeCard() {
             </li>
           ))}
         </ul>
-        <SignBox>
-          <Button className="portrait-action">Try Out</Button>
-        </SignBox>
+        {clerkEnabled ? (
+          <SignBox>
+            <Button className="portrait-action">Try Out</Button>
+          </SignBox>
+        ) : (
+          <Button asChild className="portrait-action">
+            <Link href="/mvp-simple">Try Out</Link>
+          </Button>
+        )}
       </div>
     </div>
   );

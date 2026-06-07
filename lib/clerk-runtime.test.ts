@@ -1,9 +1,13 @@
-import test from "node:test";
 import assert from "node:assert/strict";
+import test from "node:test";
 
-import { getMiddlewareAuthMode, hasClerkCredentials } from "./clerk-runtime.ts";
+const {
+  getMiddlewareAuthMode,
+  hasClerkCredentials,
+  hasClerkPublishableKey,
+} = await import(new URL("./clerk-runtime.ts", import.meta.url).href);
 
-test("在缺少 Clerk 配置时允许公开页面继续访问", () => {
+test("allows public routes to continue when Clerk credentials are missing", () => {
   assert.equal(
     getMiddlewareAuthMode({
       hasClerkCredentials: false,
@@ -14,7 +18,7 @@ test("在缺少 Clerk 配置时允许公开页面继续访问", () => {
   );
 });
 
-test("在缺少 Clerk 配置时阻止受保护页面继续走 Clerk", () => {
+test("blocks protected routes when Clerk credentials are missing", () => {
   assert.equal(
     getMiddlewareAuthMode({
       hasClerkCredentials: false,
@@ -25,7 +29,7 @@ test("在缺少 Clerk 配置时阻止受保护页面继续走 Clerk", () => {
   );
 });
 
-test("在缺少 Clerk 配置时优先按管理后台处理", () => {
+test("prioritizes admin fallback when admin routes are missing Clerk credentials", () => {
   assert.equal(
     getMiddlewareAuthMode({
       hasClerkCredentials: false,
@@ -36,7 +40,7 @@ test("在缺少 Clerk 配置时优先按管理后台处理", () => {
   );
 });
 
-test("在 Clerk 配置完整时走 Clerk 中间件", () => {
+test("uses Clerk middleware when both keys are configured", () => {
   assert.equal(
     getMiddlewareAuthMode({
       hasClerkCredentials: true,
@@ -47,7 +51,7 @@ test("在 Clerk 配置完整时走 Clerk 中间件", () => {
   );
 });
 
-test("只有在 publishable key 和 secret key 都存在时才启用 Clerk", () => {
+test("requires both publishable and secret keys for Clerk middleware", () => {
   assert.equal(
     hasClerkCredentials({
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_xxx",
@@ -60,6 +64,22 @@ test("只有在 publishable key 和 secret key 都存在时才启用 Clerk", () 
     hasClerkCredentials({
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_xxx",
       CLERK_SECRET_KEY: "",
+    }),
+    false,
+  );
+});
+
+test("only needs the publishable key for public app tree checks", () => {
+  assert.equal(
+    hasClerkPublishableKey({
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_xxx",
+    }),
+    true,
+  );
+
+  assert.equal(
+    hasClerkPublishableKey({
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "",
     }),
     false,
   );
