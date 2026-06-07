@@ -4,6 +4,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import createMiddleware from "next-intl/middleware";
 
 import { kvKeys } from "@/config/kv";
+import { getMiddlewareAuthMode, hasClerkCredentials } from "@/lib/clerk-runtime";
 import countries from "@/lib/countries.json";
 import { getIP } from "@/lib/ip";
 import { redis } from "@/lib/redis";
@@ -15,19 +16,23 @@ export const config = {
     "/",
     "/(zh|en)/:path*",
     "/((?!static|.*\\..*|_next).*)",
-  ], // Run middleware on API routes],
+  ],
 };
+
 const isProtectedRoute = createRouteMatcher([
   "/:locale/app(.*)",
   "/:locale/admin(.*)",
   "/admin(.*)",
 ]);
+
 const isPublicRoute = createRouteMatcher([
   "/api/webhooks(.*)",
   "/api/generate(.*)",
   "/api/polaroid-generate(.*)",
 ]);
+
 const isAdminRoute = createRouteMatcher(["/:locale/admin(.*)", "/admin(.*)"]);
+const clerkConfigured = hasClerkCredentials();
 
 const nextIntlMiddleware = createMiddleware({
   defaultLocale,
@@ -38,7 +43,8 @@ const nextIntlMiddleware = createMiddleware({
 function checkAdminBasicAuth(req: Request) {
   const password = process.env.ADMIN_PASSWORD;
   const isProd =
-    process.env.NODE_ENV === "production" || process.env.APP_ENV === "production";
+    process.env.NODE_ENV === "production" ||
+    process.env.APP_ENV === "production";
 
   if (!password) {
     return isProd
@@ -77,38 +83,27 @@ function checkAdminBasicAuth(req: Request) {
   });
 }
 
-const authMiddleware = clerkMiddleware(async (auth, req) => {
+function getAuthUnavailableResponse(req: any, message: string) {
+  if (req.nextUrl.pathname.startsWith("/api/")) {
+    return NextResponse.json({ error: message }, { status: 503 });
+  }
+
+  return new NextResponse(message, { status: 503 });
+}
+
+async function runSharedMiddleware(req: any) {
   try {
-    if (isPublicRoute(req)) {
-      return;
-    }
-
-    const { userId, redirectToSignIn } = auth();
-
-    if (isAdminRoute(req)) {
-      const authResponse = checkAdminBasicAuth(req);
-      if (authResponse) return authResponse;
-    }
-    if (isProtectedRoute(req)) {
-      if (!userId) {
-        return redirectToSignIn();
-      }
-      auth().protect();
-    }
     const { geo, nextUrl } = req;
     const isApi = nextUrl.pathname.startsWith("/api/");
+    const isDev =
+      process.env.NODE_ENV === "development" ||
+      process.env.VERCEL_ENV === "development";
 
-    // 使用 process.env 而不是 env 对象，避免 Edge Runtime 兼容性问题
-    const isDev = process.env.NODE_ENV === "development" || process.env.VERCEL_ENV === "development";
-
-    // 动态导入 Edge Config，避免模块加载问题
     if (process.env.EDGE_CONFIG && !isDev) {
       try {
-        // 使用动态导入确保 Edge Runtime 兼容性
         const { get } = await import("@vercel/edge-config");
         const blockedIPs = await get<string[]>("blocked_ips");
         const ip = getIP(req);
-        console.log("ip-->", ip);
 
         if (blockedIPs?.includes(ip)) {
           if (isApi) {
@@ -128,41 +123,99 @@ const authMiddleware = clerkMiddleware(async (auth, req) => {
         }
       } catch (error) {
         console.error("Edge Config error:", error);
-        // 忽略 Edge Config 错误，继续执行
       }
     }
 
-    if (geo && !isApi && !isDev && (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN)) {
+    if (
+      geo &&
+      !isApi &&
+      !isDev &&
+      process.env.UPSTASH_REDIS_REST_URL &&
+      process.env.UPSTASH_REDIS_REST_TOKEN
+    ) {
       try {
-        console.log("geo-->", geo);
         const country = geo.country;
         const city = geo.city;
+        const countryInfo = countries.find((item) => item.cca2 === country);
 
-        const countryInfo = countries.find((x) => x.cca2 === country);
         if (countryInfo) {
-          const flag = countryInfo.flag;
-          await redis.set(kvKeys.currentVisitor, { country, city, flag });
+          await redis.set(kvKeys.currentVisitor, {
+            country,
+            city,
+            flag: countryInfo.flag,
+          });
         }
       } catch (error) {
         console.error("Redis error:", error);
-        // 忽略 Redis 错误，继续执行
       }
     }
+
     if (isApi) {
-      return;
+      return NextResponse.next();
     }
 
     return nextIntlMiddleware(req);
   } catch (error) {
     console.error("Middleware error:", error);
-    // 如果中间件出错，直接放行，避免阻止所有请求
     return nextIntlMiddleware(req);
   }
-});
+}
+
+const authMiddleware = clerkConfigured
+  ? clerkMiddleware(async (auth, req) => {
+      const { userId, redirectToSignIn } = auth();
+
+      if (isAdminRoute(req)) {
+        const authResponse = checkAdminBasicAuth(req);
+        if (authResponse) return authResponse;
+      }
+
+      if (isProtectedRoute(req)) {
+        if (!userId) {
+          return redirectToSignIn();
+        }
+
+        auth().protect();
+      }
+
+      return runSharedMiddleware(req);
+    })
+  : null;
+
+function handleMissingClerk(req: any) {
+  const authMode = getMiddlewareAuthMode({
+    hasClerkCredentials: clerkConfigured,
+    isProtectedRoute: isProtectedRoute(req),
+    isAdminRoute: isAdminRoute(req),
+  });
+
+  if (authMode === "public-fallback") {
+    return runSharedMiddleware(req);
+  }
+
+  if (authMode === "admin-fallback") {
+    const authResponse = checkAdminBasicAuth(req);
+    if (authResponse) return authResponse;
+
+    return getAuthUnavailableResponse(
+      req,
+      "Admin requires Clerk configuration.",
+    );
+  }
+
+  return getAuthUnavailableResponse(
+    req,
+    "Authentication is not configured for this deployment.",
+  );
+}
 
 export default function middleware(req: any, event: any) {
   if (isPublicRoute(req)) {
     return NextResponse.next();
+  }
+
+  if (!authMiddleware) {
+    return handleMissingClerk(req);
   }
 
   return authMiddleware(req, event);
