@@ -6,44 +6,50 @@ import {
   DashboardSidebar,
   MobileSheetSidebar,
 } from "@/components/layout/dashboard-sidebar";
-import { DashboardNav } from "@/components/layout/dashboard-sidenav";
 import { ModeToggle } from "@/components/layout/mode-toggle";
-import { NavBar, NavbarUserInfo } from "@/components/layout/navbar";
-import { SiteFooter } from "@/components/layout/site-footer";
+import { NavbarUserInfo } from "@/components/layout/navbar";
 import MaxWidthWrapper from "@/components/shared/max-width-wrapper";
+import { Button } from "@/components/ui/button";
 import { dashboardConfig } from "@/config/dashboard";
+import { hasClerkPublishableKey } from "@/lib/clerk-runtime";
+import { Link } from "@/lib/navigation";
 
 interface DashboardLayoutProps {
   children?: React.ReactNode;
   params: { locale: string };
 }
-{
-  /* <div className="flex min-h-screen flex-col space-y-6">
-      <NavBar />
 
-      <MaxWidthWrapper className="min-h-svh">
-        <div className="grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
-          <aside className="hidden w-[200px] flex-col md:flex">
-            <DashboardNav items={dashboardConfig.sidebarNav} />
-            <div className="w-full flex-1">
-              <SearchCommand links={dashboardConfig.sidebarNav} />
-            </div>
-          </aside>
-          <main className="flex w-full flex-1 flex-col overflow-hidden">
-            {children}
-          </main>
-        </div>
-      </MaxWidthWrapper>
-      <SiteFooter className="border-t" />
-    </div> */
-}
 export default function DashboardLayout({
   children,
   params: { locale },
 }: DashboardLayoutProps) {
   unstable_setRequestLocale(locale);
 
-  // 使用所有侧边栏链接
+  if (!hasClerkPublishableKey()) {
+    return (
+      <MaxWidthWrapper className="flex min-h-screen items-center justify-center">
+        <div className="mx-auto max-w-xl space-y-4 text-center">
+          <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+            Authentication unavailable
+          </p>
+          <h1 className="text-3xl font-bold text-polaroid-brown">
+            Dashboard is temporarily disabled
+          </h1>
+          <p className="text-muted-foreground">
+            Clerk is not configured for this deployment, so protected account
+            pages are unavailable. Public generation still works.
+          </p>
+          <Button
+            asChild
+            className="bg-polaroid-orange hover:bg-polaroid-orange/90"
+          >
+            <Link href="/mvp-simple">Go to public generator</Link>
+          </Button>
+        </div>
+      </MaxWidthWrapper>
+    );
+  }
+
   const links = dashboardConfig.sidebarNav;
 
   return (
@@ -61,7 +67,6 @@ export default function DashboardLayout({
               </div>
             </div>
 
-            {/* <Notifications /> */}
             <UserPoints />
             <ModeToggle />
             <NavbarUserInfo />
